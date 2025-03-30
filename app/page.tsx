@@ -24,28 +24,36 @@ export default function Home() {
           <span>{siteConfig.title}</span>
         </div>
 
-        <p className="text-muted-foreground animate-slide-up" style={{ animationDelay: "300ms" }}>
-          {siteConfig.bio}
-        </p>
-
-        {(siteConfig.sections.projects || siteConfig.sections.blogs) && (
-          <div className="pt-8 animate-slide-up" style={{ animationDelay: "400ms" }}>
-            <h2 className="section-title">links</h2>
-            <div className="flex flex-wrap gap-4 text-sm">
-              {Object.entries(siteConfig.social).map(([key, url]) => (
-                <Link
-                  key={key}
-                  href={url}
-                  className="hover:text-accent transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {key}
-                </Link>
-              ))}
-            </div>
+        <div className="space-y-4 animate-slide-up" style={{ animationDelay: "300ms" }}>
+          <p className="text-muted-foreground">
+            {siteConfig.bio.main}
+          </p>
+          
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-2">{siteConfig.bio.secondaryTitle}</h3>
+            <p className="text-muted-foreground">
+              {siteConfig.bio.secondary}
+            </p>
           </div>
-        )}
+        </div>
+
+        {/* Always show social links section */}
+        <div className="pt-8 animate-slide-up" style={{ animationDelay: "400ms" }}>
+          <h2 className="section-title">links</h2>
+          <div className="flex flex-wrap gap-4 text-sm">
+            {Object.entries(siteConfig.social).map(([key, url]) => (
+              <Link
+                key={key}
+                href={key === "email" ? `mailto:${url}` : url}
+                className="hover:text-accent transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {key}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
