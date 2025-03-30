@@ -1,0 +1,175 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+
+  --card: 0 0% 6%;
+  --card-foreground: 0 0% 98%;
+
+  --popover: 0 0% 6%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 180 100% 40%;
+  --primary-foreground: 0 0% 98%;
+
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+
+  --accent: 180 100% 40%;
+  --accent-foreground: 0 0% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 180 100% 40%;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Space Mono", monospace;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-in-out;
+  }
+
+  .animate-pulse-subtle {
+    animation: pulseSlight 2s infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseSlight {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.section-title {
+  @apply text-2xl font-bold mb-6 flex items-center;
+}
+
+.section-title::before {
+  content: "*";
+  @apply text-accent mr-2;
+}
+
+.nav-item {
+  @apply transition-colors duration-200 hover:text-accent;
+}
+
+.nav-item.active {
+  @apply text-accent;
+}
+
+.entry-item {
+  @apply border border-transparent hover:border-accent/20 p-4 rounded-md transition-all duration-200;
+}
+
+.entry-item:focus-visible {
+  @apply outline-none ring-2 ring-accent;
+}
+
+.tech-tag {
+  @apply bg-secondary text-xs px-2 py-1 rounded-md mr-2 mb-2 inline-block;
+}
+
+/* Blog post styling */
+.prose {
+  @apply text-foreground;
+}
+
+.prose p {
+  @apply my-4;
+}
+
+.prose h2 {
+  @apply text-xl font-bold mt-8 mb-4;
+}
+
+.prose h3 {
+  @apply text-lg font-bold mt-6 mb-3;
+}
+
+.prose ul {
+  @apply my-4 ml-6 list-disc;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose code {
+  @apply bg-secondary px-1 py-0.5 rounded text-sm;
+}
+
+.prose pre {
+  @apply bg-secondary p-4 rounded-md my-4 overflow-x-auto;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0;
+}
+
+.prose a {
+  @apply text-accent hover:underline;
+}
+
+.prose strong {
+  @apply font-bold;
+}
+
+.prose em {
+  @apply italic;
+}
+
