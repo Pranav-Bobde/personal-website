@@ -1,8 +1,32 @@
+"use client"
+
 import { siteConfig } from "@/lib/config"
 import Link from "next/link"
 import { MapPin, Briefcase } from "lucide-react"
+import { useEffect } from "react"
 
 export default function Home() {
+  // Handle keyboard navigation for social links
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only trigger if no input elements are focused
+      if (document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement) {
+        return
+      }
+
+      // Open social links in new tabs with single key press
+      Object.entries(siteConfig.social).forEach(([key, url]) => {
+        if (e.key.toLowerCase() === key.charAt(0).toLowerCase()) {
+          e.preventDefault()
+          window.open(key === "email" ? `mailto:${url}` : url, "_blank")
+        }
+      })
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
+
   return (
     <div className="animate-fade-in">
       <div className="space-y-8">
@@ -41,17 +65,21 @@ export default function Home() {
         <div className="pt-8" style={{ animationDelay: "400ms" }}>
           <h2 className="section-title">links</h2>
           <div className="flex flex-wrap gap-4 text-sm">
-            {Object.entries(siteConfig.social).map(([key, url]) => (
-              <Link
-                key={key}
-                href={key === "email" ? `mailto:${url}` : url}
-                className="hover:text-accent transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {key}
-              </Link>
-            ))}
+            {Object.entries(siteConfig.social).map(([key, url], index) => {
+              // Assign shortcut keys based on the first letter of each platform
+              const shortcutKey = key.charAt(0);
+              return (
+                <Link
+                  key={key}
+                  href={key === "email" ? `mailto:${url}` : url}
+                  className="hover:text-accent transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  [{shortcutKey}] {key}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
