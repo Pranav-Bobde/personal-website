@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: "Pranav Bobde",
-  title: "Software Engineer & Developer",
-  location: "Nagpur",
+  title: "CTO @Senslyze",
+  location: "Nagpur, India",
   bio: {
-    main: `I'm a developer who's driven by curiosity and growth. I need to know exactly how stuff works - can't just "leave it if it works.". I'm big on 1st principles thinking. I live in terminal and obsess over optimizing my workflows and tools to get max productivity.`,
+    main: `I'm a developer by passion, who's driven by curiosity and growth. I need to know exactly how stuff works - can't just "leave it if it works.". I'm big on 1st principles thinking. I live in terminal and obsess over optimizing my workflows and tools to get max productivity.`,
     secondaryTitle: "",
     secondary: ``
   },
