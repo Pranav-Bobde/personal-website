@@ -5,10 +5,18 @@ import { useEffect, useState } from "react"
 interface KeyboardNavigationOptions {
   itemSelector: string
   onEnter?: (element: HTMLElement) => void
+  onPreviousPage?: () => void
+  onNextPage?: () => void
   searchEnabled?: boolean
 }
 
-export function useKeyboardNavigation({ itemSelector, onEnter, searchEnabled = true }: KeyboardNavigationOptions) {
+export function useKeyboardNavigation({
+  itemSelector,
+  onEnter,
+  onPreviousPage,
+  onNextPage,
+  searchEnabled = true,
+}: KeyboardNavigationOptions) {
   const [activeIndex, setActiveIndex] = useState(-1)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -43,29 +51,37 @@ export function useKeyboardNavigation({ itemSelector, onEnter, searchEnabled = t
       }
 
       // Navigation between items
-      if ((e.key === "j" && e.ctrlKey) || (e.key === "ArrowDown" && e.ctrlKey)) {
+      if (e.key === "j" || e.key === "ArrowDown") {
         e.preventDefault()
         setActiveIndex((prev) => {
           const next = prev + 1 >= items.length ? 0 : prev + 1
           items[next]?.focus()
           return next
         })
-      } else if ((e.key === "k" && e.ctrlKey) || (e.key === "ArrowUp" && e.ctrlKey)) {
+      } else if (e.key === "k" || e.key === "ArrowUp") {
         e.preventDefault()
         setActiveIndex((prev) => {
           const next = prev - 1 < 0 ? items.length - 1 : prev - 1
           items[next]?.focus()
           return next
         })
+      } else if (e.key === "h" || e.key === "ArrowLeft") {
+        e.preventDefault()
+        onPreviousPage?.()
+        setActiveIndex(-1)
+      } else if (e.key === "l" || e.key === "ArrowRight") {
+        e.preventDefault()
+        onNextPage?.()
+        setActiveIndex(-1)
       } else if (e.key === "Enter" && activeIndex >= 0) {
         e.preventDefault()
         onEnter?.(items[activeIndex])
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [itemSelector, activeIndex, isSearchOpen, onEnter, searchEnabled])
+    window.addEventListener("keydown", handleKeyDown, true)
+    return () => window.removeEventListener("keydown", handleKeyDown, true)
+  }, [itemSelector, activeIndex, isSearchOpen, onEnter, onNextPage, onPreviousPage, searchEnabled])
 
   return {
     activeIndex,
@@ -75,4 +91,3 @@ export function useKeyboardNavigation({ itemSelector, onEnter, searchEnabled = t
     setIsSearchOpen,
   }
 }
-

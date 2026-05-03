@@ -14,8 +14,8 @@ const spaceMono = Space_Mono({
 
 export const metadata: Metadata = {
   title: `${siteConfig.name} | ${siteConfig.title}`,
-  description: siteConfig.bio,
-    generator: 'v0.dev'
+  description: siteConfig.bio.main,
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
@@ -38,7 +38,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-
-import './globals.css'

@@ -13,6 +13,10 @@ export function Navigation() {
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) {
+        return
+      }
+
       // Only trigger if no input elements are focused
       if (document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement) {
         return
@@ -55,4 +59,3 @@ export function Navigation() {
     </nav>
   )
 }
-

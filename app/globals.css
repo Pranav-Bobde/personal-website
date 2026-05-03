@@ -113,11 +113,31 @@
 }
 
 .entry-item {
-  @apply border border-transparent hover:border-accent/20 p-4 rounded-md transition-all duration-200;
+  @apply px-3 py-2 transition-colors duration-150 hover:bg-secondary/20;
 }
 
 .entry-item:focus-visible {
-  @apply outline-none ring-2 ring-accent;
+  @apply outline-none;
+}
+
+.entry-item.is-active {
+  @apply bg-secondary/20;
+}
+
+.entry-item.is-active .blog-item-title {
+  @apply text-accent;
+}
+
+.blog-empty-state {
+  @apply text-lg leading-relaxed;
+}
+
+.blog-post-shell {
+  @apply md:max-w-2xl md:mx-auto;
+}
+
+.blog-post-title {
+  @apply mb-8 text-4xl font-bold leading-tight tracking-tight text-foreground md:text-5xl;
 }
 
 .tech-tag {
@@ -126,35 +146,35 @@
 
 /* Blog post styling */
 .prose {
-  @apply text-foreground;
+  @apply text-muted-foreground text-lg leading-loose;
 }
 
 .prose p {
-  @apply my-4;
+  @apply my-8;
 }
 
 .prose h2 {
-  @apply text-xl font-bold mt-8 mb-4;
+  @apply text-3xl font-bold leading-tight text-foreground mt-20 mb-8;
 }
 
 .prose h3 {
-  @apply text-lg font-bold mt-6 mb-3;
+  @apply text-2xl font-bold leading-tight text-foreground mt-14 mb-6;
 }
 
 .prose ul {
-  @apply my-4 ml-6 list-disc;
+  @apply my-8 ml-6 list-disc space-y-3;
 }
 
 .prose li {
-  @apply mb-2;
+  @apply pl-1;
 }
 
 .prose code {
-  @apply bg-secondary px-1 py-0.5 rounded text-sm;
+  @apply bg-secondary px-1.5 py-0.5 rounded text-base text-foreground;
 }
 
 .prose pre {
-  @apply bg-secondary p-4 rounded-md my-4 overflow-x-auto;
+  @apply bg-secondary/40 border border-border p-6 rounded-md my-10 overflow-x-auto text-muted-foreground;
 }
 
 .prose pre code {
@@ -166,10 +186,9 @@
 }
 
 .prose strong {
-  @apply font-bold;
+  @apply font-bold text-foreground;
 }
 
 .prose em {
   @apply italic;
 }
-

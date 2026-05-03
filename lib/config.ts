@@ -10,7 +10,7 @@ export const siteConfig = {
 
   sections: {
     home: true,
-    blogs: false,
+    blogs: true,
     projects: false,
   },
   social: {

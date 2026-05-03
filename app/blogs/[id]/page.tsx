@@ -1,17 +1,22 @@
-import { blogPosts } from "@/lib/blog-data"
+import { getBlogPost, getBlogPosts } from "@/lib/blog-data"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
+}
+
+export function generateStaticParams() {
+  return getBlogPosts().map((post) => ({ id: post.id }))
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = blogPosts.find((post) => post.id === params.id)
+  const { id } = await params
+  const post = getBlogPost(id)
 
   if (!post) {
     return {
@@ -25,8 +30,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = blogPosts.find((post) => post.id === params.id)
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const { id } = await params
+  const post = getBlogPost(id)
 
   if (!post) {
     notFound()
@@ -50,13 +56,15 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-12">
-        <h1 className="section-title text-3xl md:text-4xl">{post.title}</h1>
-        <p className="text-sm text-muted-foreground mt-2">{post.date}</p>
+      <div className="mb-12 blog-post-shell">
+        <h1 className="section-title blog-post-title">{post.title}</h1>
+        <p className="text-sm text-muted-foreground mt-2">
+          {[post.date, post.readingTime].filter(Boolean).join(" • ")}
+        </p>
 
-        <article className="mt-8">
+        <article className="mt-14">
           <div
-            className="prose prose-invert max-w-none prose-headings:text-white prose-a:text-accent"
+            className="prose max-w-none"
             dangerouslySetInnerHTML={{ __html: `<p class="my-4">${contentHtml}</p>` }}
           />
         </article>
@@ -74,4 +82,3 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     </div>
   )
 }
-
