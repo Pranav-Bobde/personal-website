@@ -1,0 +1,3 @@
+{
+  "extends": "@oreno-website.bts-migration/config/tsconfig.base.json"
+}
