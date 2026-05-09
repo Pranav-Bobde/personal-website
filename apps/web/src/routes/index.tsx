@@ -1,50 +1,97 @@
-import { useQuery } from "@tanstack/react-query";
+import { useHotkey } from "@tanstack/react-hotkeys";
 import { createFileRoute } from "@tanstack/react-router";
+import { Briefcase, MapPin } from "lucide-react";
 
-import { orpc } from "@/utils/orpc";
+import { siteConfig } from "@/lib/config";
 
 export const Route = createFileRoute("/")({
-  component: HomeComponent,
+  component: Home,
 });
 
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
+function Home() {
+  useHotkey("g", () => {
+    window.open(siteConfig.social.github, "_blank", "noopener,noreferrer");
+  });
 
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
+  useHotkey("t", () => {
+    window.open(siteConfig.social.twitter, "_blank", "noopener,noreferrer");
+  });
 
-function HomeComponent() {
-  const healthCheck = useQuery(orpc.healthCheck.queryOptions());
+  useHotkey("l", () => {
+    window.open(siteConfig.social.linkedin, "_blank", "noopener,noreferrer");
+  });
+
+  useHotkey("e", () => {
+    window.open(`mailto:${siteConfig.social.email}`, "_blank", "noopener,noreferrer");
+  });
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-2">
-      <pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
-      <div className="grid gap-6">
-        <section className="rounded-lg border p-4">
-          <h2 className="mb-2 font-medium">API Status</h2>
-          <div className="flex items-center gap-2">
-            <div
-              className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
-            />
-            <span className="text-muted-foreground text-sm">
-              {healthCheck.isLoading
-                ? "Checking..."
-                : healthCheck.data
-                  ? "Connected"
-                  : "Disconnected"}
-            </span>
+    <div className="animate-fade-in">
+      <div className="space-y-8">
+        <h1 className="text-4xl font-bold">{siteConfig.name}</h1>
+
+        <div
+          className="flex items-center space-x-2 text-sm text-muted-foreground"
+          style={{ animationDelay: "100ms" }}
+        >
+          <MapPin size={16} />
+          <span>{siteConfig.location}</span>
+        </div>
+
+        <div
+          className="flex items-center space-x-2 text-sm text-muted-foreground"
+          style={{ animationDelay: "200ms" }}
+        >
+          <Briefcase size={16} />
+          <span>{siteConfig.title}</span>
+        </div>
+
+        <div className="space-y-4" style={{ animationDelay: "300ms" }}>
+          <p className="text-muted-foreground">{siteConfig.bio.main}</p>
+
+          <div className="mt-6">
+            <h3 className="mb-2 text-lg font-semibold">{siteConfig.bio.secondaryTitle}</h3>
+            <p className="text-muted-foreground">{siteConfig.bio.secondary}</p>
           </div>
-        </section>
+        </div>
+
+        <div className="pt-8" style={{ animationDelay: "400ms" }}>
+          <h2 className="section-title">links</h2>
+          <div className="flex flex-wrap gap-4 text-sm">
+            <a
+              href={siteConfig.social.github}
+              className="hover:text-accent transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              [g] github
+            </a>
+            <a
+              href={siteConfig.social.twitter}
+              className="hover:text-accent transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              [t] twitter
+            </a>
+            <a
+              href={siteConfig.social.linkedin}
+              className="hover:text-accent transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              [l] linkedin
+            </a>
+            <a
+              href={`mailto:${siteConfig.social.email}`}
+              className="hover:text-accent transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              [e] email
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

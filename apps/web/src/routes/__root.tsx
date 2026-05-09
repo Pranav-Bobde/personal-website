@@ -1,14 +1,13 @@
-import { Toaster } from "@oreno-website.bts-migration/ui/components/sonner";
 import type { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createMiddleware } from "@tanstack/react-start";
 import { evlogErrorHandler } from "evlog/nitro/v3";
+import { HotkeysProvider } from "@tanstack/react-hotkeys";
 
 import type { orpc } from "@/utils/orpc";
+import { siteConfig } from "@/lib/config";
 
-import Header from "../components/header";
+import { Navigation } from "@/components/navigation";
 
 import appCss from "../index.css?url";
 export interface RouterAppContext {
@@ -31,7 +30,15 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "My App",
+        title: `${siteConfig.name} | ${siteConfig.title}`,
+      },
+      {
+        name: "description",
+        content: siteConfig.bio.main,
+      },
+      {
+        name: "generator",
+        content: "v0.dev",
       },
     ],
     links: [
@@ -52,13 +59,14 @@ function RootDocument() {
         <HeadContent />
       </head>
       <body>
-        <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
-          <Outlet />
-        </div>
-        <Toaster richColors />
-        <TanStackRouterDevtools position="bottom-left" />
-        <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
+        <HotkeysProvider>
+          <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8">
+            <div className="mx-auto w-full max-w-3xl">
+              <Navigation />
+              <Outlet />
+            </div>
+          </main>
+        </HotkeysProvider>
         <Scripts />
       </body>
     </html>
