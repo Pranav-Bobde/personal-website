@@ -1,6 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { ArrowLeft, PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 
 import { renderMarkdown, type TocLink } from "@/lib/markdown";
 import { fetchBlogPost } from "@/server/blogs";
@@ -19,32 +18,16 @@ export const Route = createFileRoute("/blogs/$id")({
 function BlogPostPage() {
   const post = Route.useLoaderData();
   const { html: contentHtml, toc } = renderMarkdown(post.content);
-  const [isTocOpen, setIsTocOpen] = useState(true);
 
   return (
     <div className="animate-fade-in">
-      <div className={`blog-post-shell mb-12 ${isTocOpen ? "" : "is-toc-collapsed"}`}>
+      <div className="blog-post-shell mb-12">
         <div className="blog-post-layout">
           <aside className="blog-toc" aria-label="Table of contents">
-            <button
-              type="button"
-              className="blog-toc-toggle"
-              onClick={() => setIsTocOpen((current) => !current)}
-              aria-expanded={isTocOpen}
-              aria-label={isTocOpen ? "Collapse table of content" : "Expand table of content"}
-            >
-              {isTocOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
-              <span>{isTocOpen ? "hide" : "toc"}</span>
-            </button>
-
-            {isTocOpen ? (
-              <>
-                <p className="blog-toc-title">Table Of Content</p>
-                <nav>
-                  <TocLinks links={toc} />
-                </nav>
-              </>
-            ) : null}
+            <p className="blog-toc-title">Table Of Content</p>
+            <nav>
+              <TocLinks links={toc} />
+            </nav>
           </aside>
 
           <div className="blog-post-main">
