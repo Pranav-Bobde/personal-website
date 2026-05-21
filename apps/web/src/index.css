@@ -117,11 +117,59 @@
 }
 
 .blog-post-shell {
-  @apply md:max-w-2xl md:mx-auto;
+  @apply mx-auto max-w-7xl;
+}
+
+.blog-post-header {
+  @apply max-w-3xl;
 }
 
 .blog-post-title {
-  @apply mb-8 text-4xl font-bold leading-tight tracking-tight text-foreground md:text-5xl;
+  @apply mb-4 text-2xl leading-tight font-bold text-foreground md:text-3xl;
+}
+
+.blog-post-layout {
+  @apply grid gap-10 lg:grid-cols-[18rem_minmax(0,48rem)] lg:justify-center;
+}
+
+.blog-post-shell.is-toc-collapsed .blog-post-layout {
+  @apply lg:grid-cols-[4.5rem_minmax(0,48rem)];
+}
+
+.blog-post-main {
+  @apply min-w-0;
+}
+
+.blog-post-content {
+  @apply mt-10 min-w-0;
+}
+
+.blog-toc {
+  @apply border-border hidden self-start border-r pr-6 text-sm text-muted-foreground lg:sticky lg:top-24 lg:block;
+}
+
+.blog-post-shell.is-toc-collapsed .blog-toc {
+  @apply pr-3;
+}
+
+.blog-toc-toggle {
+  @apply hover:text-accent mb-5 flex items-center gap-2 text-xs text-muted-foreground transition-colors;
+}
+
+.blog-toc-title {
+  @apply mb-4 text-foreground;
+}
+
+.blog-toc-list {
+  @apply space-y-3;
+}
+
+.blog-toc-list .blog-toc-list {
+  @apply mt-2 space-y-1 pl-3;
+}
+
+.blog-toc a {
+  @apply hover:text-accent block leading-relaxed transition-colors;
 }
 
 .tech-tag {
@@ -129,23 +177,31 @@
 }
 
 .prose {
-  @apply text-lg leading-loose text-muted-foreground;
+  @apply text-base leading-relaxed text-muted-foreground;
 }
 
 .prose p {
-  @apply my-8;
+  @apply my-6;
+}
+
+.prose h1 {
+  @apply mb-6 text-2xl leading-tight font-bold text-foreground;
 }
 
 .prose h2 {
-  @apply mt-20 mb-8 text-3xl leading-tight font-bold text-foreground;
+  @apply mt-12 mb-5 scroll-mt-24 text-2xl leading-tight font-bold text-foreground;
 }
 
 .prose h3 {
-  @apply mt-14 mb-6 text-2xl leading-tight font-bold text-foreground;
+  @apply mt-8 mb-4 scroll-mt-24 text-xl leading-tight font-bold text-foreground;
 }
 
 .prose ul {
-  @apply my-8 ml-6 list-disc space-y-3;
+  @apply my-6 ml-6 list-disc space-y-2;
+}
+
+.prose ol {
+  @apply my-6 ml-6 list-decimal space-y-2;
 }
 
 .prose li {
@@ -153,11 +209,11 @@
 }
 
 .prose code {
-  @apply bg-secondary rounded px-1.5 py-0.5 text-base text-foreground;
+  @apply bg-secondary rounded px-1.5 py-0.5 text-sm text-foreground;
 }
 
 .prose pre {
-  @apply border-border bg-secondary/40 my-10 overflow-x-auto rounded-md border p-6 text-muted-foreground;
+  @apply border-border bg-secondary/40 my-8 overflow-x-auto rounded-md border p-4 text-muted-foreground;
 }
 
 .prose pre code {
@@ -174,4 +230,37 @@
 
 .prose em {
   @apply italic;
+}
+
+.prose hr {
+  @apply border-border my-10;
+}
+
+.prose details {
+  @apply border-border bg-secondary/10 my-6 border px-4 py-3;
+}
+
+.prose summary {
+  @apply cursor-pointer text-foreground;
+}
+
+.prose details > div {
+  @apply mt-4;
+}
+
+.prose .markdown-table-wrap {
+  @apply my-10 overflow-x-auto;
+}
+
+.prose table {
+  @apply w-full border-collapse text-left text-base;
+}
+
+.prose th,
+.prose td {
+  @apply border-border border px-3 py-2 align-top;
+}
+
+.prose th {
+  @apply bg-secondary/30 text-foreground;
 }
