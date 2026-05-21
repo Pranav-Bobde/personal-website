@@ -132,10 +132,6 @@
   @apply grid gap-10 lg:grid-cols-[18rem_minmax(0,48rem)] lg:justify-center;
 }
 
-.blog-post-shell.is-toc-collapsed .blog-post-layout {
-  @apply lg:grid-cols-[4.5rem_minmax(0,48rem)];
-}
-
 .blog-post-main {
   @apply min-w-0;
 }
@@ -145,15 +141,7 @@
 }
 
 .blog-toc {
-  @apply border-border hidden self-start border-r pr-6 text-sm text-muted-foreground lg:sticky lg:top-24 lg:block;
-}
-
-.blog-post-shell.is-toc-collapsed .blog-toc {
-  @apply pr-3;
-}
-
-.blog-toc-toggle {
-  @apply hover:text-accent mb-5 flex items-center gap-2 text-xs text-muted-foreground transition-colors;
+  @apply border-border bg-background/95 hidden self-start border p-5 text-sm text-muted-foreground shadow-[16px_0_40px_rgba(0,0,0,0.35)] lg:sticky lg:top-24 lg:block;
 }
 
 .blog-toc-title {
