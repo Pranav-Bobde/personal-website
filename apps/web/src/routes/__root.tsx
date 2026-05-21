@@ -1,5 +1,11 @@
 import type { QueryClient } from "@tanstack/react-query";
-import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRouteWithContext,
+  useLocation,
+} from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import { evlogErrorHandler } from "evlog/nitro/v3";
 import { HotkeysProvider } from "@tanstack/react-hotkeys";
@@ -53,6 +59,9 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const isBlogPostRoute = pathname.startsWith("/blogs/");
+
   return (
     <html lang="en" className="dark">
       <head>
@@ -60,8 +69,8 @@ function RootDocument() {
       </head>
       <body>
         <HotkeysProvider>
-          <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8">
-            <div className="mx-auto w-full max-w-3xl">
+          <main className="flex min-h-screen flex-col items-center p-4 pt-16 md:p-8 md:pt-24">
+            <div className={`mx-auto w-full ${isBlogPostRoute ? "max-w-7xl" : "max-w-3xl"}`}>
               <Navigation />
               <Outlet />
             </div>

@@ -1,7 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const BLOGS_DIRECTORY = path.join(process.cwd(), "content", "blogs");
+const BLOGS_DIRECTORY_CANDIDATES = [
+  path.join(process.cwd(), "content", "blogs"),
+  path.join(process.cwd(), "..", "..", "content", "blogs"),
+];
 
 export interface BlogPost {
   id: string;
@@ -83,28 +86,44 @@ function parseFrontmatter(markdown: string): { metadata: BlogFrontmatter; conten
 
 function parsePost(fileName: string): BlogPost {
   const id = fileName.replace(/\.md$/, "");
-  const filePath = path.join(BLOGS_DIRECTORY, fileName);
+  const filePath = path.join(getBlogsDirectory() ?? "", fileName);
   const fileContent = fs.readFileSync(filePath, "utf8");
   const { metadata, content } = parseFrontmatter(fileContent);
+  const title = metadata.title ?? slugToTitle(id);
+  const contentWithoutDuplicateTitle = content.replace(/^#\s+(.+)\n+/, (match, heading: string) => {
+    return heading.trim() === title ? "" : match;
+  });
 
   return {
     id,
-    title: metadata.title ?? slugToTitle(id),
+    title,
     date: metadata.date ?? "",
     readingTime: metadata.readingTime ?? metadata.readTime ?? "",
     summary: metadata.summary ?? metadata.description ?? "",
     tags: metadata.tags ?? [],
-    content,
+    content: contentWithoutDuplicateTitle.trim(),
   };
 }
 
+function getBlogsDirectory() {
+  return BLOGS_DIRECTORY_CANDIDATES.find((directory) => {
+    if (!fs.existsSync(directory)) {
+      return false;
+    }
+
+    return fs.readdirSync(directory).some((fileName) => fileName.endsWith(".md"));
+  });
+}
+
 export function getBlogPosts(): BlogPost[] {
-  if (!fs.existsSync(BLOGS_DIRECTORY)) {
+  const blogsDirectory = getBlogsDirectory();
+
+  if (!blogsDirectory) {
     return [];
   }
 
   return fs
-    .readdirSync(BLOGS_DIRECTORY)
+    .readdirSync(blogsDirectory)
     .filter((fileName) => fileName.endsWith(".md"))
     .map(parsePost)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
