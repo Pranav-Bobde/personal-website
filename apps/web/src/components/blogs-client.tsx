@@ -81,7 +81,7 @@ export function BlogsClient({ posts }: BlogsClientProps) {
           disabled={currentPage === 1}
           className="nav-item disabled:pointer-events-none disabled:opacity-40"
         >
-          [h] prev
+          [Ctrl+H] prev
         </button>
         <span className="text-muted-foreground">
           page <span className="text-foreground">{currentPage}</span> / {totalPages}
@@ -92,7 +92,7 @@ export function BlogsClient({ posts }: BlogsClientProps) {
           disabled={currentPage === totalPages}
           className="nav-item disabled:pointer-events-none disabled:opacity-40"
         >
-          [l] next
+          [Ctrl+L] next
         </button>
       </div>
     </>

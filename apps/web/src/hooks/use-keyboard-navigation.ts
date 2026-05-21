@@ -103,7 +103,7 @@ export function useKeyboardNavigation({
   );
 
   useHotkey(
-    "h",
+    "ctrl+h",
     () => {
       onPreviousPage?.();
       setActiveIndex(-1);
@@ -127,7 +127,7 @@ export function useKeyboardNavigation({
   );
 
   useHotkey(
-    "l",
+    "ctrl+l",
     () => {
       onNextPage?.();
       setActiveIndex(-1);

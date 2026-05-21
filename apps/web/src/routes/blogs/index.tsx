@@ -19,7 +19,7 @@ function BlogsPage() {
           <p className="mb-8 text-sm text-muted-foreground">
             use <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">j/k</kbd> or{" "}
             <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">↑/↓</kbd> for entries •{" "}
-            <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">h/l</kbd> or{" "}
+            <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">ctrl + h/l</kbd> or{" "}
             <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">←/→</kbd> for pages
           </p>
         ) : null}

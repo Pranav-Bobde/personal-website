@@ -16,7 +16,7 @@ export function Navigation() {
       preventDefault: true,
       stopPropagation: true,
       ignoreInputElements: true,
-      enabled: !pathname.startsWith("/blogs"),
+      enabled: true,
     },
   );
 
