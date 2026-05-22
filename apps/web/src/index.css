@@ -160,6 +160,10 @@
   @apply hover:text-accent block leading-relaxed transition-colors;
 }
 
+.blog-toc a.is-active {
+  @apply text-accent;
+}
+
 .tech-tag {
   @apply bg-secondary mr-2 mb-2 inline-block rounded-md px-2 py-1 text-xs;
 }
