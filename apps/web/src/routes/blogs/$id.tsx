@@ -1,8 +1,9 @@
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MessageCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { siteConfig } from "@/lib/config";
 import { renderMarkdown, type TocLink } from "@/lib/markdown";
 import { fetchBlogPost } from "@/server/blogs";
 
@@ -23,7 +24,10 @@ function BlogPostPage() {
   const post = Route.useLoaderData();
   const { html: contentHtml, toc } = renderMarkdown(post.content);
   const activeSectionId = useActiveSectionId(toc);
-  useBlogPostHotkeys(toc);
+  const feedbackHref = `${siteConfig.social.twitterDm}&text=${encodeURIComponent(
+    `Feedback on "${post.title}": `,
+  )}`;
+  useBlogPostHotkeys(toc, feedbackHref);
 
   return (
     <div className="animate-fade-in">
@@ -48,13 +52,22 @@ function BlogPostPage() {
               <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: contentHtml }} />
             </article>
 
-            <div className="mt-12 border-t border-muted pt-4">
+            <div className="mt-12 flex items-center justify-between gap-4 border-t border-muted pt-4">
               <a
                 href="/blogs"
                 className="hover:text-accent flex items-center text-sm text-muted-foreground transition-colors"
               >
                 <ArrowLeft size={16} className="mr-2" />
                 Back to all posts
+              </a>
+              <a
+                href={feedbackHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-accent flex items-center text-sm text-muted-foreground transition-colors"
+              >
+                [f] Give feedback
+                <MessageCircle size={16} className="ml-2" />
               </a>
             </div>
           </div>
@@ -95,7 +108,7 @@ function useActiveSectionId(toc: TocLink[]) {
   return activeSectionId;
 }
 
-function useBlogPostHotkeys(toc: TocLink[]) {
+function useBlogPostHotkeys(toc: TocLink[], feedbackHref: string) {
   const lastGPressTimeRef = useRef(0);
   useReaderScrollHotkeys();
 
@@ -147,6 +160,13 @@ function useBlogPostHotkeys(toc: TocLink[]) {
   useHotkey("8", () => scrollToSection(7), hotkeyOptions);
   useHotkey("9", () => scrollToSection(8), hotkeyOptions);
   useHotkey("0", () => scrollToSection(9), hotkeyOptions);
+  useHotkey(
+    "f",
+    () => {
+      window.open(feedbackHref, "_blank", "noopener,noreferrer");
+    },
+    hotkeyOptions,
+  );
 }
 
 function useReaderScrollHotkeys() {
