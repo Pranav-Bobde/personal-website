@@ -4,14 +4,14 @@ import { ArrowLeft, MessageCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { siteConfig } from "@/lib/config";
+import { getBlogPost } from "@/lib/blog-data";
 import { renderMarkdown, type TocLink } from "@/lib/markdown";
-import { fetchBlogPost } from "@/server/blogs";
 
 type ScrollHotkey = "j" | "k" | "d" | "u";
 
 export const Route = createFileRoute("/blogs/$id")({
-  loader: async ({ params }) => {
-    const post = await fetchBlogPost({ data: { id: params.id } });
+  loader: ({ params }) => {
+    const post = getBlogPost(params.id);
     if (!post) {
       throw redirect({ to: "/blogs" });
     }

@@ -1,10 +1,8 @@
-import fs from "node:fs";
-import path from "node:path";
-
-const BLOGS_DIRECTORY_CANDIDATES = [
-  path.join(process.cwd(), "content", "blogs"),
-  path.join(process.cwd(), "..", "..", "content", "blogs"),
-];
+const blogMarkdownByPath = import.meta.glob("../../../../content/blogs/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
 
 export interface BlogPost {
   id: string;
@@ -84,10 +82,7 @@ function parseFrontmatter(markdown: string): { metadata: BlogFrontmatter; conten
   return { metadata, content };
 }
 
-function parsePost(fileName: string): BlogPost {
-  const id = fileName.replace(/\.md$/, "");
-  const filePath = path.join(getBlogsDirectory() ?? "", fileName);
-  const fileContent = fs.readFileSync(filePath, "utf8");
+function buildPost(id: string, fileContent: string): BlogPost {
   const { metadata, content } = parseFrontmatter(fileContent);
   const title = metadata.title ?? slugToTitle(id);
   const contentWithoutDuplicateTitle = content.replace(/^#\s+(.+)\n+/, (match, heading: string) => {
@@ -105,27 +100,13 @@ function parsePost(fileName: string): BlogPost {
   };
 }
 
-function getBlogsDirectory() {
-  return BLOGS_DIRECTORY_CANDIDATES.find((directory) => {
-    if (!fs.existsSync(directory)) {
-      return false;
-    }
-
-    return fs.readdirSync(directory).some((fileName) => fileName.endsWith(".md"));
-  });
+function filePathToPostId(filePath: string) {
+  return filePath.split("/").pop()?.replace(/\.md$/, "") ?? filePath;
 }
 
 export function getBlogPosts(): BlogPost[] {
-  const blogsDirectory = getBlogsDirectory();
-
-  if (!blogsDirectory) {
-    return [];
-  }
-
-  return fs
-    .readdirSync(blogsDirectory)
-    .filter((fileName) => fileName.endsWith(".md"))
-    .map(parsePost)
+  return Object.entries(blogMarkdownByPath)
+    .map(([filePath, fileContent]) => buildPost(filePathToPostId(filePath), fileContent))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 

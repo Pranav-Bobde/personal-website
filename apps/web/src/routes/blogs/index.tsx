@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { BlogsClient } from "@/components/blogs-client";
-import { listBlogPosts } from "@/server/blogs";
+import { getBlogPosts } from "@/lib/blog-data";
 
 export const Route = createFileRoute("/blogs/")({
-  loader: () => listBlogPosts(),
+  loader: () => getBlogPosts(),
   component: BlogsPage,
 });
 
