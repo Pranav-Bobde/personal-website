@@ -3,52 +3,17 @@ import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 
 import { siteConfig } from "@/lib/config";
 
+const hotkeyOptions = {
+  preventDefault: true,
+  stopPropagation: true,
+  ignoreInputs: true,
+};
+
 export function Navigation() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const navigate = useNavigate();
 
-  useHotkey(
-    "h",
-    () => {
-      navigate({ to: "/" });
-    },
-    {
-      preventDefault: true,
-      stopPropagation: true,
-      ignoreInputElements: true,
-      enabled: true,
-    },
-  );
-
-  useHotkey(
-    "b",
-    () => {
-      if (siteConfig.sections.blogs) {
-        navigate({ to: "/blogs" });
-      }
-    },
-    {
-      preventDefault: true,
-      stopPropagation: true,
-      ignoreInputElements: true,
-      enabled: siteConfig.sections.blogs,
-    },
-  );
-
-  useHotkey(
-    "p",
-    () => {
-      if (siteConfig.sections.projects) {
-        navigate({ to: "/projects" });
-      }
-    },
-    {
-      preventDefault: true,
-      stopPropagation: true,
-      ignoreInputElements: true,
-      enabled: siteConfig.sections.projects,
-    },
-  );
+  useNavigationHotkeys(navigate);
 
   return (
     <nav className="mb-8 flex justify-center space-x-6 text-sm">
@@ -71,5 +36,44 @@ export function Navigation() {
         </Link>
       ) : null}
     </nav>
+  );
+}
+
+function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
+  useHotkey(
+    "H",
+    () => {
+      navigate({ to: "/" });
+    },
+    {
+      ...hotkeyOptions,
+      enabled: true,
+    },
+  );
+
+  useHotkey(
+    "B",
+    () => {
+      if (siteConfig.sections.blogs) {
+        navigate({ to: "/blogs" });
+      }
+    },
+    {
+      ...hotkeyOptions,
+      enabled: siteConfig.sections.blogs,
+    },
+  );
+
+  useHotkey(
+    "P",
+    () => {
+      if (siteConfig.sections.projects) {
+        navigate({ to: "/projects" });
+      }
+    },
+    {
+      ...hotkeyOptions,
+      enabled: siteConfig.sections.projects,
+    },
   );
 }

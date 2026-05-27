@@ -9,19 +9,19 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  useHotkey("g", () => {
+  useHotkey("G", () => {
     window.open(siteConfig.social.github, "_blank", "noopener,noreferrer");
   });
 
-  useHotkey("t", () => {
+  useHotkey("T", () => {
     window.open(siteConfig.social.twitter, "_blank", "noopener,noreferrer");
   });
 
-  useHotkey("l", () => {
+  useHotkey("L", () => {
     window.open(siteConfig.social.linkedin, "_blank", "noopener,noreferrer");
   });
 
-  useHotkey("e", () => {
+  useHotkey("E", () => {
     window.open(`mailto:${siteConfig.social.email}`, "_blank", "noopener,noreferrer");
   });
 

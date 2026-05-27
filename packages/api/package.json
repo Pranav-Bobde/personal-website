@@ -9,15 +9,11 @@
       "default": "./src/*.ts"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
   "dependencies": {
-    "@oreno-website.bts-migration/env": "workspace:*",
-    "@orpc/client": "catalog:",
-    "@orpc/openapi": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/zod": "catalog:",
-    "dotenv": "catalog:",
-    "zod": "catalog:"
+    "@orpc/server": "catalog:"
   },
   "devDependencies": {
     "@oreno-website.bts-migration/config": "workspace:*",

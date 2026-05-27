@@ -6,6 +6,12 @@ import { useEffect, useRef, useState } from "react";
 import { siteConfig } from "@/lib/config";
 import { getBlogPost } from "@/lib/blog-data";
 import { renderMarkdown, type TocLink } from "@/lib/markdown";
+import {
+  trackBlogFeedbackClicked,
+  trackBlogScrollDepth,
+  trackBlogViewed,
+  type BlogScrollDepth,
+} from "@/lib/analytics";
 
 type ScrollHotkey = "j" | "k" | "d" | "u";
 
@@ -27,7 +33,10 @@ function BlogPostPage() {
   const feedbackHref = `${siteConfig.social.twitterDm}&text=${encodeURIComponent(
     `Feedback on "${post.title}": `,
   )}`;
-  useBlogPostHotkeys(toc, feedbackHref);
+  useBlogAnalytics(post);
+  useBlogPostHotkeys(toc, feedbackHref, () => {
+    trackBlogFeedbackClicked(post, "hotkey");
+  });
 
   return (
     <div className="animate-fade-in">
@@ -64,6 +73,9 @@ function BlogPostPage() {
                 href={feedbackHref}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  trackBlogFeedbackClicked(post, "footer");
+                }}
                 className="hover:text-accent flex items-center text-sm text-muted-foreground transition-colors"
               >
                 [f] Give feedback
@@ -87,7 +99,10 @@ function useActiveSectionId(toc: TocLink[]) {
 
     const updateActiveSection = () => {
       const currentSection =
-        toc.findLast((link) => {
+        toc
+          .slice()
+          .reverse()
+          .find((link) => {
           const heading = document.getElementById(link.id);
           return heading ? heading.getBoundingClientRect().top <= 140 : false;
         }) ?? toc[0];
@@ -108,18 +123,18 @@ function useActiveSectionId(toc: TocLink[]) {
   return activeSectionId;
 }
 
-function useBlogPostHotkeys(toc: TocLink[], feedbackHref: string) {
+function useBlogPostHotkeys(toc: TocLink[], feedbackHref: string, onFeedbackHotkey: () => void) {
   const lastGPressTimeRef = useRef(0);
   useReaderScrollHotkeys();
 
   const hotkeyOptions = {
     preventDefault: true,
     stopPropagation: true,
-    ignoreInputElements: true,
+    ignoreInputs: true,
   };
 
   useHotkey(
-    "g",
+    "G",
     () => {
       const now = Date.now();
       if (now - lastGPressTimeRef.current <= 650) {
@@ -134,7 +149,7 @@ function useBlogPostHotkeys(toc: TocLink[], feedbackHref: string) {
   );
 
   useHotkey(
-    "shift+g",
+    "Shift+G",
     () => {
       window.scrollTo({ top: document.documentElement.scrollHeight });
     },
@@ -161,12 +176,54 @@ function useBlogPostHotkeys(toc: TocLink[], feedbackHref: string) {
   useHotkey("9", () => scrollToSection(8), hotkeyOptions);
   useHotkey("0", () => scrollToSection(9), hotkeyOptions);
   useHotkey(
-    "f",
+    "F",
     () => {
+      onFeedbackHotkey();
       window.open(feedbackHref, "_blank", "noopener,noreferrer");
     },
     hotkeyOptions,
   );
+}
+
+function useBlogAnalytics(post: ReturnType<typeof Route.useLoaderData>) {
+  const reachedDepthsRef = useRef<Set<BlogScrollDepth>>(new Set());
+
+  useEffect(() => {
+    reachedDepthsRef.current = new Set();
+    trackBlogViewed(post);
+  }, [post]);
+
+  useEffect(() => {
+    const scrollDepths = [25, 50, 75, 100] as const satisfies readonly BlogScrollDepth[];
+
+    const updateScrollDepth = () => {
+      const scrollableDistance = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollableDistance <= 0) {
+        return;
+      }
+
+      const scrollPercent = Math.min(
+        100,
+        Math.max(0, Math.round((window.scrollY / scrollableDistance) * 100)),
+      );
+
+      scrollDepths.forEach((depth) => {
+        if (scrollPercent >= depth && !reachedDepthsRef.current.has(depth)) {
+          reachedDepthsRef.current.add(depth);
+          trackBlogScrollDepth(post, depth);
+        }
+      });
+    };
+
+    updateScrollDepth();
+    window.addEventListener("scroll", updateScrollDepth, { passive: true });
+    window.addEventListener("resize", updateScrollDepth);
+
+    return () => {
+      window.removeEventListener("scroll", updateScrollDepth);
+      window.removeEventListener("resize", updateScrollDepth);
+    };
+  }, [post]);
 }
 
 function useReaderScrollHotkeys() {
@@ -195,6 +252,14 @@ function useReaderScrollHotkeys() {
       }
 
       return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
+    };
+
+    const hasModifierKey = (event: KeyboardEvent) =>
+      event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+
+    const getScrollHotkey = (event: KeyboardEvent): ScrollHotkey | null => {
+      const key = event.key.toLowerCase();
+      return key in scrollConfig && !hasModifierKey(event) ? (key as ScrollHotkey) : null;
     };
 
     const clearHoldStartTimer = () => {
@@ -243,25 +308,14 @@ function useReaderScrollHotkeys() {
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
-      if (
-        !(key in scrollConfig) ||
-        event.altKey ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.shiftKey
-      ) {
-        return;
-      }
-
-      if (isEditableTarget(event.target)) {
+      const scrollKey = getScrollHotkey(event);
+      if (!scrollKey || isEditableTarget(event.target)) {
         return;
       }
 
       event.preventDefault();
       event.stopPropagation();
 
-      const scrollKey = key as ScrollHotkey;
       if (activeKeyRef.current && activeKeyRef.current !== scrollKey) {
         stopHoldScroll();
       }

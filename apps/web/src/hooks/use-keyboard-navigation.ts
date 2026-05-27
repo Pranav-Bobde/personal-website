@@ -1,4 +1,5 @@
 import { useHotkey } from "@tanstack/react-hotkeys";
+import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useMemo, useState } from "react";
 
 interface KeyboardNavigationOptions {
@@ -11,6 +12,14 @@ interface KeyboardNavigationOptions {
 
 function getFocusableItems(itemSelector: string) {
   return Array.from(document.querySelectorAll<HTMLElement>(itemSelector));
+}
+
+function getNextIndex(index: number, totalItems: number) {
+  return index + 1 >= totalItems ? 0 : index + 1;
+}
+
+function getPreviousIndex(index: number, totalItems: number) {
+  return index - 1 < 0 ? totalItems - 1 : index - 1;
 }
 
 export function useKeyboardNavigation({
@@ -28,82 +37,19 @@ export function useKeyboardNavigation({
     () => ({
       preventDefault: true,
       stopPropagation: true,
-      ignoreInputElements: true,
+      ignoreInputs: true,
       enabled: !isSearchOpen,
     }),
     [isSearchOpen],
   );
 
-  useHotkey(
-    "j",
-    () => {
-      const items = getFocusableItems(itemSelector);
-      if (items.length === 0) {
-        return;
-      }
-
-      setActiveIndex((prev) => {
-        const next = prev + 1 >= items.length ? 0 : prev + 1;
-        items[next]?.focus();
-        return next;
-      });
-    },
-    options,
-  );
+  useDirectionalHotkey("J", itemSelector, options, getNextIndex, setActiveIndex);
+  useDirectionalHotkey("ArrowDown", itemSelector, options, getNextIndex, setActiveIndex);
+  useDirectionalHotkey("K", itemSelector, options, getPreviousIndex, setActiveIndex);
+  useDirectionalHotkey("ArrowUp", itemSelector, options, getPreviousIndex, setActiveIndex);
 
   useHotkey(
-    "ArrowDown",
-    () => {
-      const items = getFocusableItems(itemSelector);
-      if (items.length === 0) {
-        return;
-      }
-
-      setActiveIndex((prev) => {
-        const next = prev + 1 >= items.length ? 0 : prev + 1;
-        items[next]?.focus();
-        return next;
-      });
-    },
-    options,
-  );
-
-  useHotkey(
-    "k",
-    () => {
-      const items = getFocusableItems(itemSelector);
-      if (items.length === 0) {
-        return;
-      }
-
-      setActiveIndex((prev) => {
-        const next = prev - 1 < 0 ? items.length - 1 : prev - 1;
-        items[next]?.focus();
-        return next;
-      });
-    },
-    options,
-  );
-
-  useHotkey(
-    "ArrowUp",
-    () => {
-      const items = getFocusableItems(itemSelector);
-      if (items.length === 0) {
-        return;
-      }
-
-      setActiveIndex((prev) => {
-        const next = prev - 1 < 0 ? items.length - 1 : prev - 1;
-        items[next]?.focus();
-        return next;
-      });
-    },
-    options,
-  );
-
-  useHotkey(
-    "ctrl+h",
+    "Control+H",
     () => {
       onPreviousPage?.();
       setActiveIndex(-1);
@@ -127,7 +73,7 @@ export function useKeyboardNavigation({
   );
 
   useHotkey(
-    "ctrl+l",
+    "Control+L",
     () => {
       onNextPage?.();
       setActiveIndex(-1);
@@ -202,4 +148,29 @@ export function useKeyboardNavigation({
     setSearchQuery,
     setIsSearchOpen,
   };
+}
+
+function useDirectionalHotkey(
+  key: Parameters<typeof useHotkey>[0],
+  itemSelector: string,
+  options: Parameters<typeof useHotkey>[2],
+  getTargetIndex: (index: number, totalItems: number) => number,
+  setActiveIndex: Dispatch<SetStateAction<number>>,
+) {
+  useHotkey(
+    key,
+    () => {
+      const items = getFocusableItems(itemSelector);
+      if (items.length === 0) {
+        return;
+      }
+
+      setActiveIndex((currentIndex) => {
+        const nextIndex = getTargetIndex(currentIndex, items.length);
+        items[nextIndex]?.focus();
+        return nextIndex;
+      });
+    },
+    options,
+  );
 }
