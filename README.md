@@ -56,7 +56,8 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 
 ## Git Hooks and Formatting
 
-- Format and lint fix: `bun run check`
+- Lint check: `bun run lint`
+- Format fix: `bun run format`
 
 ## Project Structure
 
@@ -74,5 +75,8 @@ oreno-website.bts-migration/
 - `bun run dev`: Start all applications in development mode
 - `bun run build`: Build all applications
 - `bun run dev:web`: Start only the web application
-- `bun run check-types`: Check TypeScript types across all apps
-- `bun run check`: Run Oxlint and Oxfmt
+- `bun run typecheck`: Check TypeScript types across all apps
+- `bun run lint`: Run Oxlint
+- `bun run fallow`: Run static project audit
+- `bun run format`: Run Oxfmt fixes
+- `bun run verify`: Run typecheck, lint, Fallow, and build

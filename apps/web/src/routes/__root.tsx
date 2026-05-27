@@ -14,14 +14,14 @@ import type { orpc } from "@/utils/orpc";
 import { siteConfig } from "@/lib/config";
 
 import { Navigation } from "@/components/navigation";
+import { AnalyticsProvider } from "@/components/analytics-provider";
 
 import appCss from "../index.css?url";
-export interface RouterAppContext {
+
+export const Route = createRootRouteWithContext<{
   orpc: typeof orpc;
   queryClient: QueryClient;
-}
-
-export const Route = createRootRouteWithContext<RouterAppContext>()({
+}>()({
   server: {
     middleware: [createMiddleware().server(evlogErrorHandler)],
   },
@@ -69,12 +69,14 @@ function RootDocument() {
       </head>
       <body>
         <HotkeysProvider>
-          <main className="flex min-h-screen flex-col items-center p-4 pt-16 md:p-8 md:pt-24">
-            <div className={`mx-auto w-full ${isBlogPostRoute ? "max-w-7xl" : "max-w-3xl"}`}>
-              <Navigation />
-              <Outlet />
-            </div>
-          </main>
+          <AnalyticsProvider>
+            <main className="flex min-h-screen flex-col items-center p-4 pt-16 md:p-8 md:pt-24">
+              <div className={`mx-auto w-full ${isBlogPostRoute ? "max-w-7xl" : "max-w-3xl"}`}>
+                <Navigation />
+                <Outlet />
+              </div>
+            </main>
+          </AnalyticsProvider>
         </HotkeysProvider>
         <Scripts />
       </body>
