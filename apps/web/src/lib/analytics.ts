@@ -38,6 +38,7 @@ export function initAnalytics() {
 
   posthog.init(env.VITE_POSTHOG_TOKEN, {
     api_host: env.VITE_POSTHOG_HOST,
+    ui_host: env.VITE_POSTHOG_UI_HOST,
     autocapture: false,
     capture_pageview: false,
     capture_pageleave: true,
