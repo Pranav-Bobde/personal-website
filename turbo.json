@@ -5,6 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["VITE_POSTHOG_HOST", "VITE_POSTHOG_TOKEN"],
       "outputs": ["dist/**"]
     },
     "lint": {
