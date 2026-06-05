@@ -11,7 +11,6 @@ import { evlogErrorHandler } from "evlog/nitro/v3";
 import { HotkeysProvider } from "@tanstack/react-hotkeys";
 
 import type { orpc } from "@/utils/orpc";
-import { siteConfig } from "@/lib/config";
 
 import { Navigation } from "@/components/navigation";
 import { AnalyticsProvider } from "@/components/analytics-provider";
@@ -34,17 +33,6 @@ export const Route = createRootRouteWithContext<{
       {
         name: "viewport",
         content: "width=device-width, initial-scale=1",
-      },
-      {
-        title: `${siteConfig.name} | ${siteConfig.title}`,
-      },
-      {
-        name: "description",
-        content: siteConfig.bio.main,
-      },
-      {
-        name: "generator",
-        content: "v0.dev",
       },
     ],
     links: [

@@ -26,15 +26,6 @@ export function Navigation() {
           [b] blog
         </Link>
       ) : null}
-
-      {siteConfig.sections.projects ? (
-        <Link
-          to="/projects"
-          className={`nav-item ${pathname.startsWith("/projects") ? "active" : ""}`}
-        >
-          [p] projects
-        </Link>
-      ) : null}
     </nav>
   );
 }
@@ -61,19 +52,6 @@ function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
     {
       ...hotkeyOptions,
       enabled: siteConfig.sections.blogs,
-    },
-  );
-
-  useHotkey(
-    "P",
-    () => {
-      if (siteConfig.sections.projects) {
-        navigate({ to: "/projects" });
-      }
-    },
-    {
-      ...hotkeyOptions,
-      enabled: siteConfig.sections.projects,
     },
   );
 }

@@ -2,9 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { BlogsClient } from "@/components/blogs-client";
 import { getBlogPosts } from "@/lib/blog-data";
+import { blogIndexPageSeo } from "@/lib/seo";
+
+const blogIndexSeo = blogIndexPageSeo();
 
 export const Route = createFileRoute("/blogs/")({
   loader: () => getBlogPosts(),
+  head: () => blogIndexSeo,
   component: BlogsPage,
 });
 
