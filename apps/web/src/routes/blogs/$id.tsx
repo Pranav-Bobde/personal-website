@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { siteConfig } from "@/lib/config";
 import { getBlogPost } from "@/lib/blog-data";
 import { renderMarkdown, type TocLink } from "@/lib/markdown";
+import { blogPostPageSeo } from "@/lib/seo";
 import {
   trackBlogFeedbackClicked,
   trackBlogScrollDepth,
@@ -22,6 +23,10 @@ export const Route = createFileRoute("/blogs/$id")({
       throw redirect({ to: "/blogs" });
     }
     return post;
+  },
+  head: ({ params }) => {
+    const post = getBlogPost(params.id);
+    return post ? blogPostPageSeo(post) : {};
   },
   component: BlogPostPage,
 });

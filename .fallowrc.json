@@ -1,0 +1,7 @@
+{
+  "$schema": "./node_modules/fallow/schema.json",
+  "ignorePatterns": [
+    "apps/web/src/components/projects-page.tsx",
+    "apps/web/src/lib/project-data.ts"
+  ]
+}

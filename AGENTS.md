@@ -33,3 +33,12 @@ This file captures project-specific expectations and feedback so future agent ch
 2. Keep commits focused and describe why the change exists, not only what changed.
 3. If verification could not be run, explicitly call that out and include exact next verify steps.
 4. After every task completion, run the dedicated verification commands until clean: `bun run typecheck`, `bun run lint`, `bun run fallow`, and `bun run build`.
+
+## Blog publishing checklist
+
+1. Every new blog post must include frontmatter title, date, reading time, summary/description, and tags.
+2. Do not use default/fallback SEO metadata for indexable pages. Every public page must define page-context title, description, canonical URL, Open Graph fields, and Twitter card fields explicitly.
+3. Blog post SEO must be sourced from that post's frontmatter and slug only. Do not substitute home/profile/blog-index metadata when a post is missing or incomplete.
+4. Every new blog post must have route metadata: page title, description, canonical URL, Open Graph fields, Twitter card fields, published time, and article tags.
+5. Every new blog post must be added to `/sitemap.xml` with its canonical URL and `lastmod`.
+6. If the public domain changes, update `VITE_SITE_URL`, `/robots.txt`, `/sitemap.xml`, and canonical metadata together.

@@ -24,12 +24,43 @@ interface BlogFrontmatter {
   tags?: string[];
 }
 
-function slugToTitle(slug: string) {
-  return slug
-    .split("-")
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
+const textFrontmatterKeys = new Set([
+  "title",
+  "date",
+  "readingTime",
+  "readTime",
+  "summary",
+  "description",
+]);
+
+function parseTags(rawValue: string) {
+  return rawValue
+    .replace(/^\[|\]$/g, "")
+    .split(",")
+    .map((tag) => tag.trim().replace(/^['"]|['"]$/g, ""))
+    .filter(Boolean);
+}
+
+function parseFrontmatterLine(line: string, metadata: BlogFrontmatter) {
+  const separatorIndex = line.indexOf(":");
+  if (separatorIndex === -1) {
+    return;
+  }
+
+  const key = line.slice(0, separatorIndex).trim();
+  const rawValue = line
+    .slice(separatorIndex + 1)
+    .trim()
+    .replace(/^['"]|['"]$/g, "");
+
+  if (key === "tags") {
+    metadata.tags = parseTags(rawValue);
+    return;
+  }
+
+  if (textFrontmatterKeys.has(key)) {
+    metadata[key as keyof Omit<BlogFrontmatter, "tags">] = rawValue;
+  }
 }
 
 function parseFrontmatter(markdown: string): { metadata: BlogFrontmatter; content: string } {
@@ -47,55 +78,48 @@ function parseFrontmatter(markdown: string): { metadata: BlogFrontmatter; conten
   const metadata: BlogFrontmatter = {};
 
   for (const line of rawFrontmatter.split("\n")) {
-    const separatorIndex = line.indexOf(":");
-    if (separatorIndex === -1) {
-      continue;
-    }
-
-    const key = line.slice(0, separatorIndex).trim();
-    const rawValue = line
-      .slice(separatorIndex + 1)
-      .trim()
-      .replace(/^['"]|['"]$/g, "");
-
-    if (key === "tags") {
-      metadata.tags = rawValue
-        .replace(/^\[|\]$/g, "")
-        .split(",")
-        .map((tag) => tag.trim().replace(/^['"]|['"]$/g, ""))
-        .filter(Boolean);
-      continue;
-    }
-
-    if (
-      key === "title" ||
-      key === "date" ||
-      key === "readingTime" ||
-      key === "readTime" ||
-      key === "summary" ||
-      key === "description"
-    ) {
-      metadata[key] = rawValue;
-    }
+    parseFrontmatterLine(line, metadata);
   }
 
   return { metadata, content };
 }
 
+function requireStringFrontmatter(value: string | undefined, fieldName: string, postId: string) {
+  if (!value) {
+    throw new Error(`Blog post "${postId}" is missing frontmatter: ${fieldName}`);
+  }
+
+  return value;
+}
+
+function requireTagsFrontmatter(tags: string[] | undefined, postId: string) {
+  if (!tags?.length) {
+    throw new Error(`Blog post "${postId}" is missing frontmatter: tags`);
+  }
+
+  return tags;
+}
+
+function requireBlogFrontmatter(id: string, metadata: BlogFrontmatter) {
+  return {
+    title: requireStringFrontmatter(metadata.title, "title", id),
+    date: requireStringFrontmatter(metadata.date, "date", id),
+    readingTime: requireStringFrontmatter(metadata.readingTime ?? metadata.readTime, "readingTime", id),
+    summary: requireStringFrontmatter(metadata.summary ?? metadata.description, "summary", id),
+    tags: requireTagsFrontmatter(metadata.tags, id),
+  };
+}
+
 function buildPost(id: string, fileContent: string): BlogPost {
   const { metadata, content } = parseFrontmatter(fileContent);
-  const title = metadata.title ?? slugToTitle(id);
+  const frontmatter = requireBlogFrontmatter(id, metadata);
   const contentWithoutDuplicateTitle = content.replace(/^#\s+(.+)\n+/, (match, heading: string) => {
-    return heading.trim() === title ? "" : match;
+    return heading.trim() === frontmatter.title ? "" : match;
   });
 
   return {
     id,
-    title,
-    date: metadata.date ?? "",
-    readingTime: metadata.readingTime ?? metadata.readTime ?? "",
-    summary: metadata.summary ?? metadata.description ?? "",
-    tags: metadata.tags ?? [],
+    ...frontmatter,
     content: contentWithoutDuplicateTitle.trim(),
   };
 }

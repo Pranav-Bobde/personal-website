@@ -3,8 +3,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Briefcase, MapPin } from "lucide-react";
 
 import { siteConfig } from "@/lib/config";
+import { homePageSeo } from "@/lib/seo";
+
+const homeSeo = homePageSeo();
 
 export const Route = createFileRoute("/")({
+  head: () => homeSeo,
   component: Home,
 });
 

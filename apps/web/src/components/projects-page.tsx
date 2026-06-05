@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
 
 import { SearchDialog } from "@/components/search-dialog";
 import { useKeyboardNavigation } from "@/hooks/use-keyboard-navigation";
 import { projects } from "@/lib/project-data";
 
-export const Route = createFileRoute("/projects")({
-  component: ProjectsPage,
-});
-
-function ProjectsPage() {
+export function ProjectsPage() {
   const [filteredProjects, setFilteredProjects] = useState(projects);
   const [mounted, setMounted] = useState(false);
 
