@@ -25,6 +25,10 @@ function Home() {
     window.open(siteConfig.social.linkedin, "_blank", "noopener,noreferrer");
   });
 
+  useHotkey("R", () => {
+    window.open(siteConfig.social.resume, "_blank", "noopener,noreferrer");
+  });
+
   useHotkey("E", () => {
     window.open(`mailto:${siteConfig.social.email}`, "_blank", "noopener,noreferrer");
   });
@@ -85,6 +89,14 @@ function Home() {
               rel="noopener noreferrer"
             >
               [l] linkedin
+            </a>
+            <a
+              href={siteConfig.social.resume}
+              className="hover:text-accent transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              [r] resume
             </a>
             <a
               href={`mailto:${siteConfig.social.email}`}
