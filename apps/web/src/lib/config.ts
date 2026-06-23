@@ -17,6 +17,7 @@ export const siteConfig = {
     twitter: "https://x.com/PranavBobde",
     twitterDm: "https://twitter.com/messages/compose?recipient_id=835557109592829952",
     linkedin: "https://linkedin.com/in/pranav-bobde-b95010194",
+    resume: "https://tinyurl.com/pranav-bobde-resume",
     email: "bobdep31@gmail.com",
   },
   accentColor: "teal",
