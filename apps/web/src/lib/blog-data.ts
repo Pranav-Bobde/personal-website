@@ -22,7 +22,10 @@ interface BlogFrontmatter {
   summary?: string;
   description?: string;
   tags?: string[];
+  hidden?: boolean;
 }
+
+type TextFrontmatterKey = Exclude<keyof BlogFrontmatter, "tags" | "hidden">;
 
 const textFrontmatterKeys = new Set([
   "title",
@@ -32,6 +35,15 @@ const textFrontmatterKeys = new Set([
   "summary",
   "description",
 ]);
+
+const frontmatterHandlers = {
+  tags: (rawValue: string, metadata: BlogFrontmatter) => {
+    metadata.tags = parseTags(rawValue);
+  },
+  hidden: (rawValue: string, metadata: BlogFrontmatter) => {
+    metadata.hidden = rawValue === "true";
+  },
+};
 
 function parseTags(rawValue: string) {
   return rawValue
@@ -53,13 +65,14 @@ function parseFrontmatterLine(line: string, metadata: BlogFrontmatter) {
     .trim()
     .replace(/^['"]|['"]$/g, "");
 
-  if (key === "tags") {
-    metadata.tags = parseTags(rawValue);
+  const handler = frontmatterHandlers[key as keyof typeof frontmatterHandlers];
+  if (handler) {
+    handler(rawValue, metadata);
     return;
   }
 
   if (textFrontmatterKeys.has(key)) {
-    metadata[key as keyof Omit<BlogFrontmatter, "tags">] = rawValue;
+    metadata[key as TextFrontmatterKey] = rawValue;
   }
 }
 
@@ -110,8 +123,12 @@ function requireBlogFrontmatter(id: string, metadata: BlogFrontmatter) {
   };
 }
 
-function buildPost(id: string, fileContent: string): BlogPost {
+function buildPost(id: string, fileContent: string): BlogPost | undefined {
   const { metadata, content } = parseFrontmatter(fileContent);
+  if (metadata.hidden) {
+    return undefined;
+  }
+
   const frontmatter = requireBlogFrontmatter(id, metadata);
   const contentWithoutDuplicateTitle = content.replace(/^#\s+(.+)\n+/, (match, heading: string) => {
     return heading.trim() === frontmatter.title ? "" : match;
@@ -131,6 +148,7 @@ function filePathToPostId(filePath: string) {
 export function getBlogPosts(): BlogPost[] {
   return Object.entries(blogMarkdownByPath)
     .map(([filePath, fileContent]) => buildPost(filePathToPostId(filePath), fileContent))
+    .filter((post): post is BlogPost => Boolean(post))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 

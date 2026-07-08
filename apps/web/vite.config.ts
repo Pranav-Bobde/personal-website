@@ -7,10 +7,17 @@ import path from "node:path";
 import { defineConfig } from "vite";
 
 const blogsDirectory = path.resolve("../../content/blogs");
+const isHiddenBlogPost = (fileName: string) => {
+  const fileContent = fs.readFileSync(path.join(blogsDirectory, fileName), "utf8");
+
+  return /^hidden:\s*true\s*$/m.test(fileContent);
+};
+
 const blogPages = fs.existsSync(blogsDirectory)
   ? fs
       .readdirSync(blogsDirectory)
       .filter((fileName) => fileName.endsWith(".md"))
+      .filter((fileName) => !isHiddenBlogPost(fileName))
       .map((fileName) => ({ path: `/blogs/${fileName.replace(/\.md$/, "")}` }))
   : [];
 

@@ -61,6 +61,23 @@ function Home() {
             <h3 className="mb-2 text-lg font-semibold">{siteConfig.bio.secondaryTitle}</h3>
             <p className="text-muted-foreground">{siteConfig.bio.secondary}</p>
           </div>
+
+          <div className="border-border text-muted-foreground mt-6 border p-4 text-sm">
+            <p className="text-foreground">
+              <span className="text-accent">$</span> hire --pranav
+            </p>
+            <p className="mt-1">
+              backend / infra / AI products —{" "}
+              <a
+                href={`mailto:${siteConfig.social.email}?subject=Work%20with%20Pranav`}
+                className="text-accent hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                email me [e]
+              </a>
+            </p>
+          </div>
         </div>
 
         <div className="pt-8" style={{ animationDelay: "400ms" }}>
