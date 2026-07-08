@@ -43,7 +43,6 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^6.0.1",
     "jsdom": "^29.0.2",
-    "react-doctor": "^0.2.9",
     "typescript": "catalog:",
     "vite": "^8.0.8"
   }
