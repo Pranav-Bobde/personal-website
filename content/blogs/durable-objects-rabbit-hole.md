@@ -4,7 +4,6 @@ date: "2026-07-02"
 readingTime: "12 min read"
 summary: "A late-night AI conversation that started with Cloudflare rate limiting and turned into a fight about actors, workflows, and a Redis bug I'd already fixed. The real lesson wasn't the answer — it was refusing to accept the answer until it mapped to my problem."
 tags: ["durable objects", "distributed systems", "actor model", "ai", "redis"]
-hidden: true
 ---
 
 # I Asked What Durable Objects Are. Ended Up in a Distributed Systems Rabbit Hole.
