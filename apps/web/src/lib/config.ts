@@ -2,6 +2,8 @@ export const siteConfig = {
   name: "Pranav Bobde",
   title: "CTO @Senslyze",
   location: "Nagpur, India",
+  availability: "Available immediately",
+  openTo: "Open to remote or Bangalore",
   bio: {
     main: `I'm a hands-on CTO who builds full-stack TypeScript / Node.js + AI products — with production experience shipping WhatsApp bots. Looking for founding-stage or small-team opportunities.`,
     secondaryTitle: "",
