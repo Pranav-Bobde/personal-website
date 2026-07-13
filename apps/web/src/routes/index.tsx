@@ -56,31 +56,91 @@ function Home() {
 
         <div className="space-y-4" style={{ animationDelay: "300ms" }}>
           <p className="text-muted-foreground">{siteConfig.bio.main}</p>
+        </div>
 
-          <div className="mt-6">
-            <h3 className="mb-2 text-lg font-semibold">{siteConfig.bio.secondaryTitle}</h3>
-            <p className="text-muted-foreground">{siteConfig.bio.secondary}</p>
-          </div>
-
-          <div className="border-border text-muted-foreground mt-6 border p-4 text-sm">
-            <p className="text-foreground">
-              <span className="text-accent">$</span> hire --pranav
+        <div className="space-y-16 pt-8" style={{ animationDelay: "500ms" }}>
+          <section>
+            <h2 className="section-title">my core values</h2>
+            <p className="text-muted-foreground mb-7 max-w-2xl text-sm">
+              Before we work together, you should know what I actually value and how I operate.
+              These aren't posters on a wall — they're how I make decisions when nobody's watching.
             </p>
-            <p className="mt-1">
-              backend / infra / AI products —{" "}
+            <div className="bg-border border-border grid grid-cols-1 gap-px border sm:grid-cols-2">
+              {siteConfig.coreValues.map((value, index) => (
+                <div key={value.title} className="bg-background p-5 sm:p-6">
+                  <div className="text-accent text-xs tracking-widest">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <h3 className="mt-2 mb-2 font-bold">{value.title}</h3>
+                  <p className="text-muted-foreground text-sm">{value.body}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h2 className="section-title">we'd be a fit if…</h2>
+            <p className="text-muted-foreground mb-7 max-w-2xl text-sm">
+              The kind of team where I do my best work.
+            </p>
+            <div className="border-border border">
+              {[
+                <>
+                  You're a <strong className="text-foreground">lean team that ships fast</strong> —
+                  ownership over process, quality over bureaucracy.
+                </>,
+                <>
+                  You're{" "}
+                  <strong className="text-foreground">
+                    open to new technology and better approaches
+                  </strong>
+                  , not locked into legacy habits.
+                </>,
+                <>
+                  You{" "}
+                  <strong className="text-foreground">
+                    hire for capability and give it real autonomy
+                  </strong>
+                  , rather than staffing a role to execute instructions.
+                </>,
+                <>
+                  You treat{" "}
+                  <strong className="text-foreground">
+                    tools, resources, and work-life flexibility
+                  </strong>{" "}
+                  as inputs to good engineering, not perks.
+                </>,
+                <>
+                  You value{" "}
+                  <strong className="text-foreground">first-principles engineering</strong> over
+                  resume-driven hype.
+                </>,
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="border-border text-muted-foreground flex items-start gap-3 border-b px-5 py-3.5 text-sm last:border-b-0"
+                >
+                  <span className="text-accent font-bold">[✓]</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-muted-foreground mt-7 text-sm">
+              If that sounds like your team,{" "}
               <a
                 href={`mailto:${siteConfig.social.email}?subject=Work%20with%20Pranav`}
-                className="text-accent hover:underline"
+                className="text-accent hover:text-foreground border-accent border-b"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                email me [e]
+                let's talk [e]
               </a>
+              .
             </p>
-          </div>
+          </section>
         </div>
 
-        <div className="pt-8" style={{ animationDelay: "400ms" }}>
+        <div className="pt-8" style={{ animationDelay: "600ms" }}>
           <h2 className="section-title">links</h2>
           <div className="flex flex-wrap gap-4 text-sm">
             <a
