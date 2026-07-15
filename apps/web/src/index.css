@@ -244,6 +244,10 @@
   @apply my-10 overflow-x-auto;
 }
 
+.prose .markdown-media-grid {
+  @apply overflow-visible;
+}
+
 .prose table {
   @apply w-full border-collapse text-left text-base;
 }
@@ -255,4 +259,40 @@
 
 .prose th {
   @apply bg-secondary/30 text-foreground;
+}
+
+.prose .markdown-media-grid table {
+  @apply table-fixed;
+}
+
+.prose .markdown-media-grid th,
+.prose .markdown-media-grid td {
+  @apply p-2 text-center align-top;
+}
+
+.prose .markdown-image {
+  @apply border-border my-2 block w-full rounded-md border;
+}
+
+.prose .markdown-tweet-embed {
+  @apply border-border bg-secondary/10 my-8 overflow-hidden rounded-md border;
+}
+
+.prose .markdown-tweet-embed iframe {
+  @apply block min-h-[460px] w-full border-0;
+}
+
+.prose .markdown-tweet-embed p {
+  @apply border-border m-0 border-t px-4 py-3 text-sm;
+}
+
+@media (max-width: 760px) {
+  .prose .markdown-media-grid table,
+  .prose .markdown-media-grid thead,
+  .prose .markdown-media-grid tbody,
+  .prose .markdown-media-grid tr,
+  .prose .markdown-media-grid th,
+  .prose .markdown-media-grid td {
+    @apply block w-full;
+  }
 }
