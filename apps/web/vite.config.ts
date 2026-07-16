@@ -31,7 +31,7 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
     tanstackStart({
-      pages: [{ path: "/" }, { path: "/blogs" }, ...blogPages],
+      pages: [{ path: "/" }, { path: "/hire-me" }, { path: "/blogs" }, ...blogPages],
       prerender: {
         enabled: true,
         failOnError: true,

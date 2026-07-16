@@ -9,11 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as HireMeRouteImport } from './routes/hire-me'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
 import { Route as BlogsIdRouteImport } from './routes/blogs/$id'
+import { Route as PreviewVideosIndexRouteImport } from './routes/preview/videos/index'
+import { Route as PreviewHomeVideosIndexRouteImport } from './routes/preview/home-videos/index'
+import { Route as PreviewVideosPairedRouteImport } from './routes/preview/videos/paired'
+import { Route as PreviewVideosLogRouteImport } from './routes/preview/videos/log'
+import { Route as PreviewVideosLibraryRouteImport } from './routes/preview/videos/library'
+import { Route as PreviewHomeVideosHireMeSplitRouteImport } from './routes/preview/home-videos/hire-me-split'
+import { Route as PreviewHomeVideosHireMeRouteImport } from './routes/preview/home-videos/hire-me'
+import { Route as PreviewHomeVideosBeforeLinksRouteImport } from './routes/preview/home-videos/before-links'
+import { Route as PreviewHomeVideosAfterValuesRouteImport } from './routes/preview/home-videos/after-values'
+import { Route as PreviewHomeVideosAfterHeroRouteImport } from './routes/preview/home-videos/after-hero'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 
+const HireMeRoute = HireMeRouteImport.update({
+  id: '/hire-me',
+  path: '/hire-me',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -29,6 +45,60 @@ const BlogsIdRoute = BlogsIdRouteImport.update({
   path: '/blogs/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PreviewVideosIndexRoute = PreviewVideosIndexRouteImport.update({
+  id: '/preview/videos/',
+  path: '/preview/videos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewHomeVideosIndexRoute = PreviewHomeVideosIndexRouteImport.update({
+  id: '/preview/home-videos/',
+  path: '/preview/home-videos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewVideosPairedRoute = PreviewVideosPairedRouteImport.update({
+  id: '/preview/videos/paired',
+  path: '/preview/videos/paired',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewVideosLogRoute = PreviewVideosLogRouteImport.update({
+  id: '/preview/videos/log',
+  path: '/preview/videos/log',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewVideosLibraryRoute = PreviewVideosLibraryRouteImport.update({
+  id: '/preview/videos/library',
+  path: '/preview/videos/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewHomeVideosHireMeSplitRoute =
+  PreviewHomeVideosHireMeSplitRouteImport.update({
+    id: '/preview/home-videos/hire-me-split',
+    path: '/preview/home-videos/hire-me-split',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PreviewHomeVideosHireMeRoute = PreviewHomeVideosHireMeRouteImport.update({
+  id: '/preview/home-videos/hire-me',
+  path: '/preview/home-videos/hire-me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewHomeVideosBeforeLinksRoute =
+  PreviewHomeVideosBeforeLinksRouteImport.update({
+    id: '/preview/home-videos/before-links',
+    path: '/preview/home-videos/before-links',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PreviewHomeVideosAfterValuesRoute =
+  PreviewHomeVideosAfterValuesRouteImport.update({
+    id: '/preview/home-videos/after-values',
+    path: '/preview/home-videos/after-values',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PreviewHomeVideosAfterHeroRoute =
+  PreviewHomeVideosAfterHeroRouteImport.update({
+    id: '/preview/home-videos/after-hero',
+    path: '/preview/home-videos/after-hero',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
   path: '/api/rpc/$',
@@ -37,40 +107,137 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/hire-me': typeof HireMeRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/blogs/': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
+  '/preview/home-videos/after-values': typeof PreviewHomeVideosAfterValuesRoute
+  '/preview/home-videos/before-links': typeof PreviewHomeVideosBeforeLinksRoute
+  '/preview/home-videos/hire-me': typeof PreviewHomeVideosHireMeRoute
+  '/preview/home-videos/hire-me-split': typeof PreviewHomeVideosHireMeSplitRoute
+  '/preview/videos/library': typeof PreviewVideosLibraryRoute
+  '/preview/videos/log': typeof PreviewVideosLogRoute
+  '/preview/videos/paired': typeof PreviewVideosPairedRoute
+  '/preview/home-videos/': typeof PreviewHomeVideosIndexRoute
+  '/preview/videos/': typeof PreviewVideosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/hire-me': typeof HireMeRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/blogs': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
+  '/preview/home-videos/after-values': typeof PreviewHomeVideosAfterValuesRoute
+  '/preview/home-videos/before-links': typeof PreviewHomeVideosBeforeLinksRoute
+  '/preview/home-videos/hire-me': typeof PreviewHomeVideosHireMeRoute
+  '/preview/home-videos/hire-me-split': typeof PreviewHomeVideosHireMeSplitRoute
+  '/preview/videos/library': typeof PreviewVideosLibraryRoute
+  '/preview/videos/log': typeof PreviewVideosLogRoute
+  '/preview/videos/paired': typeof PreviewVideosPairedRoute
+  '/preview/home-videos': typeof PreviewHomeVideosIndexRoute
+  '/preview/videos': typeof PreviewVideosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/hire-me': typeof HireMeRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/blogs/': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
+  '/preview/home-videos/after-values': typeof PreviewHomeVideosAfterValuesRoute
+  '/preview/home-videos/before-links': typeof PreviewHomeVideosBeforeLinksRoute
+  '/preview/home-videos/hire-me': typeof PreviewHomeVideosHireMeRoute
+  '/preview/home-videos/hire-me-split': typeof PreviewHomeVideosHireMeSplitRoute
+  '/preview/videos/library': typeof PreviewVideosLibraryRoute
+  '/preview/videos/log': typeof PreviewVideosLogRoute
+  '/preview/videos/paired': typeof PreviewVideosPairedRoute
+  '/preview/home-videos/': typeof PreviewHomeVideosIndexRoute
+  '/preview/videos/': typeof PreviewVideosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blogs/$id' | '/blogs/' | '/api/rpc/$'
+  fullPaths:
+    | '/'
+    | '/hire-me'
+    | '/blogs/$id'
+    | '/blogs/'
+    | '/api/rpc/$'
+    | '/preview/home-videos/after-hero'
+    | '/preview/home-videos/after-values'
+    | '/preview/home-videos/before-links'
+    | '/preview/home-videos/hire-me'
+    | '/preview/home-videos/hire-me-split'
+    | '/preview/videos/library'
+    | '/preview/videos/log'
+    | '/preview/videos/paired'
+    | '/preview/home-videos/'
+    | '/preview/videos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/blogs/$id' | '/blogs' | '/api/rpc/$'
-  id: '__root__' | '/' | '/blogs/$id' | '/blogs/' | '/api/rpc/$'
+  to:
+    | '/'
+    | '/hire-me'
+    | '/blogs/$id'
+    | '/blogs'
+    | '/api/rpc/$'
+    | '/preview/home-videos/after-hero'
+    | '/preview/home-videos/after-values'
+    | '/preview/home-videos/before-links'
+    | '/preview/home-videos/hire-me'
+    | '/preview/home-videos/hire-me-split'
+    | '/preview/videos/library'
+    | '/preview/videos/log'
+    | '/preview/videos/paired'
+    | '/preview/home-videos'
+    | '/preview/videos'
+  id:
+    | '__root__'
+    | '/'
+    | '/hire-me'
+    | '/blogs/$id'
+    | '/blogs/'
+    | '/api/rpc/$'
+    | '/preview/home-videos/after-hero'
+    | '/preview/home-videos/after-values'
+    | '/preview/home-videos/before-links'
+    | '/preview/home-videos/hire-me'
+    | '/preview/home-videos/hire-me-split'
+    | '/preview/videos/library'
+    | '/preview/videos/log'
+    | '/preview/videos/paired'
+    | '/preview/home-videos/'
+    | '/preview/videos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HireMeRoute: typeof HireMeRoute
   BlogsIdRoute: typeof BlogsIdRoute
   BlogsIndexRoute: typeof BlogsIndexRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
+  PreviewHomeVideosAfterHeroRoute: typeof PreviewHomeVideosAfterHeroRoute
+  PreviewHomeVideosAfterValuesRoute: typeof PreviewHomeVideosAfterValuesRoute
+  PreviewHomeVideosBeforeLinksRoute: typeof PreviewHomeVideosBeforeLinksRoute
+  PreviewHomeVideosHireMeRoute: typeof PreviewHomeVideosHireMeRoute
+  PreviewHomeVideosHireMeSplitRoute: typeof PreviewHomeVideosHireMeSplitRoute
+  PreviewVideosLibraryRoute: typeof PreviewVideosLibraryRoute
+  PreviewVideosLogRoute: typeof PreviewVideosLogRoute
+  PreviewVideosPairedRoute: typeof PreviewVideosPairedRoute
+  PreviewHomeVideosIndexRoute: typeof PreviewHomeVideosIndexRoute
+  PreviewVideosIndexRoute: typeof PreviewVideosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/hire-me': {
+      id: '/hire-me'
+      path: '/hire-me'
+      fullPath: '/hire-me'
+      preLoaderRoute: typeof HireMeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -92,6 +259,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/preview/videos/': {
+      id: '/preview/videos/'
+      path: '/preview/videos'
+      fullPath: '/preview/videos/'
+      preLoaderRoute: typeof PreviewVideosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/home-videos/': {
+      id: '/preview/home-videos/'
+      path: '/preview/home-videos'
+      fullPath: '/preview/home-videos/'
+      preLoaderRoute: typeof PreviewHomeVideosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/videos/paired': {
+      id: '/preview/videos/paired'
+      path: '/preview/videos/paired'
+      fullPath: '/preview/videos/paired'
+      preLoaderRoute: typeof PreviewVideosPairedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/videos/log': {
+      id: '/preview/videos/log'
+      path: '/preview/videos/log'
+      fullPath: '/preview/videos/log'
+      preLoaderRoute: typeof PreviewVideosLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/videos/library': {
+      id: '/preview/videos/library'
+      path: '/preview/videos/library'
+      fullPath: '/preview/videos/library'
+      preLoaderRoute: typeof PreviewVideosLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/home-videos/hire-me-split': {
+      id: '/preview/home-videos/hire-me-split'
+      path: '/preview/home-videos/hire-me-split'
+      fullPath: '/preview/home-videos/hire-me-split'
+      preLoaderRoute: typeof PreviewHomeVideosHireMeSplitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/home-videos/hire-me': {
+      id: '/preview/home-videos/hire-me'
+      path: '/preview/home-videos/hire-me'
+      fullPath: '/preview/home-videos/hire-me'
+      preLoaderRoute: typeof PreviewHomeVideosHireMeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/home-videos/before-links': {
+      id: '/preview/home-videos/before-links'
+      path: '/preview/home-videos/before-links'
+      fullPath: '/preview/home-videos/before-links'
+      preLoaderRoute: typeof PreviewHomeVideosBeforeLinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/home-videos/after-values': {
+      id: '/preview/home-videos/after-values'
+      path: '/preview/home-videos/after-values'
+      fullPath: '/preview/home-videos/after-values'
+      preLoaderRoute: typeof PreviewHomeVideosAfterValuesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/home-videos/after-hero': {
+      id: '/preview/home-videos/after-hero'
+      path: '/preview/home-videos/after-hero'
+      fullPath: '/preview/home-videos/after-hero'
+      preLoaderRoute: typeof PreviewHomeVideosAfterHeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/rpc/$': {
       id: '/api/rpc/$'
       path: '/api/rpc/$'
@@ -104,9 +341,20 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HireMeRoute: HireMeRoute,
   BlogsIdRoute: BlogsIdRoute,
   BlogsIndexRoute: BlogsIndexRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
+  PreviewHomeVideosAfterHeroRoute: PreviewHomeVideosAfterHeroRoute,
+  PreviewHomeVideosAfterValuesRoute: PreviewHomeVideosAfterValuesRoute,
+  PreviewHomeVideosBeforeLinksRoute: PreviewHomeVideosBeforeLinksRoute,
+  PreviewHomeVideosHireMeRoute: PreviewHomeVideosHireMeRoute,
+  PreviewHomeVideosHireMeSplitRoute: PreviewHomeVideosHireMeSplitRoute,
+  PreviewVideosLibraryRoute: PreviewVideosLibraryRoute,
+  PreviewVideosLogRoute: PreviewVideosLogRoute,
+  PreviewVideosPairedRoute: PreviewVideosPairedRoute,
+  PreviewHomeVideosIndexRoute: PreviewHomeVideosIndexRoute,
+  PreviewVideosIndexRoute: PreviewVideosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
