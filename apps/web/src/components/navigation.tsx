@@ -17,15 +17,9 @@ export function Navigation() {
 
   return (
     <nav className="mb-8 flex justify-center space-x-6 text-sm">
-      <Link to="/" className={`nav-item ${pathname === "/" ? "active" : ""}`}>
-        [h] home
-      </Link>
-
-      {siteConfig.sections.blogs ? (
-        <Link to="/blogs" className={`nav-item ${pathname.startsWith("/blogs") ? "active" : ""}`}>
-          [b] blog
-        </Link>
-      ) : null}
+      <HomeNavItem pathname={pathname} />
+      <HireMeNavItem pathname={pathname} />
+      <BlogNavItem pathname={pathname} />
     </nav>
   );
 }
@@ -35,6 +29,17 @@ function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
     "H",
     () => {
       navigate({ to: "/" });
+    },
+    {
+      ...hotkeyOptions,
+      enabled: true,
+    },
+  );
+
+  useHotkey(
+    "M",
+    () => {
+      navigate({ to: "/hire-me" });
     },
     {
       ...hotkeyOptions,
@@ -53,5 +58,33 @@ function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
       ...hotkeyOptions,
       enabled: siteConfig.sections.blogs,
     },
+  );
+}
+
+function HomeNavItem({ pathname }: { pathname: string }) {
+  return (
+    <Link to="/" className={`nav-item ${pathname === "/" ? "active" : ""}`}>
+      [h] home
+    </Link>
+  );
+}
+
+function HireMeNavItem({ pathname }: { pathname: string }) {
+  return (
+    <Link to="/hire-me" className={`nav-item ${pathname === "/hire-me" ? "active" : ""}`}>
+      [m] hire me
+    </Link>
+  );
+}
+
+function BlogNavItem({ pathname }: { pathname: string }) {
+  if (!siteConfig.sections.blogs) {
+    return null;
+  }
+
+  return (
+    <Link to="/blogs" className={`nav-item ${pathname.startsWith("/blogs") ? "active" : ""}`}>
+      [b] blog
+    </Link>
   );
 }

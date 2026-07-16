@@ -1,7 +1,9 @@
 {
   "$schema": "./node_modules/fallow/schema.json",
   "ignorePatterns": [
+    "apps/web/src/routeTree.gen.ts",
     "apps/web/src/components/projects-page.tsx",
-    "apps/web/src/lib/project-data.ts"
+    "apps/web/src/lib/project-data.ts",
+    "apps/web/src/lib/video-preview-data.test.mjs"
   ]
 }

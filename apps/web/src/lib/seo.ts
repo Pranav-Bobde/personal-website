@@ -35,12 +35,49 @@ function pageSeo({ title, description, pathname, type }: PageSeoInput) {
   };
 }
 
+interface PreviewPageSeoInput {
+  title: string;
+  description: string;
+  pathname: string;
+}
+
+/**
+ * Preview routes are internal review surfaces. They still get full route-scoped metadata
+ * so they never inherit fallback SEO, plus noindex so they stay out of search results.
+ */
+export function previewPageSeo({ title, description, pathname }: PreviewPageSeoInput) {
+  const seo = pageSeo({
+    title,
+    description,
+    pathname,
+    type: "website",
+  });
+
+  return {
+    meta: [
+      ...seo.meta,
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+    links: seo.links,
+  };
+}
+
 export function homePageSeo() {
   return pageSeo({
     title: "Pranav Bobde - Personal Website",
     description:
       "Personal website of Pranav Bobde, featuring engineering notes, links, and writing.",
     pathname: "/",
+    type: "website",
+  });
+}
+
+export function hireMePageSeo() {
+  return pageSeo({
+    title: "Hire Me - Pranav Bobde",
+    description:
+      "How Pranav Bobde works, what he values, and the kind of engineering team where he does his best work.",
+    pathname: "/hire-me",
     type: "website",
   });
 }
