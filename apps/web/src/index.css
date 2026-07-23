@@ -376,6 +376,15 @@
 }
 
 @media (max-width: 760px) {
+  .prose .markdown-table-wrap:not(.markdown-media-grid) table {
+    font-size: 0.8125rem;
+  }
+
+  .prose .markdown-table-wrap:not(.markdown-media-grid) th,
+  .prose .markdown-table-wrap:not(.markdown-media-grid) td {
+    padding: 0.5rem 0.4rem;
+  }
+
   .prose .markdown-media-grid table,
   .prose .markdown-media-grid thead,
   .prose .markdown-media-grid tbody,
@@ -383,5 +392,168 @@
   .prose .markdown-media-grid th,
   .prose .markdown-media-grid td {
     @apply block w-full;
+  }
+}
+
+/* ---- in-post interactive demos (::demo[...]) ---- */
+.blog-demo {
+  margin: 1.75rem 0;
+}
+.blog-demo :where(p, ul, ol, li, h1, h2, h3, pre) {
+  margin: 0;
+}
+.blog-demo code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+.blog-demo button {
+  font-family: inherit;
+}
+
+.demo-btn {
+  font-size: 12.5px;
+  padding: 6px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  border: 1px solid hsl(180 100% 40% / 0.5);
+  color: hsl(180 100% 58%);
+  background: hsl(180 100% 40% / 0.07);
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    opacity 0.15s;
+}
+.demo-btn:hover:not(:disabled) {
+  background: hsl(180 100% 40% / 0.16);
+  border-color: hsl(180 100% 45%);
+}
+.demo-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.demo-btn[data-tone="muted"] {
+  border-color: hsl(0 0% 30%);
+  color: hsl(0 0% 72%);
+  background: transparent;
+}
+.demo-btn[data-tone="muted"]:hover:not(:disabled) {
+  background: hsl(0 0% 100% / 0.05);
+  border-color: hsl(0 0% 45%);
+}
+
+.demo-seg {
+  font-size: 12.5px;
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: hsl(0 0% 63%);
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.demo-seg[data-active="true"] {
+  background: hsl(180 100% 40% / 0.16);
+  color: hsl(180 100% 62%);
+}
+
+.demo-check {
+  accent-color: hsl(180 100% 45%);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.demo-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: hsl(0 0% 82%);
+  padding: 0;
+}
+.demo-switch-track {
+  width: 42px;
+  height: 23px;
+  border-radius: 999px;
+  background: hsl(0 0% 20%);
+  border: 1px solid hsl(0 0% 28%);
+  position: relative;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+  flex: none;
+}
+.demo-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: hsl(0 0% 70%);
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.demo-switch[data-on="true"] .demo-switch-track {
+  background: hsl(180 100% 40% / 0.3);
+  border-color: hsl(180 100% 45%);
+}
+.demo-switch[data-on="true"] .demo-switch-thumb {
+  transform: translateX(19px);
+  background: hsl(180 100% 52%);
+}
+
+.drift-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: demoPop 0.35s ease;
+}
+
+@keyframes demoPop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes demoSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes demoChainEject {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.demo-chain-ejected {
+  animation: demoChainEject 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 620px) {
+  .demo-flag-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blog-demo *,
+  .demo-switch-thumb {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }

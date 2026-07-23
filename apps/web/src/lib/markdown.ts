@@ -158,6 +158,20 @@ function isPassthroughChunk(chunk: string) {
   return chunk.startsWith("__CODE_BLOCK_") || chunk.startsWith("<details>");
 }
 
+function renderDirective(chunk: string) {
+  const tweetEmbed = chunk.match(/^::tweet\[(.*?)\]\((.*?)\)$/);
+  if (tweetEmbed) {
+    return renderTweetEmbed(tweetEmbed[1], tweetEmbed[2]);
+  }
+
+  const demoEmbed = chunk.match(/^::demo\[([a-z0-9-]+)\]$/);
+  if (demoEmbed) {
+    return `<div class="blog-demo" data-demo="${demoEmbed[1]}"></div>`;
+  }
+
+  return undefined;
+}
+
 function renderSpecialChunk(chunk: string) {
   if (isPassthroughChunk(chunk)) {
     return chunk;
@@ -167,12 +181,7 @@ function renderSpecialChunk(chunk: string) {
     return "<hr />";
   }
 
-  const tweetEmbed = chunk.match(/^::tweet\[(.*?)\]\((.*?)\)$/);
-  if (tweetEmbed) {
-    return renderTweetEmbed(tweetEmbed[1], tweetEmbed[2]);
-  }
-
-  return undefined;
+  return renderDirective(chunk);
 }
 
 function renderHeadingChunk(chunk: string, state: MarkdownRenderState) {

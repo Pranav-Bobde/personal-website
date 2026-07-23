@@ -1,8 +1,9 @@
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { ArrowLeft, MessageCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { memo, type RefObject, useEffect, useMemo, useRef, useState } from "react";
 
+import { BlogDemoPortals } from "@/components/blog-demos/demo-portals";
 import { siteConfig } from "@/lib/config";
 import { getBlogPost } from "@/lib/blog-data";
 import { renderMarkdown, type TocLink } from "@/lib/markdown";
@@ -31,9 +32,24 @@ export const Route = createFileRoute("/blogs/$id")({
   component: BlogPostPage,
 });
 
+// Isolate the article HTML behind memo so scroll-spy re-renders never re-commit
+// its dangerouslySetInnerHTML — otherwise React wipes the portal-mounted demos.
+const ArticleHtml = memo(function ArticleHtml({
+  html,
+  innerRef,
+}: {
+  html: string;
+  innerRef: RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <div ref={innerRef} className="prose max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
+  );
+});
+
 function BlogPostPage() {
   const post = Route.useLoaderData();
-  const { html: contentHtml, toc } = renderMarkdown(post.content);
+  const { html: contentHtml, toc } = useMemo(() => renderMarkdown(post.content), [post.content]);
+  const contentRef = useRef<HTMLDivElement>(null);
   const activeSectionId = useActiveSectionId(toc);
   const feedbackHref = `${siteConfig.social.twitterDm}&text=${encodeURIComponent(
     `Feedback on "${post.title}": `,
@@ -63,7 +79,8 @@ function BlogPostPage() {
             </header>
 
             <article className="blog-post-content">
-              <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+              <ArticleHtml html={contentHtml} innerRef={contentRef} />
+              <BlogDemoPortals containerRef={contentRef} contentKey={post.id} />
             </article>
 
             <div className="mt-12 flex items-center justify-between gap-4 border-t border-muted pt-4">
