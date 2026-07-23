@@ -91,6 +91,16 @@ export function blogIndexPageSeo() {
   });
 }
 
+export function newsletterPageSeo() {
+  return pageSeo({
+    title: "Pranav's Notes - Pranav Bobde",
+    description:
+      "Weekly-ish notes from Pranav Bobde on tech launches, AI/dev news, useful reads, personal projects, and current technical rabbit holes.",
+    pathname: "/newsletter",
+    type: "website",
+  });
+}
+
 export function blogPostPageSeo(post: BlogPost) {
   const title = `${post.title} - Pranav Bobde`;
   const description = post.summary;

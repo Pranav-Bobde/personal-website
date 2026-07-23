@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as HireMeRouteImport } from './routes/hire-me'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
@@ -25,6 +26,11 @@ import { Route as PreviewHomeVideosAfterValuesRouteImport } from './routes/previ
 import { Route as PreviewHomeVideosAfterHeroRouteImport } from './routes/preview/home-videos/after-hero'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 
+const NewsletterRoute = NewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HireMeRoute = HireMeRouteImport.update({
   id: '/hire-me',
   path: '/hire-me',
@@ -108,6 +114,7 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/hire-me': typeof HireMeRoute
+  '/newsletter': typeof NewsletterRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/blogs/': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/hire-me': typeof HireMeRoute
+  '/newsletter': typeof NewsletterRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/blogs': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/hire-me': typeof HireMeRoute
+  '/newsletter': typeof NewsletterRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/blogs/': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/hire-me'
+    | '/newsletter'
     | '/blogs/$id'
     | '/blogs/'
     | '/api/rpc/$'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/hire-me'
+    | '/newsletter'
     | '/blogs/$id'
     | '/blogs'
     | '/api/rpc/$'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/hire-me'
+    | '/newsletter'
     | '/blogs/$id'
     | '/blogs/'
     | '/api/rpc/$'
@@ -214,6 +226,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HireMeRoute: typeof HireMeRoute
+  NewsletterRoute: typeof NewsletterRoute
   BlogsIdRoute: typeof BlogsIdRoute
   BlogsIndexRoute: typeof BlogsIndexRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
@@ -231,6 +244,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/newsletter': {
+      id: '/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof NewsletterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hire-me': {
       id: '/hire-me'
       path: '/hire-me'
@@ -342,6 +362,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HireMeRoute: HireMeRoute,
+  NewsletterRoute: NewsletterRoute,
   BlogsIdRoute: BlogsIdRoute,
   BlogsIndexRoute: BlogsIndexRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,

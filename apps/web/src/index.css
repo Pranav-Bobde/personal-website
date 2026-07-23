@@ -112,6 +112,95 @@
   @apply text-accent;
 }
 
+.newsletter-embed {
+  max-width: 44rem;
+  min-height: 3.25rem;
+}
+
+.newsletter-embed .formkit-form {
+  margin: 0 !important;
+  max-width: none !important;
+  font-family: inherit !important;
+}
+
+.newsletter-embed .formkit-form [data-style="clean"] {
+  padding: 0 !important;
+}
+
+.newsletter-embed .formkit-fields {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  margin: 0 !important;
+}
+
+.newsletter-embed .formkit-field,
+.newsletter-embed .formkit-submit {
+  margin: 0 !important;
+}
+
+.newsletter-embed .formkit-input {
+  min-height: 3rem;
+  border: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--foreground) !important;
+  font: inherit !important;
+}
+
+.newsletter-embed .formkit-input::placeholder {
+  color: var(--muted-foreground) !important;
+  opacity: 1 !important;
+}
+
+.newsletter-embed .formkit-input:focus {
+  border-color: var(--accent) !important;
+  outline: 2px solid transparent !important;
+  box-shadow: 0 0 0 1px var(--accent) !important;
+}
+
+.newsletter-embed .formkit-submit {
+  min-height: 3rem;
+  border-radius: 0 !important;
+  background: var(--accent) !important;
+  color: var(--background) !important;
+  font: inherit !important;
+  font-weight: 700 !important;
+}
+
+.newsletter-embed .formkit-submit:hover > span,
+.newsletter-embed .formkit-submit:focus > span {
+  background: var(--foreground) !important;
+}
+
+.newsletter-embed .formkit-alert {
+  border: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  background: var(--secondary) !important;
+  color: var(--foreground) !important;
+  font: inherit !important;
+  text-align: left !important;
+}
+
+.newsletter-embed .formkit-powered-by-convertkit-container {
+  justify-content: flex-start !important;
+  margin: 0.5rem 0 0 !important;
+}
+
+.newsletter-embed .formkit-powered-by-convertkit {
+  margin: 0 !important;
+  filter: invert(1);
+  opacity: 0.45 !important;
+  transform: scale(0.8);
+  transform-origin: left center;
+}
+
+@media (max-width: 36rem) {
+  .newsletter-embed .formkit-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
 .blog-empty-state {
   @apply text-lg leading-relaxed;
 }

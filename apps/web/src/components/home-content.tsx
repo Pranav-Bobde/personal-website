@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Briefcase, Clock, Globe, MapPin } from "lucide-react";
 
+import { NewsletterCta } from "@/components/newsletter-cta";
 import { siteConfig } from "@/lib/config";
 
 type HomeVideoPlacement = "after-hero" | "after-values" | "before-links";
@@ -62,6 +63,7 @@ function HomeWithHiringSections({
       <PlacedVideo current={videoPlacement} target="before-links">
         {videoSection}
       </PlacedVideo>
+      <NewsletterCta />
       <LinksSection />
     </div>
   );
@@ -79,6 +81,7 @@ function HomeWithoutHiringSections({
       <PlacedVideo current={videoPlacement} target="before-links">
         {videoSection}
       </PlacedVideo>
+      <NewsletterCta />
       <LinksSection />
     </div>
   );
@@ -288,6 +291,12 @@ function LinksSection() {
           rel="noopener noreferrer"
         >
           [r] resume
+        </a>
+        <a
+          href="/newsletter"
+          className="hover:text-accent transition-colors"
+        >
+          [n] newsletter
         </a>
         <a
           href={`mailto:${siteConfig.social.email}`}

@@ -1,3 +1,5 @@
+import { env } from "@oreno-website.bts-migration/env/web";
+
 export const siteConfig = {
   name: "Pranav Bobde",
   title: "CTO @Senslyze",
@@ -30,7 +32,14 @@ export const siteConfig = {
   sections: {
     home: true,
     blogs: true,
+    newsletter: true,
     projects: false,
+  },
+  newsletter: {
+    name: "Pranav's Notes",
+    url: env.VITE_NEWSLETTER_URL,
+    description:
+      "A weekly-ish note for tech launches, important AI/dev news, good reads, and things I'm building or thinking through.",
   },
   social: {
     github: "https://github.com/Pranav-Bobde",
