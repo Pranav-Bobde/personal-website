@@ -45,8 +45,7 @@ export function NewsletterSignupForm({ className = "mt-6" }: NewsletterSignupFor
   useEffect(() => {
     const host = hostRef.current;
 
-    if (!host || !scriptUrl) {
-      setStatus("error");
+    if (!host) {
       return;
     }
 
@@ -70,16 +69,6 @@ export function NewsletterSignupForm({ className = "mt-6" }: NewsletterSignupFor
       script.remove();
     };
   }, [formUrl, scriptUrl]);
-
-  if (!formUrl) {
-    return (
-      <span
-        className={`border-border text-muted-foreground inline-flex border px-4 py-2 text-sm ${className}`}
-      >
-        subscribe link pending
-      </span>
-    );
-  }
 
   return (
     <div className={`newsletter-embed ${className}`} ref={hostRef}>
