@@ -20,6 +20,7 @@ export function Navigation() {
       <HomeNavItem pathname={pathname} />
       <HireMeNavItem pathname={pathname} />
       <BlogNavItem pathname={pathname} />
+      <NewsletterNavItem pathname={pathname} />
     </nav>
   );
 }
@@ -59,6 +60,19 @@ function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
       enabled: siteConfig.sections.blogs,
     },
   );
+
+  useHotkey(
+    "N",
+    () => {
+      if (siteConfig.sections.newsletter) {
+        navigate({ to: "/newsletter" });
+      }
+    },
+    {
+      ...hotkeyOptions,
+      enabled: siteConfig.sections.newsletter,
+    },
+  );
 }
 
 function HomeNavItem({ pathname }: { pathname: string }) {
@@ -85,6 +99,18 @@ function BlogNavItem({ pathname }: { pathname: string }) {
   return (
     <Link to="/blogs" className={`nav-item ${pathname.startsWith("/blogs") ? "active" : ""}`}>
       [b] blog
+    </Link>
+  );
+}
+
+function NewsletterNavItem({ pathname }: { pathname: string }) {
+  if (!siteConfig.sections.newsletter) {
+    return null;
+  }
+
+  return (
+    <Link to="/newsletter" className={`nav-item ${pathname === "/newsletter" ? "active" : ""}`}>
+      [n] newsletter
     </Link>
   );
 }
