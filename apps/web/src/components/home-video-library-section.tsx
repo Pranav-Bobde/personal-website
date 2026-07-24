@@ -47,7 +47,7 @@ function FeatureFirstVideos({ videos }: { videos: PreviewVideo[] }) {
 
   return (
     <>
-      <article className="border-border border">
+      <article data-video-layout="featured" className="border-border border">
         <Thumbnail video={lead} priority sizes={fullWidthThumbnailSizes} />
         <div className="p-4 sm:p-5">
           <VideoMeta video={lead} />
@@ -61,13 +61,52 @@ function FeatureFirstVideos({ videos }: { videos: PreviewVideo[] }) {
       </article>
 
       {rest.length > 0 ? (
-        <div className="bg-border border-border mt-4 grid grid-cols-1 gap-px border sm:grid-cols-2">
-          {rest.map((video) => (
-            <SmallCard key={video.id} video={video} />
-          ))}
+        <div
+          data-video-layout="archive-row"
+          className="mt-4 grid items-start gap-4 md:grid-cols-[20rem_minmax(0,1fr)] md:items-stretch"
+        >
+          <div data-video-layout="mini-grid" className="grid gap-4">
+            {rest.map((video) => (
+              <SmallCard key={video.id} video={video} standalone />
+            ))}
+          </div>
+          <UpcomingChannelCta />
         </div>
       ) : null}
     </>
+  );
+}
+
+function UpcomingChannelCta() {
+  return (
+    <aside className="border-border flex min-h-56 flex-col justify-between border p-5 md:h-full">
+      <div>
+        <div className="text-muted-foreground text-xs">
+          <span className="text-accent">$</span> follow --signal-only
+        </div>
+        <h3 className="mt-3 text-lg font-bold">Next video is brewing</h3>
+        <p className="text-muted-foreground mt-2 max-w-md text-sm leading-relaxed">
+          Practical AI-agent workflows, dev-tool rabbit holes, and the parts that broke before they
+          worked.
+        </p>
+      </div>
+      <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+        <a
+          href={siteConfig.social.youtube}
+          className="text-accent hover:text-foreground border-accent border-b"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          youtube channel →
+        </a>
+        <Link
+          to="/newsletter"
+          className="text-accent hover:text-foreground border-accent border-b"
+        >
+          read the notes →
+        </Link>
+      </div>
+    </aside>
   );
 }
 
@@ -154,9 +193,9 @@ function SectionHeader({ variant }: { variant: HomeVideoLibraryVariant }) {
   );
 }
 
-function SmallCard({ video }: { video: PreviewVideo }) {
+function SmallCard({ video, standalone = false }: { video: PreviewVideo; standalone?: boolean }) {
   return (
-    <article className="bg-background p-4">
+    <article className={`bg-background p-4 ${standalone ? "border-border border" : ""}`}>
       <Thumbnail video={video} sizes={cardThumbnailSizes} />
       <VideoMeta video={video} className="mt-3" />
       <h3 className="mt-2 text-sm leading-snug font-bold">{video.shortTitle}</h3>
