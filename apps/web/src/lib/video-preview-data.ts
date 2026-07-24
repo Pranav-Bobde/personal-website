@@ -53,6 +53,39 @@ export const stageLabels: Record<VideoStage, string> = {
 
 export const previewVideos: PreviewVideo[] = [
   {
+    id: "merging-in-parallel",
+    title: "How Are People Merging So Many AI-Agent PRs?",
+    shortTitle: "How are people merging so many AI-agent PRs?",
+    stage: "published",
+    date: "2026-07-23",
+    duration: "10:49",
+    thumbnail: "/video-previews/merging-ai-agent-prs.jpg",
+    thumbnailAlt:
+      'Thumbnail: "Wait... How?" beside a mock post saying "Shipped 20 PRs today"',
+    youtubeUrl: "https://www.youtube.com/watch?v=F-3bpi4f0U8",
+    summary:
+      "How parallel coding-agent workflows avoid breaking the codebase: worktrees, branch drift, semantic conflicts, merge queues, stacked PRs, feature flags, and choosing the right workflow.",
+    chapters: [
+      "Worktrees vs integration",
+      "Branch drift and semantic conflicts",
+      "Merge queues and stacked PRs",
+      "Picking the right tool",
+      "My practical agent workflow",
+    ],
+    blog: {
+      id: "merging-in-parallel",
+      title: "Multiple AI Agents, Multiple PRs—How Does This Not Break?",
+      readingTime: "16 min read",
+    },
+    notes: [
+      {
+        date: "2026-07-23",
+        label: "video",
+        body: "Published the practical walkthrough with the interactive article linked in the description.",
+      },
+    ],
+  },
+  {
     id: "token-cost-minimization",
     title: 'Why "Cheap" AI Models Cost More',
     shortTitle: "Why cheap AI models cost more",
