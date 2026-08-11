@@ -101,6 +101,16 @@ export function newsletterPageSeo() {
   });
 }
 
+export function projectsPageSeo() {
+  return pageSeo({
+    title: "Projects - Pranav Bobde",
+    description:
+      "Selected products and engineering experiments built by Pranav Bobde, including Better Mail and LaterCart.",
+    pathname: "/projects",
+    type: "website",
+  });
+}
+
 export function blogPostPageSeo(post: BlogPost) {
   const title = `${post.title} - Pranav Bobde`;
   const description = post.summary;

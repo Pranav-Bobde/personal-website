@@ -33,7 +33,7 @@ export const siteConfig = {
     home: true,
     blogs: true,
     newsletter: true,
-    projects: false,
+    projects: true,
   },
   newsletter: {
     name: "Pranav's Notes",

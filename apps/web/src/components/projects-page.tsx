@@ -1,136 +1,134 @@
-import { useEffect, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { useHotkey } from "@tanstack/react-hotkeys";
+import { useState } from "react";
 
-import { SearchDialog } from "@/components/search-dialog";
+import { ProjectLogbookRows } from "@/components/project-logbook-rows";
+import { Draft, ProjectEvidenceRail } from "@/components/project-preview-frame";
 import { useKeyboardNavigation } from "@/hooks/use-keyboard-navigation";
-import { projects } from "@/lib/project-data";
+import type { PreviewProject } from "@/lib/project-preview-data";
+import { previewProjects } from "@/lib/project-preview-data";
+
+const hotkeyOptions = {
+  preventDefault: true,
+  stopPropagation: true,
+  ignoreInputs: true,
+};
 
 export function ProjectsPage() {
-  const [filteredProjects, setFilteredProjects] = useState(projects);
-  const [mounted, setMounted] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<PreviewProject | null>(null);
+  const { activeIndex, setActiveIndex } = useKeyboardNavigation({
+    itemSelector: ".project-log-detail-item",
+    enabled: !selectedProject,
+    onEnter: (element) => {
+      const href = element.getAttribute("data-href");
+      if (href) {
+        window.open(href, "_blank", "noopener,noreferrer");
+      }
+    },
+    searchEnabled: false,
+  });
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const { activeIndex, isSearchOpen, searchQuery, setSearchQuery, setIsSearchOpen } =
-    useKeyboardNavigation({
-      itemSelector: ".project-item",
-      onEnter: (element) => {
-        const href = element.getAttribute("data-href");
-        if (href) {
-          window.open(href, "_blank", "noopener,noreferrer");
-        }
-      },
-    });
-
-  useEffect(() => {
-    if (searchQuery) {
-      const nextFilteredProjects = projects.filter(
-        (project) =>
-          project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          project.technologies.some((tech) =>
-            tech.toLowerCase().includes(searchQuery.toLowerCase()),
-          ),
-      );
-      setFilteredProjects(nextFilteredProjects);
-      return;
+  const openProjectPreview = (project: PreviewProject) => {
+    const projectIndex = previewProjects.findIndex(({ id }) => id === project.id);
+    if (projectIndex >= 0) {
+      setActiveIndex(projectIndex);
     }
+    setSelectedProject(project);
+  };
 
-    setFilteredProjects(projects);
-  }, [searchQuery]);
+  useHotkey(
+    "Space",
+    () => {
+      if (activeIndex >= 0) {
+        setSelectedProject(previewProjects[activeIndex] ?? null);
+      }
+    },
+    { ...hotkeyOptions, enabled: !selectedProject && activeIndex >= 0 },
+  );
 
-  if (!mounted) {
-    return (
-      <div className="animate-fade-in">
-        <div className="mb-8">
-          <h1 className="section-title">projects</h1>
-          <p className="mb-6 text-sm text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  useHotkey("Escape", () => setSelectedProject(null), {
+    ...hotkeyOptions,
+    enabled: Boolean(selectedProject),
+  });
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-8">
-        <h1 className="section-title">projects</h1>
-        <p className="mb-6 text-sm text-muted-foreground">
-          press <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">/</kbd> to search • use{" "}
-          <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">ctrl + j/k</kbd> or
-          <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">↑</kbd> and
-          <kbd className="bg-secondary px-1 py-0.5 text-xs rounded">↓</kbd> to navigate
-        </p>
+      <h1 className="section-title">projects</h1>
 
-        <p className="mb-8 text-muted-foreground">
-          Here are some of the projects I've worked on. I love building tools that solve real
-          problems and exploring new technologies along the way.
-        </p>
+      <p className="text-muted-foreground mb-8 text-sm">
+        <span className="hidden sm:inline">
+          <kbd className="bg-secondary rounded px-1 py-0.5 text-xs">j/k</kbd> selects •{" "}
+          <kbd className="bg-secondary rounded px-1 py-0.5 text-xs">space</kbd> preview-details •{" "}
+          <kbd className="bg-secondary rounded px-1 py-0.5 text-xs">enter</kbd> opens source
+        </span>
+        <span className="sm:hidden">tap a project to preview</span>
+      </p>
 
-        <div className="space-y-8">
-          {filteredProjects.length > 0 ? (
-            filteredProjects.map((project, index) => (
-              <div
-                key={project.id}
-                className={`project-item entry-item ${activeIndex === index ? "ring-accent ring-2" : ""}`}
-                tabIndex={0}
-                data-href={project.link}
-              >
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold">{project.title}</h2>
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-accent text-muted-foreground"
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    <ExternalLink size={16} />
-                  </a>
-                </div>
-
-                <div className="mt-1 text-sm text-muted-foreground">
-                  {project.role} ({project.period})
-                </div>
-
-                <p className="my-3">{project.description}</p>
-
-                {project.achievements.length > 0 ? (
-                  <div className="mt-4">
-                    <h3 className="mb-2 text-sm font-bold">Achievements</h3>
-                    <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-                      {project.achievements.map((achievement) => (
-                        <li key={achievement}>{achievement}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                {project.technologies.length > 0 ? (
-                  <div className="mt-4 flex flex-wrap">
-                    {project.technologies.map((tech) => (
-                      <span key={tech} className="tech-tag">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            ))
-          ) : (
-            <p className="text-muted-foreground">No projects found matching your search.</p>
-          )}
-        </div>
-      </div>
-
-      <SearchDialog
-        isOpen={isSearchOpen}
-        onOpenChange={setIsSearchOpen}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        placeholder="Search projects..."
+      <ProjectLogbookRows
+        projects={previewProjects}
+        activeIndex={activeIndex}
+        itemClassName="project-log-detail-item"
+        onPreview={openProjectPreview}
       />
+
+      <p className="border-border text-muted-foreground mt-8 border-t pt-4 text-xs">
+        {previewProjects.length} projects · details on demand
+      </p>
+
+      {selectedProject ? (
+        <ProjectDetailModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      ) : null}
+    </div>
+  );
+}
+
+function ProjectDetailModal({
+  project,
+  onClose,
+}: {
+  project: PreviewProject;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="project-detail-title"
+      className="bg-background/85 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm md:p-8"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <article className="border-border bg-background max-h-[min(48rem,calc(100dvh-2rem))] w-full max-w-2xl overflow-y-auto border p-5 shadow-2xl md:p-8">
+        <header className="border-border mb-8 flex items-start justify-between gap-6 border-b pb-5">
+          <div>
+            <p className="text-accent mb-2 text-xs tracking-widest">case study</p>
+            <h2 id="project-detail-title" className="text-2xl leading-tight font-bold">
+              {project.name}
+            </h2>
+          </div>
+          <button
+            type="button"
+            aria-label={`Close ${project.name} details`}
+            onClick={onClose}
+            className="text-muted-foreground hover:text-accent shrink-0 text-xs transition-colors"
+          >
+            [esc] close
+          </button>
+        </header>
+
+        <p className="text-foreground text-lg leading-snug">
+          <Draft value={project.thesis} />
+        </p>
+        <p className="text-muted-foreground mt-5 text-sm leading-relaxed">
+          <Draft value={project.context} />
+        </p>
+
+        <ProjectEvidenceRail project={project} />
+
+        <p className="text-muted-foreground mt-6 text-xs">Press Esc or click outside to close.</p>
+      </article>
     </div>
   );
 }

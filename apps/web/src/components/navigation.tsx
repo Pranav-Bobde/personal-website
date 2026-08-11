@@ -16,10 +16,11 @@ export function Navigation() {
   useNavigationHotkeys(navigate);
 
   return (
-    <nav className="mb-8 flex justify-center space-x-6 text-sm">
+    <nav className="mb-8 flex justify-start gap-x-3 overflow-x-auto whitespace-nowrap sm:justify-center sm:gap-x-6 text-sm">
       <HomeNavItem pathname={pathname} />
       <HireMeNavItem pathname={pathname} />
       <BlogNavItem pathname={pathname} />
+      <ProjectsNavItem pathname={pathname} />
       <NewsletterNavItem pathname={pathname} />
     </nav>
   );
@@ -62,6 +63,19 @@ function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
   );
 
   useHotkey(
+    "P",
+    () => {
+      if (siteConfig.sections.projects) {
+        navigate({ to: "/projects" });
+      }
+    },
+    {
+      ...hotkeyOptions,
+      enabled: siteConfig.sections.projects,
+    },
+  );
+
+  useHotkey(
     "N",
     () => {
       if (siteConfig.sections.newsletter) {
@@ -72,6 +86,18 @@ function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
       ...hotkeyOptions,
       enabled: siteConfig.sections.newsletter,
     },
+  );
+}
+
+function ProjectsNavItem({ pathname }: { pathname: string }) {
+  if (!siteConfig.sections.projects) {
+    return null;
+  }
+
+  return (
+    <Link to="/projects" className={`nav-item ${pathname === "/projects" ? "active" : ""}`}>
+      [p] projects
+    </Link>
   );
 }
 
