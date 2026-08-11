@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 interface KeyboardNavigationOptions {
   itemSelector: string;
+  enabled?: boolean;
   onEnter?: (element: HTMLElement) => void;
   onPreviousPage?: () => void;
   onNextPage?: () => void;
@@ -24,6 +25,7 @@ function getPreviousIndex(index: number, totalItems: number) {
 
 export function useKeyboardNavigation({
   itemSelector,
+  enabled = true,
   onEnter,
   onPreviousPage,
   onNextPage,
@@ -32,15 +34,16 @@ export function useKeyboardNavigation({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const hotkeysEnabled = enabled && !isSearchOpen;
 
   const options = useMemo(
     () => ({
       preventDefault: true,
       stopPropagation: true,
       ignoreInputs: true,
-      enabled: !isSearchOpen,
+      enabled: hotkeysEnabled,
     }),
-    [isSearchOpen],
+    [hotkeysEnabled],
   );
 
   useDirectionalHotkey("J", itemSelector, options, getNextIndex, setActiveIndex);
@@ -56,7 +59,7 @@ export function useKeyboardNavigation({
     },
     {
       ...options,
-      enabled: !isSearchOpen && Boolean(onPreviousPage),
+      enabled: hotkeysEnabled && Boolean(onPreviousPage),
     },
   );
 
@@ -68,7 +71,7 @@ export function useKeyboardNavigation({
     },
     {
       ...options,
-      enabled: !isSearchOpen && Boolean(onPreviousPage),
+      enabled: hotkeysEnabled && Boolean(onPreviousPage),
     },
   );
 
@@ -80,7 +83,7 @@ export function useKeyboardNavigation({
     },
     {
       ...options,
-      enabled: !isSearchOpen && Boolean(onNextPage),
+      enabled: hotkeysEnabled && Boolean(onNextPage),
     },
   );
 
@@ -92,7 +95,7 @@ export function useKeyboardNavigation({
     },
     {
       ...options,
-      enabled: !isSearchOpen && Boolean(onNextPage),
+      enabled: hotkeysEnabled && Boolean(onNextPage),
     },
   );
 
@@ -106,7 +109,7 @@ export function useKeyboardNavigation({
     },
     {
       ...options,
-      enabled: !isSearchOpen && activeIndex >= 0,
+      enabled: hotkeysEnabled && activeIndex >= 0,
     },
   );
 
@@ -119,7 +122,7 @@ export function useKeyboardNavigation({
     },
     {
       ...options,
-      enabled: searchEnabled && !isSearchOpen,
+      enabled: hotkeysEnabled && searchEnabled,
     },
   );
 
@@ -143,6 +146,7 @@ export function useKeyboardNavigation({
 
   return {
     activeIndex,
+    setActiveIndex,
     isSearchOpen,
     searchQuery,
     setSearchQuery,

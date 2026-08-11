@@ -7,6 +7,7 @@
     "apps/web/src/lib/project-data.ts",
     "apps/web/src/lib/video-preview-data.test.mjs",
     "apps/web/src/lib/newsletter-embed.test.mjs",
-    "apps/web/src/lib/newsletter-page.test.mjs"
+    "apps/web/src/lib/newsletter-page.test.mjs",
+    "apps/web/src/lib/project-preview-data.test.mjs"
   ]
 }

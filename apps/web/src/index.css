@@ -101,7 +101,7 @@
 }
 
 .entry-item:focus-visible {
-  @apply outline-none;
+  @apply outline-accent outline-1 outline-offset-2;
 }
 
 .entry-item.is-active {
