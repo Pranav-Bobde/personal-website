@@ -545,9 +545,448 @@
   animation: demoChainEject 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.demo-two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(180px, 0.65fr);
+  gap: 24px;
+  align-items: center;
+}
+.demo-control-heading,
+.demo-control-row,
+.demo-rule-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.demo-control-heading {
+  margin-bottom: 7px;
+  color: hsl(0 0% 63.9%);
+  font-size: 12px;
+}
+.demo-control-heading strong {
+  color: white;
+  font-size: 13px;
+}
+.demo-range {
+  width: 100%;
+  accent-color: hsl(180 100% 45%);
+}
+.demo-range-actions {
+  margin-top: 8px;
+}
+.demo-process-flow {
+  display: grid;
+  grid-template-columns: auto 16px auto 16px minmax(80px, 1fr);
+  gap: 8px;
+  align-items: center;
+  margin: 18px 0 10px;
+  color: hsl(0 0% 42%);
+}
+.demo-process-node {
+  padding: 7px 8px;
+  border: 1px solid hsl(0 0% 24%);
+  border-radius: 7px;
+  color: hsl(0 0% 82%);
+  text-align: center;
+  font-size: 11px;
+}
+.demo-backend-cloud {
+  min-height: 52px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 4px;
+  padding: 7px;
+  border: 1px solid hsl(0 0% 24%);
+  border-radius: 7px;
+}
+.demo-backend-cloud small {
+  color: hsl(0 0% 63.9%);
+  font-size: 10px;
+}
+.demo-backend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  transition:
+    background 0.25s,
+    opacity 0.25s,
+    transform 0.25s;
+}
+.demo-backend-dot[data-overloaded="true"] {
+  opacity: 0.85;
+  transform: rotate(45deg);
+}
+.demo-caption {
+  color: hsl(0 0% 63.9%);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+.demo-stat-stack {
+  display: grid;
+  gap: 18px;
+}
+.demo-verdict {
+  padding: 9px 11px;
+  border-radius: 7px;
+  color: hsl(0 0% 82%);
+  background: hsl(0 0% 100% / 0.04);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.demo-verdict[data-tone="good"] {
+  background: hsl(150 62% 47% / 0.1);
+  color: hsl(150 62% 66%);
+}
+.demo-verdict[data-tone="warn"] {
+  background: hsl(42 95% 58% / 0.1);
+  color: hsl(42 95% 68%);
+}
+.demo-segmented {
+  display: inline-flex;
+  padding: 3px;
+  margin-bottom: 18px;
+  border: 1px solid hsl(0 0% 24%);
+  border-radius: 8px;
+}
+.demo-version-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.demo-tx-lane {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.demo-tx-lane strong {
+  color: white;
+  font-size: 12px;
+}
+.demo-tx-lane span {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: hsl(0 0% 100% / 0.035);
+  color: hsl(0 0% 42%);
+  font-size: 11px;
+  transition:
+    color 0.25s,
+    background 0.25s;
+}
+.demo-tx-lane span[data-active="true"] {
+  color: hsl(180 100% 68%);
+  background: hsl(180 100% 40% / 0.1);
+}
+.demo-version-store {
+  display: grid;
+  gap: 7px;
+}
+.demo-version {
+  padding: 7px 9px;
+  border: 1px solid hsl(0 0% 24%);
+  border-radius: 6px;
+  color: hsl(0 0% 42%);
+  font-size: 11px;
+  opacity: 0.25;
+  transform: scale(0.96);
+  transition:
+    opacity 0.3s,
+    transform 0.3s,
+    border-color 0.3s;
+}
+.demo-version[data-visible="true"] {
+  opacity: 1;
+  transform: scale(1);
+  border-color: hsl(180 100% 40% / 0.55);
+}
+.demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.demo-account-grid,
+.demo-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.demo-account,
+.demo-stat-grid > div {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  border: 1px solid hsl(0 0% 24%);
+  border-radius: 8px;
+}
+.demo-account span,
+.demo-account small,
+.demo-stat-grid span {
+  color: hsl(0 0% 63.9%);
+  font-size: 10.5px;
+}
+.demo-account strong,
+.demo-stat-grid strong {
+  color: white;
+  font-size: 15px;
+}
+.demo-rule-row {
+  margin: 12px 0;
+  padding: 9px 11px;
+  border-radius: 7px;
+  background: hsl(0 0% 100% / 0.04);
+  color: hsl(0 0% 63.9%);
+  font-size: 11.5px;
+}
+.prose ol.write-skew-trace {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.write-skew-trace li {
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr);
+  gap: 7px;
+  align-items: baseline;
+  padding: 6px 7px;
+  border-left: 2px solid hsl(0 0% 24%);
+  background: hsl(0 0% 100% / 0.018);
+}
+.write-skew-trace li[data-state="complete"] {
+  border-color: hsl(150 62% 47% / 0.6);
+}
+.write-skew-trace li[data-state="current"] {
+  border-color: hsl(180 100% 45%);
+  background: hsl(180 100% 40% / 0.06);
+}
+.write-skew-trace li > span {
+  color: hsl(0 0% 45%);
+  font-size: 9px;
+}
+.write-skew-trace li code {
+  min-width: 0;
+  color: hsl(0 0% 73%);
+  font-size: 9.5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.write-skew-trace li[data-state="upcoming"] code {
+  color: hsl(0 0% 50%);
+}
+.write-skew-sql-trace {
+  display: grid;
+  gap: 8px;
+}
+.write-skew-sql-trace-notation {
+  display: grid;
+  gap: 5px;
+  padding: 8px 10px;
+  border: 1px solid hsl(180 100% 40% / 0.25);
+  border-radius: 7px;
+  background: hsl(180 100% 40% / 0.04);
+}
+.write-skew-sql-trace-notation > span,
+.write-skew-sql-trace-current > span,
+.write-skew-sql-trace-outcome span {
+  color: hsl(180 100% 68%);
+  font-size: 9px;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+.write-skew-sql-trace-notation dl {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+.write-skew-sql-trace-notation dl > div {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.9fr) minmax(0, 1.1fr);
+  gap: 10px;
+  align-items: baseline;
+}
+.write-skew-sql-trace-notation dt {
+  color: hsl(0 0% 87%);
+  font-size: 9.5px;
+  line-height: 1.3;
+}
+.write-skew-sql-trace-notation dd {
+  margin: 0;
+  color: hsl(0 0% 66%);
+  font-size: 9.5px;
+  line-height: 1.3;
+}
+.write-skew-sql-trace-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.write-skew-sql-trace .demo-segmented {
+  margin-bottom: 0;
+}
+.write-skew-sql-trace .demo-seg,
+.write-skew-sql-trace .demo-btn {
+  min-height: 44px;
+}
+.write-skew-sql-trace-step {
+  color: hsl(0 0% 55%);
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.write-skew-sql-trace-current {
+  display: grid;
+  gap: 3px;
+  padding: 8px 10px;
+  border: 1px solid hsl(0 0% 22%);
+  border-radius: 7px;
+  background: hsl(0 0% 100% / 0.025);
+}
+.write-skew-sql-trace-current strong {
+  color: hsl(0 0% 91%);
+  font-size: 12px;
+  font-weight: 500;
+}
+.write-skew-sql-trace-current p {
+  margin: 0;
+  color: hsl(0 0% 71%);
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+.write-skew-sql-trace-outcome {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 7px 8px;
+  border: 1px solid hsl(0 0% 19%);
+  border-radius: 7px;
+  background: hsl(0 0% 100% / 0.035);
+}
+.write-skew-sql-trace-outcome > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.write-skew-sql-trace-outcome strong {
+  color: hsl(0 0% 86%);
+  font-size: 10px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.write-skew-sql-trace-outcome > div:first-child strong {
+  color: hsl(150 62% 66%);
+  font-size: 12px;
+}
+.write-skew-sql-trace-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.write-skew-sql-trace-actions p {
+  margin: 0;
+  color: hsl(0 0% 58%);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.write-skew-good {
+  color: hsl(150 62% 66%) !important;
+}
+.write-skew-bad {
+  color: hsl(2 72% 72%) !important;
+}
+.demo-timeline {
+  margin: 2px 0 18px;
+}
+.demo-timeline-label {
+  margin-bottom: 7px;
+  color: hsl(0 0% 63.9%);
+  font-size: 11px;
+}
+.demo-phase-row {
+  display: flex;
+  height: 42px;
+}
+.demo-phase-row span {
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  border-right: 1px solid hsl(0 0% 5.5%);
+  background: hsl(0 0% 13%);
+  color: hsl(0 0% 72%);
+  font-size: 9.5px;
+  text-align: center;
+}
+.demo-hold-row {
+  height: 30px;
+  padding-top: 6px;
+}
+.demo-hold-bar {
+  display: grid;
+  place-items: center;
+  height: 24px;
+  min-width: 86px;
+  border-radius: 5px;
+  background: hsl(2 72% 58% / 0.22);
+  color: hsl(2 72% 72%);
+  font-size: 9.5px;
+  transition:
+    width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.3s;
+}
+.demo-hold-bar[data-scope="query"] {
+  background: hsl(150 62% 47% / 0.2);
+  color: hsl(150 62% 70%);
+}
+.demo-stat-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 @media (max-width: 620px) {
-  .demo-flag-grid {
+  .demo-flag-grid,
+  .demo-two-col,
+  .demo-version-stage {
     grid-template-columns: 1fr !important;
+  }
+  .write-skew-sql-trace-notation dl > div {
+    grid-template-columns: minmax(108px, 0.9fr) minmax(0, 1.1fr);
+    gap: 3px 7px;
+  }
+  .write-skew-sql-trace-controls,
+  .write-skew-sql-trace-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .write-skew-sql-trace-outcome {
+    grid-template-columns: 1fr;
+  }
+  .demo-version-store {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .demo-control-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .demo-actions {
+    justify-content: flex-start;
+  }
+  .demo-stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .demo-process-flow {
+    grid-template-columns: auto 12px auto;
+  }
+  .demo-process-flow > span:last-of-type {
+    display: none;
+  }
+  .demo-backend-cloud {
+    grid-column: 1 / -1;
   }
 }
 @media (prefers-reduced-motion: reduce) {
