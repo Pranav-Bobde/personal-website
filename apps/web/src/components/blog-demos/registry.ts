@@ -1,9 +1,13 @@
 import type { ComponentType } from "react";
 
 import { BranchDriftDemo } from "./branch-drift-demo";
+import { CheckoutWindowDemo } from "./checkout-window-demo";
+import { ConnectionPressureDemo } from "./connection-pressure-demo";
 import { FeatureFlagDemo } from "./feature-flag-demo";
 import { MergeQueueDemo } from "./merge-queue-demo";
+import { MvccVisibilityDemo } from "./mvcc-visibility-demo";
 import { StackedPrsDemo } from "./stacked-prs-demo";
+import { WriteSkewDemo } from "./write-skew-demo";
 
 /* Maps a `::demo[name]` directive in a blog post to its interactive widget. */
 export const demoRegistry: Record<string, ComponentType> = {
@@ -11,4 +15,8 @@ export const demoRegistry: Record<string, ComponentType> = {
   "merge-queue": MergeQueueDemo,
   "stacked-prs": StackedPrsDemo,
   "feature-flag": FeatureFlagDemo,
+  "connection-pressure": ConnectionPressureDemo,
+  "mvcc-visibility": MvccVisibilityDemo,
+  "write-skew": WriteSkewDemo,
+  "checkout-window": CheckoutWindowDemo,
 };
