@@ -3,9 +3,8 @@ import { Link } from "@tanstack/react-router";
 
 import { StageMark } from "@/components/video-stage-mark";
 import { siteConfig } from "@/lib/config";
-import type { PreviewVideo } from "@/lib/video-preview-data";
-import { getPublishedVideos } from "@/lib/video-preview-data";
-import { getVideoThumbnailSrcSet } from "@/lib/video-preview-data";
+import type { HomepageVideo } from "@/lib/youtube-video-data";
+import { homepageYoutubeVideos } from "@/lib/youtube-video-data";
 
 type HomeVideoLibraryVariant = "feature-first" | "shelf" | "compact";
 
@@ -14,7 +13,7 @@ interface HomeVideoLibrarySectionProps {
 }
 
 export function HomeVideoLibrarySection({ variant }: HomeVideoLibrarySectionProps) {
-  const videos = getPublishedVideos().slice(0, 3);
+  const videos = homepageYoutubeVideos;
   const VariantComponent = variantComponents[variant];
 
   if (videos.length === 0) {
@@ -33,12 +32,12 @@ const variantComponents = {
   "feature-first": FeatureFirstVideos,
   shelf: ShelfVideos,
   compact: CompactVideos,
-} satisfies Record<HomeVideoLibraryVariant, (props: { videos: PreviewVideo[] }) => ReactNode>;
+} satisfies Record<HomeVideoLibraryVariant, (props: { videos: HomepageVideo[] }) => ReactNode>;
 
 const fullWidthThumbnailSizes = "(max-width: 768px) calc(100vw - 2rem), 768px";
 const cardThumbnailSizes = "(max-width: 640px) calc(100vw - 4rem), 384px";
 
-function FeatureFirstVideos({ videos }: { videos: PreviewVideo[] }) {
+function FeatureFirstVideos({ videos }: { videos: HomepageVideo[] }) {
   const [lead, ...rest] = videos;
 
   if (!lead) {
@@ -62,55 +61,19 @@ function FeatureFirstVideos({ videos }: { videos: PreviewVideo[] }) {
 
       {rest.length > 0 ? (
         <div
-          data-video-layout="archive-row"
-          className="mt-4 grid items-start gap-4 md:grid-cols-[20rem_minmax(0,1fr)] md:items-stretch"
+          data-video-layout="archive-grid"
+          className="mt-4 grid items-stretch gap-4 sm:grid-cols-2"
         >
-          <div data-video-layout="mini-grid" className="grid gap-4">
-            {rest.map((video) => (
-              <SmallCard key={video.id} video={video} standalone />
-            ))}
-          </div>
-          <UpcomingChannelCta />
+          {rest.map((video) => (
+            <SmallCard key={video.id} video={video} standalone />
+          ))}
         </div>
       ) : null}
     </>
   );
 }
 
-function UpcomingChannelCta() {
-  return (
-    <aside className="border-border flex min-h-56 flex-col justify-between border p-5 md:h-full">
-      <div>
-        <div className="text-muted-foreground text-xs">
-          <span className="text-accent">$</span> follow --signal-only
-        </div>
-        <h3 className="mt-3 text-lg font-bold">Next video is brewing</h3>
-        <p className="text-muted-foreground mt-2 max-w-md text-sm leading-relaxed">
-          Practical AI-agent workflows, dev-tool rabbit holes, and the parts that broke before they
-          worked.
-        </p>
-      </div>
-      <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-        <a
-          href={siteConfig.social.youtube}
-          className="text-accent hover:text-foreground border-accent border-b"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          youtube channel →
-        </a>
-        <Link
-          to="/newsletter"
-          className="text-accent hover:text-foreground border-accent border-b"
-        >
-          read the notes →
-        </Link>
-      </div>
-    </aside>
-  );
-}
-
-function ShelfVideos({ videos }: { videos: PreviewVideo[] }) {
+function ShelfVideos({ videos }: { videos: HomepageVideo[] }) {
   return (
     <div className="bg-border border-border grid grid-cols-1 gap-px border sm:grid-cols-2 lg:grid-cols-3">
       {videos.map((video) => (
@@ -120,7 +83,7 @@ function ShelfVideos({ videos }: { videos: PreviewVideo[] }) {
   );
 }
 
-function CompactVideos({ videos }: { videos: PreviewVideo[] }) {
+function CompactVideos({ videos }: { videos: HomepageVideo[] }) {
   const [lead, ...rest] = videos;
 
   if (!lead) {
@@ -151,13 +114,7 @@ function CompactVideos({ videos }: { videos: PreviewVideo[] }) {
           <span className="text-accent mt-0.5 text-xs">↳</span>
           <div className="min-w-0 flex-1">
             <VideoMeta video={video} compact />
-            <Link
-              to="/blogs/$id"
-              params={{ id: video.blog.id }}
-              className="hover:text-accent mt-1 block text-sm leading-snug font-bold transition-colors"
-            >
-              {video.shortTitle}
-            </Link>
+            <TitleLink video={video} />
           </div>
           <span className="text-muted-foreground shrink-0 text-xs">{video.duration}</span>
         </article>
@@ -170,7 +127,8 @@ function SectionHeader({ variant }: { variant: HomeVideoLibraryVariant }) {
   const copy = {
     "feature-first": "Recent uploads from the channel.",
     shelf: "A small shelf of published YouTube work, kept close to the existing blog-card rhythm.",
-    compact: "A quieter video block, just enough to route people to the channel and companion posts.",
+    compact:
+      "A quieter video block, just enough to route people to the channel and companion posts.",
   } satisfies Record<HomeVideoLibraryVariant, string>;
 
   return (
@@ -193,7 +151,7 @@ function SectionHeader({ variant }: { variant: HomeVideoLibraryVariant }) {
   );
 }
 
-function SmallCard({ video, standalone = false }: { video: PreviewVideo; standalone?: boolean }) {
+function SmallCard({ video, standalone = false }: { video: HomepageVideo; standalone?: boolean }) {
   return (
     <article className={`bg-background p-4 ${standalone ? "border-border border" : ""}`}>
       <Thumbnail video={video} sizes={cardThumbnailSizes} />
@@ -216,14 +174,13 @@ function Thumbnail({
   priority = false,
 }: {
   sizes: string;
-  video: PreviewVideo;
+  video: HomepageVideo;
   priority?: boolean;
 }) {
   const thumbnailContent = (
     <>
       <img
         src={video.thumbnail}
-        srcSet={getVideoThumbnailSrcSet(video.thumbnail)}
         sizes={sizes}
         alt={video.thumbnailAlt}
         width={1280}
@@ -237,27 +194,15 @@ function Thumbnail({
     </>
   );
 
-  if (video.youtubeUrl) {
-    return (
-      <a
-        href={video.youtubeUrl}
-        className="border-border relative block border"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {thumbnailContent}
-      </a>
-    );
-  }
-
   return (
-    <Link
-      to="/blogs/$id"
-      params={{ id: video.blog.id }}
+    <a
+      href={video.youtubeUrl}
       className="border-border relative block border"
+      target="_blank"
+      rel="noopener noreferrer"
     >
       {thumbnailContent}
-    </Link>
+    </a>
   );
 }
 
@@ -266,7 +211,7 @@ function VideoMeta({
   className,
   compact = false,
 }: {
-  video: PreviewVideo;
+  video: HomepageVideo;
   className?: string;
   compact?: boolean;
 }) {
@@ -281,7 +226,7 @@ function VideoMeta({
   );
 }
 
-function WatchLink({ video }: { video: PreviewVideo }) {
+function WatchLink({ video }: { video: HomepageVideo }) {
   if (!video.youtubeUrl) {
     return null;
   }
@@ -298,7 +243,11 @@ function WatchLink({ video }: { video: PreviewVideo }) {
   );
 }
 
-function PostLink({ video }: { video: PreviewVideo }) {
+function PostLink({ video }: { video: HomepageVideo }) {
+  if (!video.blog) {
+    return null;
+  }
+
   return (
     <Link
       to="/blogs/$id"
@@ -306,6 +255,24 @@ function PostLink({ video }: { video: PreviewVideo }) {
       className="text-accent hover:text-foreground border-accent border-b text-xs"
     >
       companion post →
+    </Link>
+  );
+}
+
+function TitleLink({ video }: { video: HomepageVideo }) {
+  const className = "hover:text-accent mt-1 block text-sm leading-snug font-bold transition-colors";
+
+  if (!video.blog) {
+    return (
+      <a href={video.youtubeUrl} className={className} target="_blank" rel="noopener noreferrer">
+        {video.shortTitle}
+      </a>
+    );
+  }
+
+  return (
+    <Link to="/blogs/$id" params={{ id: video.blog.id }} className={className}>
+      {video.shortTitle}
     </Link>
   );
 }

@@ -32,19 +32,18 @@ test("homepage video list only includes published YouTube uploads", () => {
   expect(videos.every((video) => video.stage === "published")).toBe(true);
 });
 
-test("feature-first layout pairs archive mini-cards with the selected brewing CTA", () => {
+test("feature-first layout places the two archive videos side by side without a brewing CTA", () => {
   const component = fs.readFileSync(homeVideoComponentPath, "utf8");
-  const normalizedComponent = component.replace(/\s+/g, " ");
 
   expect(component).toContain('data-video-layout="featured"');
-  expect(component).toContain('data-video-layout="archive-row"');
-  expect(component).toContain('data-video-layout="mini-grid"');
-  expect(component).toContain("md:items-stretch");
-  expect(component).toContain("md:h-full");
-  expect(component).toContain("Next video is brewing");
-  expect(normalizedComponent).toContain(
-    "Practical AI-agent workflows, dev-tool rabbit holes, and the parts that broke before they worked.",
-  );
-  expect(component).toContain("youtube channel →");
-  expect(component).toContain("read the notes →");
+  expect(component).toContain('data-video-layout="archive-grid"');
+  expect(component).toContain("sm:grid-cols-2");
+  expect(component).not.toContain("Next video is brewing");
+});
+
+test("desktop archive cards stretch to equal heights", () => {
+  const component = fs.readFileSync(homeVideoComponentPath, "utf8");
+
+  expect(component).toContain('className="mt-4 grid items-stretch gap-4 sm:grid-cols-2"');
+  expect(component).not.toContain('className="mt-4 grid items-start gap-4 sm:grid-cols-2"');
 });

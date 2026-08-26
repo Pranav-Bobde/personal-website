@@ -1,0 +1,28 @@
+[
+  {
+    "id": "L3dtD_1UNII",
+    "title": "Fable 5 vs GPT-5.6 vs Opus 5: What I Actually Use",
+    "summary": "Anthropic says Claude Opus 5 comes close to Fable 5 intelligence at half the price. After using it on real coding work, that has not been my experience.",
+    "publishedAt": "2026-08-13T07:55:52.000Z",
+    "duration": "15:22",
+    "thumbnail": "/video-previews/youtube/L3dtD_1UNII-fa2fec00e505.jpg"
+  },
+  {
+    "id": "F-3bpi4f0U8",
+    "title": "How Are People Merging So Many AI-Agent PRs?",
+    "summary": "How are people running multiple AI coding agents, raising several PRs, and merging everything without constantly breaking their codebase?",
+    "publishedAt": "2026-07-24T06:36:59.000Z",
+    "duration": "10:49",
+    "thumbnail": "/video-previews/youtube/F-3bpi4f0U8-457f5109b250.jpg",
+    "companionBlogId": "merging-in-parallel"
+  },
+  {
+    "id": "_PHYH45Gl1E",
+    "title": "Why “Cheap” AI Models Cost More",
+    "summary": "In this video, I talk about why AI costs can get out of hand, especially for enterprises paying actual API/token prices, and why “cheaper” models are not always cheaper in real usage.",
+    "publishedAt": "2026-07-16T09:38:19.000Z",
+    "duration": "15:53",
+    "thumbnail": "/video-previews/youtube/_PHYH45Gl1E-f4eaac693c11.jpg",
+    "companionBlogId": "token-cost-minimization"
+  }
+]
