@@ -7,7 +7,9 @@
     "check-types": "tsc --noEmit",
     "serve": "vite preview",
     "dev": "vite dev",
-    "doctor": "npx react-doctor@latest"
+    "doctor": "npx react-doctor@latest",
+    "sync-youtube": "bun run scripts/youtube-sync.ts",
+    "test:youtube-sync": "bun test scripts/youtube-sync.test.ts src/lib/youtube-video-data.test.mjs src/lib/video-preview-data.test.mjs"
   },
   "dependencies": {
     "@oreno-website.bts-migration/api": "workspace:*",
