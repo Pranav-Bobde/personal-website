@@ -1,5 +1,14 @@
 [
   {
+    "id": "vLxBnGF4iLU",
+    "title": "Why Postgres Runs Out of Connections",
+    "summary": "A Postgres connection is not free plumbing.",
+    "publishedAt": "2026-08-26T03:00:18.000Z",
+    "duration": "16:01",
+    "thumbnail": "/video-previews/youtube/vLxBnGF4iLU-159717f9b193.jpg",
+    "companionBlogId": "postgres-connections"
+  },
+  {
     "id": "L3dtD_1UNII",
     "title": "Fable 5 vs GPT-5.6 vs Opus 5: What I Actually Use",
     "summary": "Anthropic says Claude Opus 5 comes close to Fable 5 intelligence at half the price. After using it on real coding work, that has not been my experience.",
