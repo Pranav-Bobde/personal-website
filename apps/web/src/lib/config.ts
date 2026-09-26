@@ -47,7 +47,7 @@ export const siteConfig = {
     twitterDm: "https://twitter.com/messages/compose?recipient_id=835557109592829952",
     youtube: "https://www.youtube.com/@pranavb-dot-xyz",
     linkedin: "https://linkedin.com/in/pranav-bobde-b95010194",
-    resume: "https://tinyurl.com/pranav-bobde-resume",
+    resume: "https://drive.google.com/file/d/199FikT8Ntn-D2nVHzHbgtaJExQOkLweY/view?usp=sharing",
     email: "bobdep31@gmail.com",
   },
   accentColor: "teal",
