@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { HireMeContent } from "@/components/home-content";
+import { WorkOverviewContent } from "@/components/home-content";
 import { PreviewFrame } from "@/components/preview-frame";
 import { previewPageSeo } from "@/lib/seo";
 import { homeVideoPreviewVariants } from "@/lib/video-preview-data";
@@ -23,7 +23,7 @@ function HireMePreview() {
       indexTo="/preview/home-videos"
       variants={homeVideoPreviewVariants}
     >
-      <HireMeContent />
+      <WorkOverviewContent />
     </PreviewFrame>
   );
 }
