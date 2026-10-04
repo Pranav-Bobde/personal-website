@@ -39,7 +39,7 @@ function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
   );
 
   useHotkey(
-    "M",
+    "W",
     () => {
       navigate({ to: "/work" });
     },
@@ -112,7 +112,7 @@ function HomeNavItem({ pathname }: { pathname: string }) {
 function WorkNavItem({ pathname }: { pathname: string }) {
   return (
     <Link to="/work" className={`nav-item ${pathname.startsWith("/work") ? "active" : ""}`}>
-      [m] work
+      [w] work
     </Link>
   );
 }
