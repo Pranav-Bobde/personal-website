@@ -33,7 +33,9 @@ export default defineConfig({
     tanstackStart({
       pages: [
         { path: "/" },
-        { path: "/hire-me" },
+        { path: "/work" },
+        { path: "/work/real-estate-whatsapp" },
+        { path: "/work/git-reporting" },
         { path: "/blogs" },
         { path: "/newsletter" },
         ...blogPages,

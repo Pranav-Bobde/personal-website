@@ -2,12 +2,12 @@ import { env } from "@oreno-website.bts-migration/env/web";
 
 export const siteConfig = {
   name: "Pranav Bobde",
-  title: "CTO @Senslyze",
+  title: "TypeScript engineer with end-to-end backend ownership.",
   location: "Nagpur, India",
   availability: "Available immediately",
   openTo: "Open to remote or Bangalore",
   bio: {
-    main: `I'm a hands-on CTO who builds full-stack TypeScript / Node.js + AI products — with production experience shipping WhatsApp bots. Looking for founding-stage or small-team opportunities.`,
+    main: "I've built and deployed client backends, AI applications and integrations, led small teams, and handled the operational work around delivery.",
     secondaryTitle: "",
     secondary: "",
   },

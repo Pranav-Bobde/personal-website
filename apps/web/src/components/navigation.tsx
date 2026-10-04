@@ -18,7 +18,7 @@ export function Navigation() {
   return (
     <nav className="mb-8 flex justify-start gap-x-3 overflow-x-auto whitespace-nowrap sm:justify-center sm:gap-x-6 text-sm">
       <HomeNavItem pathname={pathname} />
-      <HireMeNavItem pathname={pathname} />
+      <WorkNavItem pathname={pathname} />
       <BlogNavItem pathname={pathname} />
       <ProjectsNavItem pathname={pathname} />
       <NewsletterNavItem pathname={pathname} />
@@ -39,9 +39,9 @@ function useNavigationHotkeys(navigate: ReturnType<typeof useNavigate>) {
   );
 
   useHotkey(
-    "M",
+    "W",
     () => {
-      navigate({ to: "/hire-me" });
+      navigate({ to: "/work" });
     },
     {
       ...hotkeyOptions,
@@ -109,10 +109,10 @@ function HomeNavItem({ pathname }: { pathname: string }) {
   );
 }
 
-function HireMeNavItem({ pathname }: { pathname: string }) {
+function WorkNavItem({ pathname }: { pathname: string }) {
   return (
-    <Link to="/hire-me" className={`nav-item ${pathname === "/hire-me" ? "active" : ""}`}>
-      [m] hire me
+    <Link to="/work" className={`nav-item ${pathname.startsWith("/work") ? "active" : ""}`}>
+      [w] work
     </Link>
   );
 }

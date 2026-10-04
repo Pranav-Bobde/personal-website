@@ -72,13 +72,22 @@ export function homePageSeo() {
   });
 }
 
-export function hireMePageSeo() {
+export function workOverviewPageSeo() {
   return pageSeo({
-    title: "Hire Me - Pranav Bobde",
+    title: "Work & background - Pranav Bobde",
     description:
-      "How Pranav Bobde works, what he values, and the kind of engineering team where he does his best work.",
-    pathname: "/hire-me",
+      "Pranav Bobde's engineering background, selected backend work, and current availability.",
+    pathname: "/work",
     type: "website",
+  });
+}
+
+export function workStudyPageSeo(study: { title: string; preview: string; path: string }) {
+  return pageSeo({
+    title: `${study.title} - Pranav Bobde`,
+    description: study.preview,
+    pathname: study.path,
+    type: "article",
   });
 }
 
