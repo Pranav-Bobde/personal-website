@@ -30,11 +30,11 @@ export function HomeContent({
   );
 }
 
-export function HireMeContent() {
+export function WorkOverviewContent() {
   return (
     <div className="animate-fade-in">
       <header className="space-y-3">
-        <h1 className="text-4xl font-bold">hire me</h1>
+        <h1 className="text-4xl font-bold">Work &amp; background</h1>
         <p className="text-muted-foreground max-w-2xl leading-relaxed">
           my background is mostly small teams and hands-on engineering. In a previous technology
           leadership role, I handled APIs, databases, integrations, deployments and mentoring.

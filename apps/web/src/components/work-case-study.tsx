@@ -15,8 +15,8 @@ export function WorkCaseStudy({ title, children }: { title: string; children: Re
         <Link to="/" className="text-accent hover:text-foreground border-accent border-b">
           Back to home
         </Link>
-        <Link to="/hire-me" className="text-accent hover:text-foreground border-accent border-b">
-          Work and availability
+        <Link to="/work" className="text-accent hover:text-foreground border-accent border-b">
+          Work &amp; background
         </Link>
       </nav>
     </article>
