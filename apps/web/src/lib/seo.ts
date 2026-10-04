@@ -82,6 +82,15 @@ export function hireMePageSeo() {
   });
 }
 
+export function workStudyPageSeo(study: { title: string; preview: string; path: string }) {
+  return pageSeo({
+    title: `${study.title} - Pranav Bobde`,
+    description: study.preview,
+    pathname: study.path,
+    type: "article",
+  });
+}
+
 export function blogIndexPageSeo() {
   return pageSeo({
     title: "Engineering Blog - Pranav Bobde",

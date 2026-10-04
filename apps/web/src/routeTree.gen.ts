@@ -14,6 +14,8 @@ import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as HireMeRouteImport } from './routes/hire-me'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
+import { Route as WorkRealEstateWhatsappRouteImport } from './routes/work/real-estate-whatsapp'
+import { Route as WorkGitReportingRouteImport } from './routes/work/git-reporting'
 import { Route as BlogsIdRouteImport } from './routes/blogs/$id'
 import { Route as PreviewVideosIndexRouteImport } from './routes/preview/videos/index'
 import { Route as PreviewProjectsIndexRouteImport } from './routes/preview/projects/index'
@@ -55,6 +57,16 @@ const IndexRoute = IndexRouteImport.update({
 const BlogsIndexRoute = BlogsIndexRouteImport.update({
   id: '/blogs/',
   path: '/blogs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkRealEstateWhatsappRoute = WorkRealEstateWhatsappRouteImport.update({
+  id: '/work/real-estate-whatsapp',
+  path: '/work/real-estate-whatsapp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkGitReportingRoute = WorkGitReportingRouteImport.update({
+  id: '/work/git-reporting',
+  path: '/work/git-reporting',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogsIdRoute = BlogsIdRouteImport.update({
@@ -155,6 +167,8 @@ export interface FileRoutesByFullPath {
   '/newsletter': typeof NewsletterRoute
   '/projects': typeof ProjectsRoute
   '/blogs/$id': typeof BlogsIdRoute
+  '/work/git-reporting': typeof WorkGitReportingRoute
+  '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs/': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
@@ -179,6 +193,8 @@ export interface FileRoutesByTo {
   '/newsletter': typeof NewsletterRoute
   '/projects': typeof ProjectsRoute
   '/blogs/$id': typeof BlogsIdRoute
+  '/work/git-reporting': typeof WorkGitReportingRoute
+  '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
@@ -204,6 +220,8 @@ export interface FileRoutesById {
   '/newsletter': typeof NewsletterRoute
   '/projects': typeof ProjectsRoute
   '/blogs/$id': typeof BlogsIdRoute
+  '/work/git-reporting': typeof WorkGitReportingRoute
+  '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs/': typeof BlogsIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
@@ -230,6 +248,8 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/projects'
     | '/blogs/$id'
+    | '/work/git-reporting'
+    | '/work/real-estate-whatsapp'
     | '/blogs/'
     | '/api/rpc/$'
     | '/preview/home-videos/after-hero'
@@ -254,6 +274,8 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/projects'
     | '/blogs/$id'
+    | '/work/git-reporting'
+    | '/work/real-estate-whatsapp'
     | '/blogs'
     | '/api/rpc/$'
     | '/preview/home-videos/after-hero'
@@ -278,6 +300,8 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/projects'
     | '/blogs/$id'
+    | '/work/git-reporting'
+    | '/work/real-estate-whatsapp'
     | '/blogs/'
     | '/api/rpc/$'
     | '/preview/home-videos/after-hero'
@@ -303,6 +327,8 @@ export interface RootRouteChildren {
   NewsletterRoute: typeof NewsletterRoute
   ProjectsRoute: typeof ProjectsRoute
   BlogsIdRoute: typeof BlogsIdRoute
+  WorkGitReportingRoute: typeof WorkGitReportingRoute
+  WorkRealEstateWhatsappRoute: typeof WorkRealEstateWhatsappRoute
   BlogsIndexRoute: typeof BlogsIndexRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
   PreviewHomeVideosAfterHeroRoute: typeof PreviewHomeVideosAfterHeroRoute
@@ -357,6 +383,20 @@ declare module '@tanstack/react-router' {
       path: '/blogs'
       fullPath: '/blogs/'
       preLoaderRoute: typeof BlogsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/work/real-estate-whatsapp': {
+      id: '/work/real-estate-whatsapp'
+      path: '/work/real-estate-whatsapp'
+      fullPath: '/work/real-estate-whatsapp'
+      preLoaderRoute: typeof WorkRealEstateWhatsappRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/work/git-reporting': {
+      id: '/work/git-reporting'
+      path: '/work/git-reporting'
+      fullPath: '/work/git-reporting'
+      preLoaderRoute: typeof WorkGitReportingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blogs/$id': {
@@ -487,6 +527,8 @@ const rootRouteChildren: RootRouteChildren = {
   NewsletterRoute: NewsletterRoute,
   ProjectsRoute: ProjectsRoute,
   BlogsIdRoute: BlogsIdRoute,
+  WorkGitReportingRoute: WorkGitReportingRoute,
+  WorkRealEstateWhatsappRoute: WorkRealEstateWhatsappRoute,
   BlogsIndexRoute: BlogsIndexRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
   PreviewHomeVideosAfterHeroRoute: PreviewHomeVideosAfterHeroRoute,
