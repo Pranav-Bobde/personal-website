@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { Briefcase, Clock, Globe, MapPin } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 import { NewsletterCta } from "@/components/newsletter-cta";
 import { siteConfig } from "@/lib/config";
+import { workStudies } from "@/lib/work-studies";
 
 type HomeVideoPlacement = "after-hero" | "after-values" | "before-links";
 
@@ -22,6 +24,7 @@ export function HomeContent({
   return (
     <div className="animate-fade-in">
       <HomeHeader />
+      <SelectedWorkSection />
       <BodyComponent videoPlacement={videoPlacement} videoSection={videoSection} />
     </div>
   );
@@ -32,16 +35,64 @@ export function HireMeContent() {
     <div className="animate-fade-in">
       <header className="space-y-3">
         <h1 className="text-4xl font-bold">hire me</h1>
-        <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
-          The condensed version of how I work, what I value, and what kind of team gets the best out
-          of me.
+        <p className="text-muted-foreground max-w-2xl leading-relaxed">
+          my background is mostly small teams and hands-on engineering. In a previous technology
+          leadership role, I handled APIs, databases, integrations, deployments and mentoring.
+        </p>
+        <p className="text-muted-foreground max-w-2xl leading-relaxed">
+          most recently, I owned the backend of a real-estate WhatsApp platform. I also built a tool
+          that generates project reports from structured Git history.
+        </p>
+        <p className="text-muted-foreground max-w-2xl leading-relaxed">
+          I'm looking for a hands-on TypeScript backend/full-stack role. I'm immediately available.
         </p>
       </header>
 
-      <CoreValuesSection />
-      <NotOnResumeSection />
-      <FitSection />
+      <SelectedWorkSection />
+      <section className="border-border mt-12 border-t pt-12">
+        <h2 className="section-title">how I work</h2>
+        <p className="text-muted-foreground max-w-2xl leading-relaxed">
+          I learn through real problems and carry those lessons into the next project. I use coding
+          agents heavily, with repository rules and checks to give them useful feedback. When
+          mentoring, I work through the reasoning with teammates so they can handle similar problems
+          themselves.
+        </p>
+      </section>
+      <section className="border-border mt-12 border-t pt-12">
+        <h2 className="section-title">contact</h2>
+        <a
+          href={`mailto:${siteConfig.social.email}?subject=Work%20with%20Pranav`}
+          className="text-accent hover:text-foreground border-accent border-b"
+        >
+          let's talk [e]
+        </a>
+        .
+      </section>
     </div>
+  );
+}
+
+function SelectedWorkSection() {
+  return (
+    <section className="border-border mt-12 border-t pt-12">
+      <h2 className="section-title">selected work</h2>
+      <div className="space-y-8">
+        {workStudies.map((study) => (
+          <article key={study.path} className="space-y-3">
+            <h3 className="text-lg font-bold">{study.title}</h3>
+            <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
+              {study.preview}
+            </p>
+            <Link
+              to={study.path}
+              className="text-accent hover:text-foreground border-accent border-b text-sm"
+            >
+              Read case study →
+            </Link>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
