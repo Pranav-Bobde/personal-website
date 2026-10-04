@@ -1,15 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-import { HireMeContent } from "@/components/home-content";
-import { hireMePageSeo } from "@/lib/seo";
-
-const seo = hireMePageSeo();
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/hire-me")({
-  head: () => seo,
-  component: HireMePage,
+  beforeLoad: () => {
+    throw redirect({ to: "/work", statusCode: 301 });
+  },
 });
-
-function HireMePage() {
-  return <HireMeContent />;
-}

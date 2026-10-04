@@ -9,39 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as NewsletterRouteImport } from './routes/newsletter'
-import { Route as HireMeRouteImport } from './routes/hire-me'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HireMeRouteImport } from './routes/hire-me'
+import { Route as NewsletterRouteImport } from './routes/newsletter'
+import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
-import { Route as WorkRealEstateWhatsappRouteImport } from './routes/work/real-estate-whatsapp'
-import { Route as WorkGitReportingRouteImport } from './routes/work/git-reporting'
 import { Route as BlogsIdRouteImport } from './routes/blogs/$id'
-import { Route as PreviewVideosIndexRouteImport } from './routes/preview/videos/index'
-import { Route as PreviewProjectsIndexRouteImport } from './routes/preview/projects/index'
-import { Route as PreviewHomeVideosIndexRouteImport } from './routes/preview/home-videos/index'
-import { Route as PreviewVideosPairedRouteImport } from './routes/preview/videos/paired'
-import { Route as PreviewVideosLogRouteImport } from './routes/preview/videos/log'
-import { Route as PreviewVideosLibraryRouteImport } from './routes/preview/videos/library'
-import { Route as PreviewProjectsShowcaseRouteImport } from './routes/preview/projects/showcase'
-import { Route as PreviewProjectsLogbookDetailRouteImport } from './routes/preview/projects/logbook-detail'
-import { Route as PreviewProjectsLogbookRouteImport } from './routes/preview/projects/logbook'
-import { Route as PreviewProjectsCaseStudyRouteImport } from './routes/preview/projects/case-study'
-import { Route as PreviewHomeVideosHireMeSplitRouteImport } from './routes/preview/home-videos/hire-me-split'
-import { Route as PreviewHomeVideosHireMeRouteImport } from './routes/preview/home-videos/hire-me'
-import { Route as PreviewHomeVideosBeforeLinksRouteImport } from './routes/preview/home-videos/before-links'
-import { Route as PreviewHomeVideosAfterValuesRouteImport } from './routes/preview/home-videos/after-values'
-import { Route as PreviewHomeVideosAfterHeroRouteImport } from './routes/preview/home-videos/after-hero'
+import { Route as WorkIndexRouteImport } from './routes/work/index'
+import { Route as WorkGitReportingRouteImport } from './routes/work/git-reporting'
+import { Route as WorkRealEstateWhatsappRouteImport } from './routes/work/real-estate-whatsapp'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
+import { Route as PreviewHomeVideosIndexRouteImport } from './routes/preview/home-videos/index'
+import { Route as PreviewHomeVideosAfterHeroRouteImport } from './routes/preview/home-videos/after-hero'
+import { Route as PreviewHomeVideosAfterValuesRouteImport } from './routes/preview/home-videos/after-values'
+import { Route as PreviewHomeVideosBeforeLinksRouteImport } from './routes/preview/home-videos/before-links'
+import { Route as PreviewHomeVideosHireMeRouteImport } from './routes/preview/home-videos/hire-me'
+import { Route as PreviewHomeVideosHireMeSplitRouteImport } from './routes/preview/home-videos/hire-me-split'
+import { Route as PreviewProjectsIndexRouteImport } from './routes/preview/projects/index'
+import { Route as PreviewProjectsCaseStudyRouteImport } from './routes/preview/projects/case-study'
+import { Route as PreviewProjectsLogbookRouteImport } from './routes/preview/projects/logbook'
+import { Route as PreviewProjectsLogbookDetailRouteImport } from './routes/preview/projects/logbook-detail'
+import { Route as PreviewProjectsShowcaseRouteImport } from './routes/preview/projects/showcase'
+import { Route as PreviewVideosIndexRouteImport } from './routes/preview/videos/index'
+import { Route as PreviewVideosLibraryRouteImport } from './routes/preview/videos/library'
+import { Route as PreviewVideosLogRouteImport } from './routes/preview/videos/log'
+import { Route as PreviewVideosPairedRouteImport } from './routes/preview/videos/paired'
 
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsletterRoute = NewsletterRouteImport.update({
-  id: '/newsletter',
-  path: '/newsletter',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HireMeRoute = HireMeRouteImport.update({
@@ -49,9 +45,14 @@ const HireMeRoute = HireMeRouteImport.update({
   path: '/hire-me',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const NewsletterRoute = NewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogsIndexRoute = BlogsIndexRouteImport.update({
@@ -59,9 +60,14 @@ const BlogsIndexRoute = BlogsIndexRouteImport.update({
   path: '/blogs/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkRealEstateWhatsappRoute = WorkRealEstateWhatsappRouteImport.update({
-  id: '/work/real-estate-whatsapp',
-  path: '/work/real-estate-whatsapp',
+const BlogsIdRoute = BlogsIdRouteImport.update({
+  id: '/blogs/$id',
+  path: '/blogs/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkIndexRoute = WorkIndexRouteImport.update({
+  id: '/work/',
+  path: '/work/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkGitReportingRoute = WorkGitReportingRouteImport.update({
@@ -69,19 +75,14 @@ const WorkGitReportingRoute = WorkGitReportingRouteImport.update({
   path: '/work/git-reporting',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogsIdRoute = BlogsIdRouteImport.update({
-  id: '/blogs/$id',
-  path: '/blogs/$id',
+const WorkRealEstateWhatsappRoute = WorkRealEstateWhatsappRouteImport.update({
+  id: '/work/real-estate-whatsapp',
+  path: '/work/real-estate-whatsapp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PreviewVideosIndexRoute = PreviewVideosIndexRouteImport.update({
-  id: '/preview/videos/',
-  path: '/preview/videos/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreviewProjectsIndexRoute = PreviewProjectsIndexRouteImport.update({
-  id: '/preview/projects/',
-  path: '/preview/projects/',
+const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
+  id: '/api/rpc/$',
+  path: '/api/rpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PreviewHomeVideosIndexRoute = PreviewHomeVideosIndexRouteImport.update({
@@ -89,58 +90,10 @@ const PreviewHomeVideosIndexRoute = PreviewHomeVideosIndexRouteImport.update({
   path: '/preview/home-videos/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PreviewVideosPairedRoute = PreviewVideosPairedRouteImport.update({
-  id: '/preview/videos/paired',
-  path: '/preview/videos/paired',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreviewVideosLogRoute = PreviewVideosLogRouteImport.update({
-  id: '/preview/videos/log',
-  path: '/preview/videos/log',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreviewVideosLibraryRoute = PreviewVideosLibraryRouteImport.update({
-  id: '/preview/videos/library',
-  path: '/preview/videos/library',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreviewProjectsShowcaseRoute = PreviewProjectsShowcaseRouteImport.update({
-  id: '/preview/projects/showcase',
-  path: '/preview/projects/showcase',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreviewProjectsLogbookDetailRoute =
-  PreviewProjectsLogbookDetailRouteImport.update({
-    id: '/preview/projects/logbook-detail',
-    path: '/preview/projects/logbook-detail',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PreviewProjectsLogbookRoute = PreviewProjectsLogbookRouteImport.update({
-  id: '/preview/projects/logbook',
-  path: '/preview/projects/logbook',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreviewProjectsCaseStudyRoute =
-  PreviewProjectsCaseStudyRouteImport.update({
-    id: '/preview/projects/case-study',
-    path: '/preview/projects/case-study',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PreviewHomeVideosHireMeSplitRoute =
-  PreviewHomeVideosHireMeSplitRouteImport.update({
-    id: '/preview/home-videos/hire-me-split',
-    path: '/preview/home-videos/hire-me-split',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PreviewHomeVideosHireMeRoute = PreviewHomeVideosHireMeRouteImport.update({
-  id: '/preview/home-videos/hire-me',
-  path: '/preview/home-videos/hire-me',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreviewHomeVideosBeforeLinksRoute =
-  PreviewHomeVideosBeforeLinksRouteImport.update({
-    id: '/preview/home-videos/before-links',
-    path: '/preview/home-videos/before-links',
+const PreviewHomeVideosAfterHeroRoute =
+  PreviewHomeVideosAfterHeroRouteImport.update({
+    id: '/preview/home-videos/after-hero',
+    path: '/preview/home-videos/after-hero',
     getParentRoute: () => rootRouteImport,
   } as any)
 const PreviewHomeVideosAfterValuesRoute =
@@ -149,15 +102,68 @@ const PreviewHomeVideosAfterValuesRoute =
     path: '/preview/home-videos/after-values',
     getParentRoute: () => rootRouteImport,
   } as any)
-const PreviewHomeVideosAfterHeroRoute =
-  PreviewHomeVideosAfterHeroRouteImport.update({
-    id: '/preview/home-videos/after-hero',
-    path: '/preview/home-videos/after-hero',
+const PreviewHomeVideosBeforeLinksRoute =
+  PreviewHomeVideosBeforeLinksRouteImport.update({
+    id: '/preview/home-videos/before-links',
+    path: '/preview/home-videos/before-links',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
-  id: '/api/rpc/$',
-  path: '/api/rpc/$',
+const PreviewHomeVideosHireMeRoute = PreviewHomeVideosHireMeRouteImport.update({
+  id: '/preview/home-videos/hire-me',
+  path: '/preview/home-videos/hire-me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewHomeVideosHireMeSplitRoute =
+  PreviewHomeVideosHireMeSplitRouteImport.update({
+    id: '/preview/home-videos/hire-me-split',
+    path: '/preview/home-videos/hire-me-split',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PreviewProjectsIndexRoute = PreviewProjectsIndexRouteImport.update({
+  id: '/preview/projects/',
+  path: '/preview/projects/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewProjectsCaseStudyRoute =
+  PreviewProjectsCaseStudyRouteImport.update({
+    id: '/preview/projects/case-study',
+    path: '/preview/projects/case-study',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PreviewProjectsLogbookRoute = PreviewProjectsLogbookRouteImport.update({
+  id: '/preview/projects/logbook',
+  path: '/preview/projects/logbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewProjectsLogbookDetailRoute =
+  PreviewProjectsLogbookDetailRouteImport.update({
+    id: '/preview/projects/logbook-detail',
+    path: '/preview/projects/logbook-detail',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PreviewProjectsShowcaseRoute = PreviewProjectsShowcaseRouteImport.update({
+  id: '/preview/projects/showcase',
+  path: '/preview/projects/showcase',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewVideosIndexRoute = PreviewVideosIndexRouteImport.update({
+  id: '/preview/videos/',
+  path: '/preview/videos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewVideosLibraryRoute = PreviewVideosLibraryRouteImport.update({
+  id: '/preview/videos/library',
+  path: '/preview/videos/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewVideosLogRoute = PreviewVideosLogRouteImport.update({
+  id: '/preview/videos/log',
+  path: '/preview/videos/log',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewVideosPairedRoute = PreviewVideosPairedRouteImport.update({
+  id: '/preview/videos/paired',
+  path: '/preview/videos/paired',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/work/git-reporting': typeof WorkGitReportingRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs/': typeof BlogsIndexRoute
+  '/work/': typeof WorkIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
   '/preview/home-videos/after-values': typeof PreviewHomeVideosAfterValuesRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/work/git-reporting': typeof WorkGitReportingRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs': typeof BlogsIndexRoute
+  '/work': typeof WorkIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
   '/preview/home-videos/after-values': typeof PreviewHomeVideosAfterValuesRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/work/git-reporting': typeof WorkGitReportingRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs/': typeof BlogsIndexRoute
+  '/work/': typeof WorkIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/preview/home-videos/after-hero': typeof PreviewHomeVideosAfterHeroRoute
   '/preview/home-videos/after-values': typeof PreviewHomeVideosAfterValuesRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/work/git-reporting'
     | '/work/real-estate-whatsapp'
     | '/blogs/'
+    | '/work/'
     | '/api/rpc/$'
     | '/preview/home-videos/after-hero'
     | '/preview/home-videos/after-values'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
     | '/work/git-reporting'
     | '/work/real-estate-whatsapp'
     | '/blogs'
+    | '/work'
     | '/api/rpc/$'
     | '/preview/home-videos/after-hero'
     | '/preview/home-videos/after-values'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/work/git-reporting'
     | '/work/real-estate-whatsapp'
     | '/blogs/'
+    | '/work/'
     | '/api/rpc/$'
     | '/preview/home-videos/after-hero'
     | '/preview/home-videos/after-values'
@@ -330,6 +342,7 @@ export interface RootRouteChildren {
   WorkGitReportingRoute: typeof WorkGitReportingRoute
   WorkRealEstateWhatsappRoute: typeof WorkRealEstateWhatsappRoute
   BlogsIndexRoute: typeof BlogsIndexRoute
+  WorkIndexRoute: typeof WorkIndexRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
   PreviewHomeVideosAfterHeroRoute: typeof PreviewHomeVideosAfterHeroRoute
   PreviewHomeVideosAfterValuesRoute: typeof PreviewHomeVideosAfterValuesRoute
@@ -350,18 +363,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/newsletter': {
-      id: '/newsletter'
-      path: '/newsletter'
-      fullPath: '/newsletter'
-      preLoaderRoute: typeof NewsletterRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hire-me': {
@@ -371,11 +377,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HireMeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/newsletter': {
+      id: '/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof NewsletterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blogs/': {
@@ -385,11 +398,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/work/real-estate-whatsapp': {
-      id: '/work/real-estate-whatsapp'
-      path: '/work/real-estate-whatsapp'
-      fullPath: '/work/real-estate-whatsapp'
-      preLoaderRoute: typeof WorkRealEstateWhatsappRouteImport
+    '/blogs/$id': {
+      id: '/blogs/$id'
+      path: '/blogs/$id'
+      fullPath: '/blogs/$id'
+      preLoaderRoute: typeof BlogsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/work/': {
+      id: '/work/'
+      path: '/work'
+      fullPath: '/work/'
+      preLoaderRoute: typeof WorkIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/work/git-reporting': {
@@ -399,25 +419,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkGitReportingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blogs/$id': {
-      id: '/blogs/$id'
-      path: '/blogs/$id'
-      fullPath: '/blogs/$id'
-      preLoaderRoute: typeof BlogsIdRouteImport
+    '/work/real-estate-whatsapp': {
+      id: '/work/real-estate-whatsapp'
+      path: '/work/real-estate-whatsapp'
+      fullPath: '/work/real-estate-whatsapp'
+      preLoaderRoute: typeof WorkRealEstateWhatsappRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/preview/videos/': {
-      id: '/preview/videos/'
-      path: '/preview/videos'
-      fullPath: '/preview/videos/'
-      preLoaderRoute: typeof PreviewVideosIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/projects/': {
-      id: '/preview/projects/'
-      path: '/preview/projects'
-      fullPath: '/preview/projects/'
-      preLoaderRoute: typeof PreviewProjectsIndexRouteImport
+    '/api/rpc/$': {
+      id: '/api/rpc/$'
+      path: '/api/rpc/$'
+      fullPath: '/api/rpc/$'
+      preLoaderRoute: typeof ApiRpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/preview/home-videos/': {
@@ -427,74 +440,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreviewHomeVideosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/preview/videos/paired': {
-      id: '/preview/videos/paired'
-      path: '/preview/videos/paired'
-      fullPath: '/preview/videos/paired'
-      preLoaderRoute: typeof PreviewVideosPairedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/videos/log': {
-      id: '/preview/videos/log'
-      path: '/preview/videos/log'
-      fullPath: '/preview/videos/log'
-      preLoaderRoute: typeof PreviewVideosLogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/videos/library': {
-      id: '/preview/videos/library'
-      path: '/preview/videos/library'
-      fullPath: '/preview/videos/library'
-      preLoaderRoute: typeof PreviewVideosLibraryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/projects/showcase': {
-      id: '/preview/projects/showcase'
-      path: '/preview/projects/showcase'
-      fullPath: '/preview/projects/showcase'
-      preLoaderRoute: typeof PreviewProjectsShowcaseRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/projects/logbook-detail': {
-      id: '/preview/projects/logbook-detail'
-      path: '/preview/projects/logbook-detail'
-      fullPath: '/preview/projects/logbook-detail'
-      preLoaderRoute: typeof PreviewProjectsLogbookDetailRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/projects/logbook': {
-      id: '/preview/projects/logbook'
-      path: '/preview/projects/logbook'
-      fullPath: '/preview/projects/logbook'
-      preLoaderRoute: typeof PreviewProjectsLogbookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/projects/case-study': {
-      id: '/preview/projects/case-study'
-      path: '/preview/projects/case-study'
-      fullPath: '/preview/projects/case-study'
-      preLoaderRoute: typeof PreviewProjectsCaseStudyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/home-videos/hire-me-split': {
-      id: '/preview/home-videos/hire-me-split'
-      path: '/preview/home-videos/hire-me-split'
-      fullPath: '/preview/home-videos/hire-me-split'
-      preLoaderRoute: typeof PreviewHomeVideosHireMeSplitRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/home-videos/hire-me': {
-      id: '/preview/home-videos/hire-me'
-      path: '/preview/home-videos/hire-me'
-      fullPath: '/preview/home-videos/hire-me'
-      preLoaderRoute: typeof PreviewHomeVideosHireMeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/home-videos/before-links': {
-      id: '/preview/home-videos/before-links'
-      path: '/preview/home-videos/before-links'
-      fullPath: '/preview/home-videos/before-links'
-      preLoaderRoute: typeof PreviewHomeVideosBeforeLinksRouteImport
+    '/preview/home-videos/after-hero': {
+      id: '/preview/home-videos/after-hero'
+      path: '/preview/home-videos/after-hero'
+      fullPath: '/preview/home-videos/after-hero'
+      preLoaderRoute: typeof PreviewHomeVideosAfterHeroRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/preview/home-videos/after-values': {
@@ -504,18 +454,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreviewHomeVideosAfterValuesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/preview/home-videos/after-hero': {
-      id: '/preview/home-videos/after-hero'
-      path: '/preview/home-videos/after-hero'
-      fullPath: '/preview/home-videos/after-hero'
-      preLoaderRoute: typeof PreviewHomeVideosAfterHeroRouteImport
+    '/preview/home-videos/before-links': {
+      id: '/preview/home-videos/before-links'
+      path: '/preview/home-videos/before-links'
+      fullPath: '/preview/home-videos/before-links'
+      preLoaderRoute: typeof PreviewHomeVideosBeforeLinksRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/rpc/$': {
-      id: '/api/rpc/$'
-      path: '/api/rpc/$'
-      fullPath: '/api/rpc/$'
-      preLoaderRoute: typeof ApiRpcSplatRouteImport
+    '/preview/home-videos/hire-me': {
+      id: '/preview/home-videos/hire-me'
+      path: '/preview/home-videos/hire-me'
+      fullPath: '/preview/home-videos/hire-me'
+      preLoaderRoute: typeof PreviewHomeVideosHireMeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/home-videos/hire-me-split': {
+      id: '/preview/home-videos/hire-me-split'
+      path: '/preview/home-videos/hire-me-split'
+      fullPath: '/preview/home-videos/hire-me-split'
+      preLoaderRoute: typeof PreviewHomeVideosHireMeSplitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/projects/': {
+      id: '/preview/projects/'
+      path: '/preview/projects'
+      fullPath: '/preview/projects/'
+      preLoaderRoute: typeof PreviewProjectsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/projects/case-study': {
+      id: '/preview/projects/case-study'
+      path: '/preview/projects/case-study'
+      fullPath: '/preview/projects/case-study'
+      preLoaderRoute: typeof PreviewProjectsCaseStudyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/projects/logbook': {
+      id: '/preview/projects/logbook'
+      path: '/preview/projects/logbook'
+      fullPath: '/preview/projects/logbook'
+      preLoaderRoute: typeof PreviewProjectsLogbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/projects/logbook-detail': {
+      id: '/preview/projects/logbook-detail'
+      path: '/preview/projects/logbook-detail'
+      fullPath: '/preview/projects/logbook-detail'
+      preLoaderRoute: typeof PreviewProjectsLogbookDetailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/projects/showcase': {
+      id: '/preview/projects/showcase'
+      path: '/preview/projects/showcase'
+      fullPath: '/preview/projects/showcase'
+      preLoaderRoute: typeof PreviewProjectsShowcaseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/videos/': {
+      id: '/preview/videos/'
+      path: '/preview/videos'
+      fullPath: '/preview/videos/'
+      preLoaderRoute: typeof PreviewVideosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/videos/library': {
+      id: '/preview/videos/library'
+      path: '/preview/videos/library'
+      fullPath: '/preview/videos/library'
+      preLoaderRoute: typeof PreviewVideosLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/videos/log': {
+      id: '/preview/videos/log'
+      path: '/preview/videos/log'
+      fullPath: '/preview/videos/log'
+      preLoaderRoute: typeof PreviewVideosLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/videos/paired': {
+      id: '/preview/videos/paired'
+      path: '/preview/videos/paired'
+      fullPath: '/preview/videos/paired'
+      preLoaderRoute: typeof PreviewVideosPairedRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -530,6 +550,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorkGitReportingRoute: WorkGitReportingRoute,
   WorkRealEstateWhatsappRoute: WorkRealEstateWhatsappRoute,
   BlogsIndexRoute: BlogsIndexRoute,
+  WorkIndexRoute: WorkIndexRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
   PreviewHomeVideosAfterHeroRoute: PreviewHomeVideosAfterHeroRoute,
   PreviewHomeVideosAfterValuesRoute: PreviewHomeVideosAfterValuesRoute,
