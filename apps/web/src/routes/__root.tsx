@@ -1,26 +1,14 @@
-import type { QueryClient } from "@tanstack/react-query";
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRouteWithContext,
-  useLocation,
-} from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute, useLocation } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import { evlogErrorHandler } from "evlog/nitro/v3";
 import { HotkeysProvider } from "@tanstack/react-hotkeys";
-
-import type { orpc } from "@/utils/orpc";
 
 import { Navigation } from "@/components/navigation";
 import { AnalyticsProvider } from "@/components/analytics-provider";
 
 import appCss from "../index.css?url";
 
-export const Route = createRootRouteWithContext<{
-  orpc: typeof orpc;
-  queryClient: QueryClient;
-}>()({
+export const Route = createRootRoute({
   server: {
     middleware: [createMiddleware().server(evlogErrorHandler)],
   },

@@ -9,25 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as NewsletterRouteImport } from './routes/newsletter'
-import { Route as HireMeRouteImport } from './routes/hire-me'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WorkIndexRouteImport } from './routes/work/index'
+import { Route as HireMeRouteImport } from './routes/hire-me'
+import { Route as NewsletterRouteImport } from './routes/newsletter'
+import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
-import { Route as WorkRealEstateWhatsappRouteImport } from './routes/work/real-estate-whatsapp'
-import { Route as WorkGitReportingRouteImport } from './routes/work/git-reporting'
 import { Route as BlogsIdRouteImport } from './routes/blogs/$id'
-import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
+import { Route as WorkGitReportingRouteImport } from './routes/work/git-reporting'
+import { Route as WorkRealEstateWhatsappRouteImport } from './routes/work/real-estate-whatsapp'
 
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsletterRoute = NewsletterRouteImport.update({
-  id: '/newsletter',
-  path: '/newsletter',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HireMeRoute = HireMeRouteImport.update({
@@ -35,14 +28,14 @@ const HireMeRoute = HireMeRouteImport.update({
   path: '/hire-me',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const NewsletterRoute = NewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkIndexRoute = WorkIndexRouteImport.update({
-  id: '/work/',
-  path: '/work/',
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogsIndexRoute = BlogsIndexRouteImport.update({
@@ -50,9 +43,9 @@ const BlogsIndexRoute = BlogsIndexRouteImport.update({
   path: '/blogs/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkRealEstateWhatsappRoute = WorkRealEstateWhatsappRouteImport.update({
-  id: '/work/real-estate-whatsapp',
-  path: '/work/real-estate-whatsapp',
+const BlogsIdRoute = BlogsIdRouteImport.update({
+  id: '/blogs/$id',
+  path: '/blogs/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkGitReportingRoute = WorkGitReportingRouteImport.update({
@@ -60,14 +53,9 @@ const WorkGitReportingRoute = WorkGitReportingRouteImport.update({
   path: '/work/git-reporting',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogsIdRoute = BlogsIdRouteImport.update({
-  id: '/blogs/$id',
-  path: '/blogs/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
-  id: '/api/rpc/$',
-  path: '/api/rpc/$',
+const WorkRealEstateWhatsappRoute = WorkRealEstateWhatsappRouteImport.update({
+  id: '/work/real-estate-whatsapp',
+  path: '/work/real-estate-whatsapp',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -80,8 +68,6 @@ export interface FileRoutesByFullPath {
   '/work/git-reporting': typeof WorkGitReportingRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs/': typeof BlogsIndexRoute
-  '/work/': typeof WorkIndexRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -92,8 +78,6 @@ export interface FileRoutesByTo {
   '/work/git-reporting': typeof WorkGitReportingRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs': typeof BlogsIndexRoute
-  '/work': typeof WorkIndexRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -105,8 +89,6 @@ export interface FileRoutesById {
   '/work/git-reporting': typeof WorkGitReportingRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs/': typeof BlogsIndexRoute
-  '/work/': typeof WorkIndexRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -119,8 +101,6 @@ export interface FileRouteTypes {
     | '/work/git-reporting'
     | '/work/real-estate-whatsapp'
     | '/blogs/'
-    | '/work/'
-    | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -131,8 +111,6 @@ export interface FileRouteTypes {
     | '/work/git-reporting'
     | '/work/real-estate-whatsapp'
     | '/blogs'
-    | '/work'
-    | '/api/rpc/$'
   id:
     | '__root__'
     | '/'
@@ -143,8 +121,6 @@ export interface FileRouteTypes {
     | '/work/git-reporting'
     | '/work/real-estate-whatsapp'
     | '/blogs/'
-    | '/work/'
-    | '/api/rpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -156,24 +132,15 @@ export interface RootRouteChildren {
   WorkGitReportingRoute: typeof WorkGitReportingRoute
   WorkRealEstateWhatsappRoute: typeof WorkRealEstateWhatsappRoute
   BlogsIndexRoute: typeof BlogsIndexRoute
-  WorkIndexRoute: typeof WorkIndexRoute
-  ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/newsletter': {
-      id: '/newsletter'
-      path: '/newsletter'
-      fullPath: '/newsletter'
-      preLoaderRoute: typeof NewsletterRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hire-me': {
@@ -183,18 +150,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HireMeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/newsletter': {
+      id: '/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof NewsletterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/work/': {
-      id: '/work/'
-      path: '/work'
-      fullPath: '/work/'
-      preLoaderRoute: typeof WorkIndexRouteImport
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blogs/': {
@@ -204,11 +171,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/work/real-estate-whatsapp': {
-      id: '/work/real-estate-whatsapp'
-      path: '/work/real-estate-whatsapp'
-      fullPath: '/work/real-estate-whatsapp'
-      preLoaderRoute: typeof WorkRealEstateWhatsappRouteImport
+    '/blogs/$id': {
+      id: '/blogs/$id'
+      path: '/blogs/$id'
+      fullPath: '/blogs/$id'
+      preLoaderRoute: typeof BlogsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/work/git-reporting': {
@@ -218,18 +185,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkGitReportingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blogs/$id': {
-      id: '/blogs/$id'
-      path: '/blogs/$id'
-      fullPath: '/blogs/$id'
-      preLoaderRoute: typeof BlogsIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/rpc/$': {
-      id: '/api/rpc/$'
-      path: '/api/rpc/$'
-      fullPath: '/api/rpc/$'
-      preLoaderRoute: typeof ApiRpcSplatRouteImport
+    '/work/real-estate-whatsapp': {
+      id: '/work/real-estate-whatsapp'
+      path: '/work/real-estate-whatsapp'
+      fullPath: '/work/real-estate-whatsapp'
+      preLoaderRoute: typeof WorkRealEstateWhatsappRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -244,8 +204,6 @@ const rootRouteChildren: RootRouteChildren = {
   WorkGitReportingRoute: WorkGitReportingRoute,
   WorkRealEstateWhatsappRoute: WorkRealEstateWhatsappRoute,
   BlogsIndexRoute: BlogsIndexRoute,
-  WorkIndexRoute: WorkIndexRoute,
-  ApiRpcSplatRoute: ApiRpcSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
