@@ -1,21 +1,9 @@
-/**
- * Project data for the /preview/projects review routes.
- *
- * Evidence rule: only `repoUrl`, `siteUrl` and `demoPostUrl` are verified — they were
- * supplied directly with the brief. Nothing else about these projects is discoverable in
- * this repo, so every descriptive field is placeholder copy and is marked as such via
- * `PlaceholderText`. Preview surfaces must render that marking, never hide it.
- */
+/** Project data for the /projects page. */
 
 /** Project copy with its verification state carried into the preview UI. */
 export interface PlaceholderText {
   placeholder: boolean;
   text: string;
-}
-
-/** Wraps unverified copy so a preview can render it with a placeholder marker. */
-function draft(text: string): PlaceholderText {
-  return { placeholder: true, text };
 }
 
 /** Copy sourced from project-specific task context supplied by the user. */
@@ -40,12 +28,6 @@ export interface ProjectFact {
   value: PlaceholderText;
 }
 
-export interface ProjectLogEntry {
-  /** Kept deliberately non-numeric: no real dates are known. */
-  marker: string;
-  body: PlaceholderText;
-}
-
 export interface PreviewProject {
   id: string;
   name: string;
@@ -55,49 +37,8 @@ export interface PreviewProject {
   context: PlaceholderText;
   /** Spec-sheet rows for dense layouts. Unverified. */
   facts: ProjectFact[];
-  /** Changelog-style entries for the logbook layout. Unverified. */
-  log: ProjectLogEntry[];
   /** Verified links only. */
   links: ProjectLink[];
-  /** Describes the media slot a real asset would fill. No asset exists locally. */
-  media: {
-    /** What the eventual asset should show. */
-    intent: string;
-    /** Aspect ratio for the reserved frame. */
-    aspect: "video" | "square";
-    /** Present only when a real embeddable demo URL is known. */
-    embed?: ProjectEmbed;
-  };
-}
-
-export interface ProjectEmbed {
-  kind: "tweet";
-  /** Canonical link, always rendered as a visible fallback. */
-  canonicalUrl: string;
-  /** Script-free iframe URL, matching the blog tweet embed in lib/markdown.ts. */
-  embedUrl: string;
-  title: string;
-}
-
-/** Matches an x.com/twitter.com status URL, capturing the path and the status id. */
-const tweetUrlPattern = /^https:\/\/(?:x|twitter)\.com(\/[^/]+\/status\/(\d+))/;
-
-/**
- * Builds the same script-free tweet iframe the blog renderer uses, so the preview does not
- * introduce a second embed mechanism. Returns undefined for anything that is not a status URL.
- */
-function getTweetEmbed(rawUrl: string, title: string): ProjectEmbed | undefined {
-  const match = tweetUrlPattern.exec(rawUrl);
-  if (!match) {
-    return undefined;
-  }
-
-  return {
-    kind: "tweet",
-    canonicalUrl: `https://x.com${match[1]}`,
-    embedUrl: `https://platform.twitter.com/embed/Tweet.html?id=${match[2]}&theme=dark&dnt=true`,
-    title,
-  };
 }
 
 const laterCartDemoUrl = "https://x.com/PranavBobde/status/2084167546740392077";
@@ -116,11 +57,6 @@ export const previewProjects: PreviewProject[] = [
         value: sourced("Next.js, TypeScript, Gmail API, PostgreSQL, Prisma, oRPC, CopilotKit, LangSmith"),
       },
     ],
-    log: [
-      { marker: "—", body: draft("Placeholder entry: what problem started the project.") },
-      { marker: "—", body: draft("Placeholder entry: the decision that shaped the build.") },
-      { marker: "—", body: draft("Placeholder entry: what shipped, and what is still open.") },
-    ],
     links: [
       {
         kind: "site",
@@ -135,10 +71,6 @@ export const previewProjects: PreviewProject[] = [
         host: "github.com",
       },
     ],
-    media: {
-      intent: "Screenshot of the Better Mail inbox — no asset exists in this repo yet.",
-      aspect: "video",
-    },
   },
   {
     id: "latercart",
@@ -149,11 +81,6 @@ export const previewProjects: PreviewProject[] = [
     ),
     facts: [
       { key: "stack", value: sourced("TypeScript, iMessage via Linq, UCP, Prava") },
-    ],
-    log: [
-      { marker: "—", body: draft("Placeholder entry: the habit the project is aimed at.") },
-      { marker: "—", body: draft("Placeholder entry: how the demo came together.") },
-      { marker: "—", body: draft("Placeholder entry: what is still unfinished.") },
     ],
     links: [
       {
@@ -169,41 +96,5 @@ export const previewProjects: PreviewProject[] = [
         host: "github.com",
       },
     ],
-    media: {
-      intent: "The demo clip posted on X. Embedded live; no local poster image exists.",
-      aspect: "video",
-      embed: getTweetEmbed(laterCartDemoUrl, "LaterCart demo posted on X"),
-    },
   },
 ];
-
-export const projectPreviewVariants = [
-  {
-    to: "/preview/projects/case-study",
-    name: "case study",
-    tagline: "Editorial, text-forward index.",
-    tradeoff:
-      "Reads as a written body of work and needs no media to look finished — which is the point while no screenshots exist. Costs the most writing, and two entries look thin at this width.",
-  },
-  {
-    to: "/preview/projects/showcase",
-    name: "showcase",
-    tagline: "Media leads, copy supports.",
-    tradeoff:
-      "Strongest if the demo does the selling, and the LaterCart clip is real today. Weakest right now too: Better Mail has no asset, so half the page is a reserved empty frame.",
-  },
-  {
-    to: "/preview/projects/logbook",
-    name: "logbook",
-    tagline: "Compact rows, system-native.",
-    tradeoff:
-      "Closest to the existing blog and watch-log rhythm, and the only variant that scales past a handful of projects. Deliberately undersells any single project.",
-  },
-  {
-    to: "/preview/projects/logbook-detail",
-    name: "logbook + detail",
-    tagline: "Compact index, case-study depth on demand.",
-    tradeoff:
-      "Keeps the fast logbook scan, then uses Space to open the selected project as a focused case study without leaving the index.",
-  },
-] as const;

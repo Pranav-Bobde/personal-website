@@ -2,17 +2,7 @@ import { expect, test } from "bun:test";
 
 import { readFileSync } from "node:fs";
 
-import { previewProjects, projectPreviewVariants } from "./project-preview-data.ts";
-
-test("project previews expose the logbook with detail-modal variant", () => {
-  expect(projectPreviewVariants).toContainEqual({
-    to: "/preview/projects/logbook-detail",
-    name: "logbook + detail",
-    tagline: "Compact index, case-study depth on demand.",
-    tradeoff:
-      "Keeps the fast logbook scan, then uses Space to open the selected project as a focused case study without leaving the index.",
-  });
-});
+import { previewProjects } from "./project-preview-data.ts";
 
 test("closing the detail modal cannot reset the selected logbook row", () => {
   const pageSource = readFileSync(
