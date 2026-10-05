@@ -66,18 +66,8 @@ export function homePageSeo() {
   return pageSeo({
     title: "Pranav Bobde - Personal Website",
     description:
-      "Personal website of Pranav Bobde, featuring engineering notes, links, and writing.",
+      "Pranav Bobde, TypeScript engineer: background, how he works, selected backend work, videos and writing.",
     pathname: "/",
-    type: "website",
-  });
-}
-
-export function workOverviewPageSeo() {
-  return pageSeo({
-    title: "Work & background - Pranav Bobde",
-    description:
-      "Pranav Bobde's engineering background, selected backend work, and current availability.",
-    pathname: "/work",
     type: "website",
   });
 }
