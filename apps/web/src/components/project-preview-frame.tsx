@@ -1,29 +1,4 @@
-import { PreviewFrame } from "@/components/preview-frame";
-import { projectPreviewVariants } from "@/lib/project-preview-data";
 import type { PlaceholderText, PreviewProject } from "@/lib/project-preview-data";
-
-/**
- * The projects previews reuse the videos preview scaffolding, pointed at their own index
- * and variant list, so both review surfaces stay visually identical at the frame level.
- */
-export function ProjectPreviewFrame({
-  command,
-  children,
-}: {
-  command: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <PreviewFrame
-      command={command}
-      indexLabel="index"
-      indexTo="/preview/projects"
-      variants={projectPreviewVariants}
-    >
-      {children}
-    </PreviewFrame>
-  );
-}
 
 /**
  * Renders unverified copy with a visible marker, so no reviewer can mistake placeholder
@@ -44,19 +19,6 @@ export function Draft({ value, className = "" }: { value: PlaceholderText; class
       </span>
       {value.text}
     </span>
-  );
-}
-
-/**
- * A reserved media frame for a project with no local asset. It states what the real asset
- * should be rather than showing an invented image.
- */
-export function ReservedMedia({ intent }: { intent: string }) {
-  return (
-    <div className="border-border text-muted-foreground flex aspect-video w-full flex-col items-center justify-center gap-2 border border-dashed p-6 text-center">
-      <span className="text-foreground text-xs tracking-widest uppercase">no asset yet</span>
-      <span className="max-w-sm text-xs leading-relaxed">{intent}</span>
-    </div>
   );
 }
 

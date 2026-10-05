@@ -39,10 +39,6 @@ function Home() {
   });
 
   return (
-    <HomeContent
-      showHiringSections={false}
-      videoPlacement="after-hero"
-      videoSection={<HomeVideoLibrarySection variant="feature-first" />}
-    />
+    <HomeContent videoSection={<HomeVideoLibrarySection />} />
   );
 }
