@@ -20,10 +20,12 @@ export function DemoFrame({
   label,
   children,
   footer,
+  tag = "interactive",
 }: {
   label: string;
   children: ReactNode;
   footer?: ReactNode;
+  tag?: string;
 }) {
   return (
     <div
@@ -53,9 +55,10 @@ export function DemoFrame({
             color: C.faint,
             textTransform: "uppercase",
             letterSpacing: 1.4,
+            whiteSpace: "nowrap",
           }}
         >
-          interactive
+          {tag}
         </span>
       </div>
       <div style={{ padding: "18px 16px" }}>{children}</div>
@@ -81,11 +84,13 @@ export function Btn({
   onClick,
   disabled,
   tone = "accent",
+  ariaLabel,
 }: {
   children: ReactNode;
   onClick: () => void;
   disabled?: boolean;
   tone?: "accent" | "muted";
+  ariaLabel?: string;
 }) {
   return (
     <button
@@ -94,6 +99,7 @@ export function Btn({
       disabled={disabled}
       className="demo-btn"
       data-tone={tone}
+      aria-label={ariaLabel}
     >
       {children}
     </button>
@@ -122,9 +128,4 @@ export function Meter({ value, tone }: { value: number; tone: string }) {
       />
     </div>
   );
-}
-
-export function usePrefersReducedMotion() {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }

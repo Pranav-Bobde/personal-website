@@ -399,6 +399,13 @@
 .blog-demo {
   margin: 1.75rem 0;
 }
+/* Widgets mount once the page's scripts run. Until then, hold a visible slot so a
+   slow load shows a frame instead of an unexplained gap, and the text jumps less. */
+.blog-demo:empty {
+  min-height: 320px;
+  border: 1px dashed hsl(0 0% 18%);
+  border-radius: 10px;
+}
 .blog-demo :where(p, ul, ol, li, h1, h2, h3, pre) {
   margin: 0;
 }
@@ -459,6 +466,10 @@
   background: hsl(180 100% 40% / 0.16);
   color: hsl(180 100% 62%);
 }
+.demo-seg:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
 
 .demo-check {
   accent-color: hsl(180 100% 45%);
@@ -510,39 +521,870 @@
   background: hsl(180 100% 52%);
 }
 
-.drift-pop {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: demoPop 0.35s ease;
-}
-
-@keyframes demoPop {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
 @keyframes demoSpin {
   to {
     transform: rotate(360deg);
   }
 }
-@keyframes demoChainEject {
-  from {
-    opacity: 0;
-    transform: translateX(-12px);
+/* ---- merging-in-parallel demos: one commit graph, one mail app, real errors ---- */
+.gx-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.blog-demo .gx-figure p {
+  margin: 0;
+}
+/* One fixed colour per person in every widget. main is neutral and never shares one. */
+.gx-figure [data-owner="main"] {
+  --gx-owner: hsl(0 0% 80%);
+}
+.gx-figure [data-owner="julius"] {
+  --gx-owner: hsl(212 95% 68%);
+}
+.gx-figure [data-owner="maria"] {
+  --gx-owner: hsl(268 90% 76%);
+}
+.gx-figure [data-owner="ben"] {
+  --gx-owner: hsl(322 85% 70%);
+}
+.gx-figure [data-owner="kai"] {
+  --gx-owner: hsl(178 75% 48%);
+}
+.gx-graph {
+  position: relative;
+  container-type: inline-size;
+}
+.gx-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+}
+.gx-edge {
+  fill: none;
+  stroke-width: 2.5;
+  stroke: var(--gx-owner);
+  transition:
+    d 0.75s cubic-bezier(0.4, 0, 0.2, 1),
+    stroke 0.3s;
+}
+.gx-edge[data-owner="main"] {
+  stroke-width: 3;
+}
+.gx-edge[data-look="trial"],
+.gx-edge[data-look="bad"] {
+  stroke-dasharray: 4 4;
+}
+.gx-edge[data-look="bad"][data-lane="0"] {
+  stroke: hsl(2 72% 58%);
+}
+.gx-ghost {
+  fill: none;
+  stroke: var(--gx-owner);
+  stroke-width: 2;
+  stroke-dasharray: 3 5;
+  animation: gxFade 1.8s ease-out forwards;
+}
+.gx-pulse {
+  fill: none;
+  stroke: var(--gx-owner);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gxPulse 1.4s ease-out 2;
+}
+.gx-dep path {
+  fill: none;
+  stroke: hsl(2 90% 72%);
+  stroke-width: 2;
+  stroke-dasharray: 3 3;
+}
+.gx-dep path.gx-dep-head {
+  stroke-dasharray: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.gx-dot {
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gx-dot circle {
+  fill: var(--gx-owner);
+  stroke: hsl(0 0% 5.5%);
+  stroke-width: 2;
+  transition: fill 0.3s;
+}
+.gx-dot text {
+  fill: hsl(0 0% 6%);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.gx-dot[data-look="trial"] circle {
+  fill: hsl(0 0% 5.5%);
+  stroke: var(--gx-owner);
+  stroke-dasharray: 3 2;
+}
+.gx-dot[data-look="trial"] text {
+  fill: var(--gx-owner);
+}
+.gx-dot[data-look="bad"] circle {
+  stroke: hsl(2 90% 62%);
+  stroke-width: 3;
+}
+.gx-row {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--gx-row-h);
+  padding: 0 8px 0 calc(var(--gx-graph-w) + 4px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: 10px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  transition:
+    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s,
+    box-shadow 0.3s;
+  animation: gxArrive 0.35s ease-out;
+}
+.gx-row[data-selected="true"] {
+  background: hsl(0 0% 100% / 0.04);
+  box-shadow: inset 0 0 0 1px hsl(0 0% 100% / 0.28);
+}
+/* Red means one thing everywhere: this row is why something failed. */
+.gx-row[data-look="bad"] {
+  background: hsl(2 72% 50% / 0.2);
+  box-shadow:
+    inset 0 0 0 1px hsl(2 72% 58% / 0.8),
+    inset 4px 0 0 hsl(2 72% 58%);
+}
+.gx-row[data-look="bad"][data-selected="true"] {
+  background: hsl(2 72% 50% / 0.28);
+  box-shadow:
+    inset 0 0 0 2px hsl(2 80% 66%),
+    inset 4px 0 0 hsl(2 80% 66%);
+}
+.gx-graph[data-bracket="true"] .gx-row {
+  padding-right: 140px;
+}
+/* The bracket never reaches Maria's row, so that row keeps the full width. */
+.gx-graph[data-bracket="true"] .gx-row[data-lane="1"] {
+  padding-right: 8px;
+}
+.gx-refs {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+.gx-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 21px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0 7px;
+  border: 1px solid var(--gx-owner);
+  border-radius: 6px;
+  background: hsl(0 0% 12%);
+  color: var(--gx-owner);
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+.gx-pill svg {
+  flex: none;
+}
+.gx-pill[data-owner="main"] {
+  background: hsl(0 0% 24%);
+  color: hsl(0 0% 96%);
+  font-weight: 700;
+}
+.gx-row[data-look="trial"] .gx-pill {
+  border-style: dashed;
+}
+.gx-pill-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gx-pill-stat {
+  flex: none;
+  padding-left: 6px;
+  border-left: 1px solid currentColor;
+  color: hsl(0 0% 80%);
+  font-weight: 700;
+}
+.gx-pill[data-tone="wait"] .gx-pill-stat {
+  color: hsl(42 95% 65%);
+}
+.gx-pill[data-tone="ok"] .gx-pill-stat {
+  color: hsl(150 62% 60%);
+}
+.gx-pill[data-tone="bad"] {
+  border-color: hsl(2 72% 58%);
+  background: hsl(2 60% 14%);
+}
+.gx-pill[data-tone="bad"] .gx-pill-stat {
+  color: hsl(2 90% 75%);
+}
+.gx-msg {
+  min-width: 0;
+  overflow: hidden;
+  color: hsl(0 0% 90%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.blog-demo code.gx-hash {
+  color: hsl(0 0% 58%);
+  font-size: 11.5px;
+  animation: gxFlash 0.9s ease-out;
+}
+.gx-status {
+  font-size: 11.5px;
+  text-align: right;
+  white-space: nowrap;
+}
+.gx-status[data-tone="ok"] {
+  color: hsl(150 62% 58%);
+  font-weight: 700;
+}
+.gx-status[data-tone="bad"] {
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: hsl(2 72% 42%);
+  color: white;
+  font-weight: 700;
+}
+.gx-status[data-tone="wait"] {
+  color: hsl(42 95% 65%);
+}
+.gx-status[data-tone="owner"] {
+  color: var(--gx-owner);
+  font-weight: 700;
+}
+.gx-status[data-tone="faint"] {
+  color: hsl(0 0% 58%);
+}
+/* A label attached to a lane's newest commit. It moves when that commit changes. */
+.gx-lane-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: hsl(0 0% 5.5%);
+  color: var(--gx-owner);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gx-gap-note {
+  position: absolute;
+  left: calc(var(--gx-graph-w) + 4px);
+  display: flex;
+  align-items: center;
+  gap: 0.5ch;
+  color: hsl(2 90% 76%);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+/* One bracket for the commits Maria is missing, instead of a label on every row. */
+.gx-bracket {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  width: 130px;
+  padding-right: 13px;
+  color: var(--gx-owner);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: right;
+  transition:
+    top 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s;
+}
+.gx-bracket::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 7px;
+  border: 2px solid var(--gx-owner);
+  border-left: 0;
+  border-radius: 0 5px 5px 0;
+}
+.gx-bracket[data-shown="false"] {
+  opacity: 0;
+}
+/* Narrow graphs, on a phone or inside a card, put the branch name above the commit. */
+@container (max-width: 470px) {
+  .gx-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-content: center;
+    column-gap: 8px;
+    row-gap: 2px;
+    font-size: 12px;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+  .gx-refs {
+    grid-row: 1;
+    grid-column: 1 / -1;
+  }
+  .gx-msg {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  .blog-demo code.gx-hash,
+  .gx-status {
+    grid-row: 2;
+    grid-column: 2;
+  }
+  .gx-refs:empty,
+  .gx-status:empty,
+  .gx-status[data-wide-only="true"] {
+    display: none;
+  }
+  .blog-demo .gx-row[data-has-status="true"] code.gx-hash {
+    display: none;
+  }
+  .gx-pill {
+    height: 19px;
+    padding: 0 5px;
+    font-size: 11px;
+  }
+  .gx-pill svg {
+    display: none;
+  }
+  .gx-status {
+    font-size: 11px;
+  }
+  .gx-status[data-tone="bad"] {
+    padding: 1px 5px;
+  }
+  /* Tall rows have room to keep the hash and put the reason on its own line. */
+  .blog-demo .gx-graph[data-tall="true"] .gx-row[data-has-status="true"] code.gx-hash {
+    display: inline;
+  }
+  .gx-graph[data-tall="true"] .gx-status {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  /* Rows beside the bracket hide main's hashes, because only Maria's hash changes. */
+  .gx-graph[data-bracket="true"] .gx-row {
+    padding-right: 102px;
+  }
+  .gx-graph[data-bracket="true"] .gx-row[data-lane="1"] {
+    padding-right: 2px;
+  }
+  .blog-demo .gx-graph[data-bracket="true"] .gx-row[data-lane="0"] code.gx-hash {
+    display: none;
+  }
+  .gx-graph[data-bracket="true"] .gx-status {
+    margin-right: -94px;
+  }
+  .gx-bracket {
+    width: 98px;
+    padding-right: 10px;
+    font-size: 10.5px;
   }
 }
-.demo-chain-ejected {
-  animation: demoChainEject 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+.gx-reserved {
+  display: grid;
+  min-width: 0;
+}
+.gx-reserved-item {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.gx-reserved-item[data-shown="false"] {
+  visibility: hidden;
+}
+.gx-reserved-item > .gx-code {
+  height: 100%;
+}
+.gx-caption {
+  color: hsl(0 0% 86%);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.gx-caption b {
+  color: hsl(0 0% 98%);
+}
+/* The outcome shows as colour on the caption, the moment it happens. */
+.gx-caption[data-tone] {
+  padding: 8px 10px 8px 13px;
+  border-radius: 6px;
+  background: hsl(0 0% 100% / 0.03);
+  box-shadow: inset 3px 0 0 hsl(0 0% 34%);
+  transition:
+    background 0.25s,
+    box-shadow 0.25s;
+}
+.gx-caption[data-tone="wait"] {
+  background: hsl(42 95% 58% / 0.07);
+  box-shadow: inset 3px 0 0 hsl(42 95% 58%);
+}
+.gx-caption[data-tone="ok"] {
+  background: hsl(150 62% 47% / 0.14);
+  box-shadow: inset 3px 0 0 hsl(150 62% 47%);
+}
+.gx-caption[data-tone="bad"] {
+  background: hsl(2 72% 50% / 0.22);
+  box-shadow:
+    inset 0 0 0 1px hsl(2 72% 58% / 0.8),
+    inset 4px 0 0 hsl(2 72% 58%);
+}
+.gx-caption[data-tone="pick"] {
+  background: hsl(180 100% 45% / 0.09);
+  box-shadow: inset 3px 0 0 hsl(180 100% 45%);
+}
+.gx-caption code {
+  overflow-wrap: anywhere;
+}
+.gx-step {
+  margin-right: 4px;
+  color: hsl(180 100% 58%);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.gx-avatar {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--gx-owner);
+  color: hsl(0 0% 6%);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+}
+.blog-demo .gx-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 12px;
+}
+.blog-demo .gx-tasks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.blog-demo .gx-tasks li {
+  margin: 0;
+}
+.gx-task-text {
+  color: hsl(0 0% 72%);
+  font-weight: 400;
+}
+.gx-person {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gx-owner);
+  font-weight: 700;
+}
+.gx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.gx-actions .demo-btn {
+  min-height: 34px;
+}
+.gx-actions-label {
+  color: hsl(0 0% 60%);
+  font-size: 12.5px;
+}
+.gx-segments {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid hsl(0 0% 22%);
+  border-radius: 8px;
+}
+.gx-code {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid hsl(0 0% 18%);
+  border-radius: 6px;
+  background: hsl(0 0% 3.9%);
+}
+.gx-code-file {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 10px;
+  border-bottom: 1px solid hsl(0 0% 18%);
+  color: hsl(0 0% 85%);
+  font-size: 12.5px;
+}
+.gx-code-note {
+  color: hsl(0 0% 62%);
+  white-space: nowrap;
+}
+.blog-demo pre.gx-code-body {
+  display: block;
+  margin: 0;
+  padding: 6px 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: hsl(0 0% 88%);
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.gx-line-group {
+  display: block;
+}
+.gx-line {
+  display: flex;
+  min-height: 1.55em;
+  padding: 0 6px;
+}
+.gx-line[data-kind][data-failed="true"] {
+  background: hsl(2 72% 50% / 0.34);
+  box-shadow: inset 4px 0 0 hsl(2 72% 58%);
+}
+.gx-line-error {
+  display: block;
+  padding: 3px 8px 5px calc(6px + 1.4em);
+  background: hsl(2 72% 50% / 0.14);
+  color: hsl(2 90% 80%);
+  font-size: 11.5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.gx-gutter {
+  flex: none;
+  width: 1.4em;
+  color: hsl(0 0% 45%);
+}
+.gx-line[data-kind="add"] {
+  background: hsl(150 62% 47% / 0.1);
+}
+.gx-line[data-kind="add"] .gx-gutter {
+  color: hsl(150 62% 55%);
+}
+.gx-line[data-kind="del"] {
+  background: hsl(2 72% 58% / 0.12);
+}
+.gx-line[data-kind="del"] .gx-gutter {
+  color: hsl(2 90% 72%);
+}
+.gx-sym {
+  color: hsl(268 90% 80%);
+}
+.gx-sym[data-sym="sendEmail"] {
+  color: hsl(0 0% 100%);
+  font-weight: 700;
+}
+.gx-sym[data-sym="deliver"] {
+  color: hsl(212 95% 72%);
+}
+.gx-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+.gx-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid hsl(0 0% 18%);
+  border-radius: 8px;
+  background: hsl(0 0% 8%);
+  transition:
+    border-color 0.25s,
+    opacity 0.25s;
+}
+.gx-card[data-pick="true"] {
+  border-color: hsl(180 100% 45%);
+}
+.gx-card[data-pick="false"] {
+  opacity: 0.55;
+}
+.gx-card[data-outcome="warn"] {
+  border-color: hsl(42 95% 58%);
+}
+.gx-card[data-outcome="bad"] {
+  border-color: hsl(2 72% 58%);
+  box-shadow: 0 0 0 1px hsl(2 72% 58%);
+}
+.blog-demo .gx-card-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  color: hsl(0 0% 98%);
+  font-size: 14px;
+  font-weight: 700;
+}
+.gx-pick {
+  color: hsl(180 100% 58%);
+  font-size: 12px;
+}
+.gx-card-lede {
+  min-height: 3em;
+  color: hsl(0 0% 72%);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.gx-changes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  border: 1px solid hsl(0 0% 18%);
+  border-radius: 6px;
+  background: hsl(0 0% 3.9%);
+}
+.gx-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: hsl(0 0% 90%);
+  font-size: 12.5px;
+}
+.gx-card-action .demo-btn {
+  min-height: 34px;
+}
+.gx-result {
+  color: hsl(0 0% 86%);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.gx-result .gx-reserved-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.gx-faint {
+  color: hsl(0 0% 50%);
+}
+.blog-demo .gx-outcome {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: hsl(150 62% 47% / 0.1);
+  font-size: 11.5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.blog-demo .gx-outcome[data-tone="bad"] {
+  background: hsl(2 72% 58% / 0.14);
+  color: hsl(2 90% 78%);
+}
+.gx-outcome-tool {
+  flex: none;
+  color: hsl(0 0% 62%);
+}
+.gx-line-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+}
+.blog-demo .gx-line-strip ol {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.blog-demo .gx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  padding: 2px 8px 2px 4px;
+  border: 1px solid var(--gx-owner);
+  border-radius: 6px;
+  color: hsl(0 0% 96%);
+  font-size: 12.5px;
+  font-weight: 700;
+  animation: gxArrive 0.35s ease-out;
+}
+.gx-line-arrow {
+  color: hsl(0 0% 60%);
+}
+.gx-line-note {
+  color: hsl(0 0% 62%);
+  font-size: 12.5px;
+}
+.gx-checks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  font-size: 12.5px;
+}
+.gx-check {
+  padding: 2px 8px;
+  border: 1px solid hsl(0 0% 24%);
+  border-radius: 6px;
+  color: hsl(0 0% 62%);
+  white-space: nowrap;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s;
+}
+.gx-check b {
+  display: inline-block;
+  width: 1ch;
+  text-align: center;
+}
+.gx-check[data-state="running"] {
+  border-color: hsl(42 95% 58%);
+  color: hsl(42 95% 65%);
+}
+.gx-check[data-state="ok"] {
+  border-color: hsl(150 62% 47%);
+  color: hsl(150 62% 62%);
+}
+.gx-check[data-state="bad"] {
+  border-color: hsl(2 72% 58%);
+  background: hsl(2 72% 42%);
+  color: white;
+  font-weight: 700;
+}
+.gx-verdict[data-verdict] {
+  color: hsl(180 100% 62%);
+}
+.gx-inbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid hsl(0 0% 18%);
+  border-radius: 8px;
+  background: hsl(0 0% 8%);
+  transition: border-color 0.25s;
+}
+.gx-inbox[data-live="true"] {
+  border-color: hsl(150 62% 47%);
+}
+.gx-inbox[data-reading="true"] {
+  border-color: hsl(42 95% 58%);
+}
+.gx-inbox-head {
+  color: hsl(0 0% 62%);
+  font-size: 12px;
+}
+.gx-mail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 30px;
+  font-size: 12.5px;
+}
+.gx-mail-text {
+  min-width: 0;
+  overflow: hidden;
+  color: hsl(0 0% 80%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gx-mail-text b {
+  color: hsl(0 0% 96%);
+}
+.blog-demo .gx-reply {
+  flex: none;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+.gx-reply[data-live="false"] {
+  visibility: hidden;
+}
+.blog-demo code.gx-sent {
+  color: hsl(150 62% 60%);
+  font-size: 12px;
+}
+.gx-sent[data-shown="false"] {
+  visibility: hidden;
+}
+.gx-switch-label {
+  font-size: 12.5px;
+}
+.gx-switch-label b {
+  display: inline-block;
+  width: 3ch;
+  color: hsl(0 0% 62%);
+}
+.gx-switch-label b[data-on="true"] {
+  color: hsl(180 100% 58%);
+}
+@keyframes gxArrive {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes gxFade {
+  to {
+    opacity: 0.45;
+  }
+}
+@keyframes gxPulse {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+@keyframes gxFlash {
+  from {
+    color: hsl(180 100% 62%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gx-edge,
+  .gx-dot,
+  .gx-row {
+    transition: none;
+    animation: none;
+  }
+  .gx-ghost,
+  .gx-pulse {
+    display: none;
+  }
 }
 
 .demo-two-col {

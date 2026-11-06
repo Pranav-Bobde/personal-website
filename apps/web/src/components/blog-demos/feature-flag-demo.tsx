@@ -1,151 +1,65 @@
-import { type CSSProperties, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-import { C, DemoFrame } from "./demo-ui";
+import { Actions, CommitGraph, Reserved, type GraphCommit } from "./commit-graph";
+import { Btn, DemoFrame } from "./demo-ui";
+import { branchRef, mainRef, prMessage, REPLAYED } from "./merge-scenario";
+import { prefersReducedMotion, useGoSteps } from "./use-go-steps";
 
-type Email = { from: string; subj: string; cat: string };
-
-const EMAILS: Email[] = [
-  { from: "Marcus", subj: "Lease — signature", cat: "needs-you" },
-  { from: "Stripe", subj: "Payout of $4,120 sent", cat: "receipt" },
-  { from: "Dana", subj: "Q3 vendor call", cat: "needs-you" },
-  { from: "Figma", subj: "Weekly digest", cat: "newsletter" },
-  { from: "LinkedIn", subj: "3 new roles for you", cat: "noise" },
-  { from: "Amazon", subj: "Order shipped", cat: "receipt" },
+const MAILS = [
+  { from: "Sam", subject: "Lease, needs signature" },
+  { from: "Dana", subject: "Q3 vendor call" },
+  { from: "Figma", subject: "Weekly digest" },
 ];
 
-const CAT_LABEL: Record<string, string> = {
-  receipt: "filed",
-  newsletter: "muted",
-  noise: "muted",
-  "needs-you": "flagged",
+/* main after the merge queue run: Kai's #4, then Maria's fixed #2 on top. */
+const kaiOnMain: GraphCommit = {
+  id: "#4",
+  lane: 0,
+  message: prMessage("#4"),
+  hash: REPLAYED.fourOnOne,
+  owner: "kai",
 };
 
-const HANDLED = EMAILS.filter((e) => e.cat !== "needs-you").length;
-const FLAGGED = EMAILS.length - HANDLED;
+const mariaOnMain = (tip: boolean): GraphCommit => ({
+  id: "#2",
+  lane: 0,
+  parent: "#4",
+  message: prMessage("#2"),
+  hash: REPLAYED.fixedTwoOnFour,
+  owner: "maria",
+  refs: tip ? [mainRef()] : undefined,
+});
 
-type RowKind = "unread" | "flagged" | "handled";
-const ROW: Record<
-  RowKind,
-  { opacity: number; dot: string; from: string; left: string; tag: string; showTag: boolean }
-> = {
-  unread: { opacity: 1, dot: C.accent, from: "#eee", left: "transparent", tag: C.faint, showTag: false },
-  flagged: { opacity: 1, dot: "transparent", from: "#eee", left: C.accent, tag: C.accent, showTag: true },
-  handled: { opacity: 0.42, dot: "transparent", from: C.faint, left: "transparent", tag: C.faint, showTag: true },
+const CHECKING: GraphCommit["status"] = { text: "● check running", tone: "wait" };
+const PASSES: GraphCommit["status"] = { text: "✓ builds", tone: "ok" };
+const BEN_STATUS: (GraphCommit["status"] | undefined)[] = [undefined, CHECKING, PASSES];
+
+/* Go: the check runs, it passes, #3 lands, and then the inbox shows what the flag decided. */
+const STEP_MS = [1400, 1100, 1500];
+const LANDS_AT = 3;
+
+const benFlagged = (step: number): GraphCommit => {
+  const merged = step >= LANDS_AT;
+  return {
+    id: "#3",
+    lane: merged ? 0 : 1,
+    parent: "#2",
+    message: prMessage("#3"),
+    hash: REPLAYED.flagThreeOnTwo,
+    owner: "ben",
+    refs: [merged ? mainRef() : branchRef("#3")],
+    status: BEN_STATUS[step],
+  };
 };
 
-function rowKind(cat: string, on: boolean): RowKind {
-  if (!on) return "unread";
-  return cat === "needs-you" ? "flagged" : "handled";
-}
+export const flagCommits = (step: number): GraphCommit[] => [
+  benFlagged(step),
+  mariaOnMain(step < LANDS_AT),
+  kaiOnMain,
+];
 
-function EmailRow({ email, on }: { email: Email; on: boolean }) {
-  const st = ROW[rowKind(email.cat, on)];
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        padding: "8px 11px",
-        borderBottom: `1px solid ${C.border}`,
-        borderLeft: `2px solid ${st.left}`,
-        opacity: st.opacity,
-        transition: "opacity .4s, border-color .4s",
-      }}
-    >
-      <span style={{ width: 6, height: 6, borderRadius: 9, background: st.dot, flex: "none" }} />
-      <span style={{ fontSize: 12, color: st.from, minWidth: 52 }}>{email.from}</span>
-      <span
-        style={{ fontSize: 12, color: C.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
-      >
-        {email.subj}
-      </span>
-      {st.showTag ? (
-        <span
-          style={{
-            marginLeft: "auto",
-            fontSize: 10,
-            color: st.tag,
-            border: `1px solid ${st.tag === C.accent ? C.accent : C.line}`,
-            borderRadius: 5,
-            padding: "1px 5px",
-            flex: "none",
-          }}
-        >
-          {CAT_LABEL[email.cat]}
-        </span>
-      ) : null}
-    </div>
-  );
-}
-
-function MiniInbox({ on }: { on: boolean }) {
-  const count = on ? `${HANDLED} handled · ${FLAGGED} flagged` : `${EMAILS.length} unread`;
-  return (
-    <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: "hidden", background: C.panel }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "7px 11px",
-          borderBottom: `1px solid ${C.border}`,
-          background: C.panel2,
-          fontSize: 12,
-        }}
-      >
-        <span style={{ color: "#fff", fontWeight: 700 }}>Inbox</span>
-        <span style={{ marginLeft: "auto", color: on ? C.green : C.faint, fontSize: 11 }}>{count}</span>
-      </div>
-      {EMAILS.map((e) => (
-        <EmailRow key={e.from + e.subj} email={e} on={on} />
-      ))}
-    </div>
-  );
-}
-
-const FLIP_ON: CSSProperties = { background: C.accent, border: `2px solid ${C.accent}`, color: "#000" };
-const FLIP_OFF: CSSProperties = { background: "transparent", border: `2px solid ${C.line}`, color: C.faint };
-
-function Timeline({ merges, on }: { merges: number; on: boolean }) {
-  return (
-    <div style={{ position: "relative", height: 46, marginBottom: 6 }}>
-      <div style={{ position: "absolute", top: 21, left: 0, right: 0, height: 2, background: C.green }} />
-      {Array.from({ length: merges }, (_, i) => (
-        <span
-          key={i}
-          style={{
-            position: "absolute",
-            top: 15,
-            left: `${8 + (i * 74) / Math.max(merges, 5)}%`,
-            width: 13,
-            height: 13,
-            borderRadius: 9,
-            background: C.bg,
-            border: `2.5px solid ${C.green}`,
-          }}
-        />
-      ))}
-      <div
-        style={{
-          position: "absolute",
-          top: 10,
-          right: "2%",
-          width: 24,
-          height: 24,
-          borderRadius: 6,
-          display: "grid",
-          placeItems: "center",
-          fontSize: 13,
-          fontWeight: 700,
-          transition: "all .3s",
-          ...(on ? FLIP_ON : FLIP_OFF),
-        }}
-      >
-        ✓
-      </div>
-    </div>
-  );
-}
+/* How long the app takes to read a flag you flipped after #3 landed. */
+const READ_FLAG_MS = 800;
 
 function FlagSwitch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
@@ -153,55 +67,170 @@ function FlagSwitch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
       <span className="demo-switch-track">
         <span className="demo-switch-thumb" />
       </span>
-      <span style={{ fontSize: 13 }}>
-        autoTriage <b style={{ color: on ? C.accent : C.muted }}>{on ? "ON" : "OFF"}</b>
+      <span className="gx-switch-label">
+        reply-button flag <b data-on={on}>{on ? "ON" : "OFF"}</b>
       </span>
     </button>
   );
 }
 
+function Inbox({
+  live,
+  reading,
+  sent,
+  onReply,
+}: {
+  live: boolean;
+  reading: boolean;
+  sent: boolean;
+  onReply: () => void;
+}) {
+  return (
+    <div className="gx-inbox" data-live={live} data-reading={reading}>
+      <p className="gx-inbox-head">what users see</p>
+      {MAILS.map((mail, index) => (
+        <div key={mail.from} className="gx-mail">
+          <span className="gx-mail-text">
+            <b>{mail.from}</b> {mail.subject}
+          </span>
+          {index === 0 ? (
+            <button
+              type="button"
+              className="demo-btn gx-reply"
+              data-live={live}
+              tabIndex={live ? 0 : -1}
+              aria-hidden={!live}
+              onClick={onReply}
+            >
+              Reply
+            </button>
+          ) : null}
+        </div>
+      ))}
+      <code className="gx-sent" data-shown={live && sent}>
+        sendReply(&quot;sam&quot;) ran
+      </code>
+    </div>
+  );
+}
+
+type Note = "none" | "early" | "check" | "passed" | "lands" | "reading" | "both" | "together" | "live";
+
+const CAPTIONS: Record<Note, ReactNode> = {
+  none: (
+    <>
+      Maria&apos;s #2 is already on <code>main</code>. Ben&apos;s #3 is still open, with its button
+      behind the flag.
+    </>
+  ),
+  early: (
+    <>
+      <b>The flag is ON but nothing changed</b>, because Ben&apos;s button code is not on{" "}
+      <code>main</code> yet.
+    </>
+  ),
+  check: <>Ben&apos;s check runs on #3.</>,
+  passed: (
+    <>
+      <b>#3 is green.</b> Maria&apos;s #2 is underneath it on <code>main</code>.
+    </>
+  ),
+  lands: (
+    <>
+      <b>Ben&apos;s #3 lands</b> on <code>main</code>. Now watch the inbox.
+    </>
+  ),
+  reading: <>The app reads the new flag value. Nothing merges and nothing deploys.</>,
+  both: (
+    <>
+      <b>Merged, not released.</b> Ben&apos;s #3 is on <code>main</code> and the inbox looks the same.
+      Flip the flag.
+    </>
+  ),
+  together: (
+    <>
+      <b>Merged and released together</b>, because the flag was already ON. Flip it off and the button is
+      gone, with no revert and no deploy.
+    </>
+  ),
+  live: (
+    <>
+      <b>Released, with no new merge.</b> Flip it back and the button is gone, with no revert and no
+      deploy.
+    </>
+  ),
+};
+
+const RUN_NOTES: Note[] = ["check", "passed", "lands"];
+
 export function FeatureFlagDemo() {
+  const { step, done, go, reset: resetRun } = useGoSteps(STEP_MS);
   const [on, setOn] = useState(false);
-  const [merges, setMerges] = useState(4);
-  const status = on ? "released → flag ON" : "behind flag: OFF (merged, dormant)";
+  /* True once you have flipped the flag after #3 landed. */
+  const [flippedAfter, setFlippedAfter] = useState(false);
+  const [reading, setReading] = useState(false);
+  const [sent, setSent] = useState(false);
+  const live = done && on && !reading;
+
+  useEffect(() => {
+    if (!reading) return;
+    const timer = setTimeout(() => setReading(false), READ_FLAG_MS);
+    return () => clearTimeout(timer);
+  }, [reading, on]);
+
+  const flip = () => {
+    setOn((current) => !current);
+    if (!done) return;
+    setFlippedAfter(true);
+    setReading(!prefersReducedMotion());
+  };
+
+  const reset = () => {
+    resetRun();
+    setOn(false);
+    setFlippedAfter(false);
+    setReading(false);
+    setSent(false);
+  };
+
+  const noteFor = (): Note => {
+    if (step === 0) return on ? "early" : "none";
+    if (!done) return RUN_NOTES[step - 1];
+    if (reading) return "reading";
+    if (!on) return "both";
+    return flippedAfter ? "live" : "together";
+  };
 
   return (
-    <DemoFrame
-      label="feature flag — merged is not released"
-      footer={
-        <>
-          The code merged to main days ago behind <code style={{ color: C.amber }}>autoTriage:
-          false</code> — integrated, but invisible. Shipping is <b style={{ color: C.accent }}>one
-          switch</b>, decoupled from every merge. Flip it back and it&rsquo;s an instant rollback —
-          no revert, no redeploy.
-        </>
-      }
-    >
-      <div
-        className="demo-flag-grid"
-        style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.1fr)", gap: 18 }}
-      >
-        <div>
-          <div
-            style={{ fontSize: 11.5, color: C.faint, textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}
-          >
-            commits to main
-          </div>
-          <Timeline merges={merges} on={on} />
-          <div style={{ fontSize: 11.5, color: on ? C.accent : C.amber, marginBottom: 20 }}>{status}</div>
-          <FlagSwitch on={on} onToggle={() => setOn((v) => !v)} />
-          <button
-            type="button"
-            onClick={() => setMerges((n) => Math.min(8, n + 1))}
-            disabled={merges >= 8}
-            className="demo-btn"
-            data-tone="muted"
-            style={{ marginTop: 12, display: "block" }}
-          >
-            merge a commit
-          </button>
+    <DemoFrame label="Ben's Reply button, behind one flag" tag="newest on top">
+      <div className="gx-figure">
+        <div className="gx-cards">
+          <CommitGraph
+            commits={flagCommits(step)}
+            lanes={2}
+            rows={3}
+            label={step >= LANDS_AT ? "Ben's #3 is on main" : "Ben's #3 is still open"}
+          />
+          <Inbox live={live} reading={reading} sent={sent} onReply={() => setSent(true)} />
         </div>
-        <MiniInbox on={on} />
+        <Reserved
+          active={noteFor()}
+          items={CAPTIONS}
+          className="gx-caption"
+          tone={live ? "ok" : done ? "wait" : "run"}
+          announce
+        />
+        <Actions>
+          <FlagSwitch on={on} onToggle={flip} />
+        </Actions>
+        <Actions>
+          <Btn onClick={go} disabled={step !== 0}>
+            Go
+          </Btn>
+          <Btn onClick={reset} tone="muted">
+            reset
+          </Btn>
+        </Actions>
       </div>
     </DemoFrame>
   );

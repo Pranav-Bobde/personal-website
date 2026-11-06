@@ -19,6 +19,11 @@ export const Route = createRootRoute({
         charSet: "utf-8",
       },
       {
+        // The site is dark only. Without this, the Dark Reader extension rewrites inline
+        // styles before hydration, which logs a hydration error and recolours the demos.
+        name: "darkreader-lock",
+      },
+      {
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },

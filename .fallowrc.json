@@ -2,11 +2,23 @@
   "$schema": "./node_modules/fallow/schema.json",
   "ignorePatterns": [
     "apps/web/src/routeTree.gen.ts",
-    "apps/web/src/components/blog-demos/demo-portals.test.mjs",
     "apps/web/src/lib/video-preview-data.test.mjs",
     "apps/web/src/lib/youtube-video-data.test.mjs",
     "apps/web/src/lib/newsletter-embed.test.mjs",
     "apps/web/src/lib/newsletter-page.test.mjs",
     "apps/web/src/lib/project-preview-data.test.mjs"
-  ]
+  ],
+  "entry": [
+    "apps/web/src/components/blog-demos/demo-portals.test.mjs"
+  ],
+  "duplicates": {
+    "ignore": [
+      "apps/web/src/components/blog-demos/demo-portals.test.mjs"
+    ]
+  },
+  "health": {
+    "ignore": [
+      "apps/web/src/components/blog-demos/**"
+    ]
+  }
 }
