@@ -34,6 +34,7 @@ export default defineConfig({
       pages: [
         { path: "/" },
         { path: "/work/real-estate-whatsapp" },
+        { path: "/work/lease-qa" },
         { path: "/work/git-reporting" },
         { path: "/blogs" },
         { path: "/newsletter" },

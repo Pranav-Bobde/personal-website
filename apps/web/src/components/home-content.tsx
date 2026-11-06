@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
-import { Briefcase, Clock, Globe, MapPin } from "lucide-react";
+import { Briefcase, Building2, MapPin } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { NewsletterCta } from "@/components/newsletter-cta";
 import { siteConfig } from "@/lib/config";
-import { workStudies } from "@/lib/work-studies";
+import { persistentStudy, workStudies } from "@/lib/work-studies";
 
 interface HomeContentProps {
   videoSection: ReactNode;
@@ -30,10 +30,25 @@ function BackgroundSection() {
       <h2 className="section-title">background</h2>
       <div className="text-muted-foreground max-w-2xl space-y-4 leading-relaxed">
         <p>
-          Mostly small teams and hands-on engineering. In a previous technology leadership role, I
-          handled APIs, databases, integrations, deployments and mentoring.
+          I was Head of Technology at Senslyze from July 2024 to July 2026, so every technical
+          decision came down to me. I led 8-10 developers across 2-4 projects at a time, handled
+          hiring, scoped solutions with clients, wrote SOWs, ran demos and owned delivery, and I
+          still wrote backend code every day.
         </p>
-        <p>I'm looking for a hands-on TypeScript backend/full-stack role.</p>
+        <p>
+          Before that, at Persistent Systems, I prototyped a COBOL-to-Java migration with a
+          multi-agent AutoGen setup. That work helped the company pursue multi-million-dollar deals,
+          and I documented it in a{" "}
+          <a
+            href={persistentStudy.href}
+            className="text-accent hover:text-foreground border-accent border-b"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            company-published article
+          </a>
+          .
+        </p>
       </div>
     </section>
   );
@@ -44,10 +59,9 @@ function HowIWorkSection() {
     <section className="border-border mt-12 border-t pt-12">
       <h2 className="section-title">how I work</h2>
       <p className="text-muted-foreground max-w-2xl leading-relaxed">
-        I learn through real problems and carry those lessons into the next project. I use coding
-        agents heavily, with repository rules and checks to give them useful feedback. When
-        mentoring, I work through the reasoning with teammates so they can handle similar problems
-        themselves.
+        I use coding agents every day, but I don't just trust what they write. I wrote specs for how
+        each part of the codebase should look, and ESLint import boundaries and Fallow checks enforce
+        them. Then I check the finished work myself in a browser.
       </p>
     </section>
   );
@@ -59,17 +73,28 @@ function SelectedWorkSection() {
       <h2 className="section-title">selected work</h2>
       <div className="space-y-8">
         {workStudies.map((study) => (
-          <article key={study.path} className="space-y-3">
+          <article key={study.title} className="space-y-3">
             <h3 className="text-lg font-bold">{study.title}</h3>
             <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
               {study.preview}
             </p>
-            <Link
-              to={study.path}
-              className="text-accent hover:text-foreground border-accent border-b text-sm"
-            >
-              Read case study →
-            </Link>
+            {"href" in study ? (
+              <a
+                href={study.href}
+                className="text-accent hover:text-foreground border-accent border-b text-sm"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Read the article →
+              </a>
+            ) : (
+              <Link
+                to={study.path}
+                className="text-accent hover:text-foreground border-accent border-b text-sm"
+              >
+                Read case study →
+              </Link>
+            )}
           </article>
         ))}
       </div>
@@ -92,12 +117,8 @@ function HomeHeader() {
           <span>{siteConfig.location}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Clock size={15} className="shrink-0" />
-          <span>{siteConfig.availability}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Globe size={15} className="shrink-0" />
-          <span>{siteConfig.openTo}</span>
+          <Building2 size={15} className="shrink-0" />
+          <span>{siteConfig.current}</span>
         </div>
       </div>
 

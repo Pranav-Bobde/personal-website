@@ -16,6 +16,7 @@ import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
 import { Route as BlogsIdRouteImport } from './routes/blogs/$id'
 import { Route as WorkGitReportingRouteImport } from './routes/work/git-reporting'
+import { Route as WorkLeaseQaRouteImport } from './routes/work/lease-qa'
 import { Route as WorkRealEstateWhatsappRouteImport } from './routes/work/real-estate-whatsapp'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,6 +54,11 @@ const WorkGitReportingRoute = WorkGitReportingRouteImport.update({
   path: '/work/git-reporting',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkLeaseQaRoute = WorkLeaseQaRouteImport.update({
+  id: '/work/lease-qa',
+  path: '/work/lease-qa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorkRealEstateWhatsappRoute = WorkRealEstateWhatsappRouteImport.update({
   id: '/work/real-estate-whatsapp',
   path: '/work/real-estate-whatsapp',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/projects': typeof ProjectsRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/work/git-reporting': typeof WorkGitReportingRoute
+  '/work/lease-qa': typeof WorkLeaseQaRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs/': typeof BlogsIndexRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/work/git-reporting': typeof WorkGitReportingRoute
+  '/work/lease-qa': typeof WorkLeaseQaRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs': typeof BlogsIndexRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/projects': typeof ProjectsRoute
   '/blogs/$id': typeof BlogsIdRoute
   '/work/git-reporting': typeof WorkGitReportingRoute
+  '/work/lease-qa': typeof WorkLeaseQaRoute
   '/work/real-estate-whatsapp': typeof WorkRealEstateWhatsappRoute
   '/blogs/': typeof BlogsIndexRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/blogs/$id'
     | '/work/git-reporting'
+    | '/work/lease-qa'
     | '/work/real-estate-whatsapp'
     | '/blogs/'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/blogs/$id'
     | '/work/git-reporting'
+    | '/work/lease-qa'
     | '/work/real-estate-whatsapp'
     | '/blogs'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/blogs/$id'
     | '/work/git-reporting'
+    | '/work/lease-qa'
     | '/work/real-estate-whatsapp'
     | '/blogs/'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   ProjectsRoute: typeof ProjectsRoute
   BlogsIdRoute: typeof BlogsIdRoute
   WorkGitReportingRoute: typeof WorkGitReportingRoute
+  WorkLeaseQaRoute: typeof WorkLeaseQaRoute
   WorkRealEstateWhatsappRoute: typeof WorkRealEstateWhatsappRoute
   BlogsIndexRoute: typeof BlogsIndexRoute
 }
@@ -185,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkGitReportingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/work/lease-qa': {
+      id: '/work/lease-qa'
+      path: '/work/lease-qa'
+      fullPath: '/work/lease-qa'
+      preLoaderRoute: typeof WorkLeaseQaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/work/real-estate-whatsapp': {
       id: '/work/real-estate-whatsapp'
       path: '/work/real-estate-whatsapp'
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRoute,
   BlogsIdRoute: BlogsIdRoute,
   WorkGitReportingRoute: WorkGitReportingRoute,
+  WorkLeaseQaRoute: WorkLeaseQaRoute,
   WorkRealEstateWhatsappRoute: WorkRealEstateWhatsappRoute,
   BlogsIndexRoute: BlogsIndexRoute,
 }

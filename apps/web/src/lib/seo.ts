@@ -64,9 +64,9 @@ export function previewPageSeo({ title, description, pathname }: PreviewPageSeoI
 
 export function homePageSeo() {
   return pageSeo({
-    title: "Pranav Bobde - Personal Website",
+    title: "Pranav Bobde - AI Engineer",
     description:
-      "Pranav Bobde, TypeScript engineer: background, how he works, selected backend work, videos and writing.",
+      "Pranav Bobde, AI engineer: LLM systems, RAG and TypeScript backends. Former Head of Technology at Senslyze, led 8-10 developers.",
     pathname: "/",
     type: "website",
   });

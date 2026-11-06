@@ -2,12 +2,11 @@ import { env } from "@oreno-website.bts-migration/env/web";
 
 export const siteConfig = {
   name: "Pranav Bobde",
-  title: "TypeScript engineer with end-to-end backend ownership.",
+  title: "AI Engineer | LLM Systems, RAG & Claude Code",
   location: "Nagpur, India",
-  availability: "Available immediately",
-  openTo: "Open to remote or Bangalore",
+  current: "Software Engineer at Suzega",
   bio: {
-    main: "I've built and deployed client backends, AI applications and integrations, led small teams, and handled the operational work around delivery.",
+    main: "I've spent nearly 3 years building LLM systems: RAG, tool calling, evals and the backends behind them. As Head of Technology at Senslyze, I led 8-10 developers across client projects and built the whole backend of a WhatsApp AI agent platform myself. I also took over a client RAG project stuck at 40-50% accuracy and lifted it to 80%+ on the client's own test questions.",
     secondaryTitle: "",
     secondary: "",
   },
@@ -28,9 +27,9 @@ export const siteConfig = {
     twitter: "https://x.com/PranavBobde",
     twitterDm: "https://twitter.com/messages/compose?recipient_id=835557109592829952",
     youtube: "https://www.youtube.com/@pranavb-dot-xyz",
-    linkedin: "https://linkedin.com/in/pranav-bobde-b95010194",
+    linkedin: "https://linkedin.com/in/pranavbobde",
     resume: "https://drive.google.com/file/d/1A-vGJPMl__JTKzBEiTRaqRcop2q5Vsgr/view?usp=sharing",
-    email: "bobdep31@gmail.com",
+    email: "pranav@pranavb.xyz",
   },
   accentColor: "teal",
 } as const;

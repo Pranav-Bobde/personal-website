@@ -13,7 +13,9 @@ function CaseStudyPage() {
   return (
     <WorkCaseStudy title={gitReportingStudy.title}>
       <p>
-        {"I built a tool that turned structured Git commit messages into project activity reports."}
+        {
+          "I used AI to automate monthly client task sheets from standardized Git commit details, which cut preparation from days to a few minutes."
+        }
       </p>
       <p>
         {
@@ -77,7 +79,7 @@ function CaseStudyPage() {
       </table>
       <p>
         {
-          "The result was a repeatable way to prepare reports from task details already recorded in Git, with less manual copying and rewriting and a review step before use."
+          "This removed separate work logs, and I still reviewed the inputs and every generated sheet."
         }
       </p>
     </WorkCaseStudy>

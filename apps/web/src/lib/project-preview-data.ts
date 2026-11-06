@@ -47,7 +47,7 @@ export const previewProjects: PreviewProject[] = [
   {
     id: "better-mail",
     name: "better mail",
-    thesis: sourced("An AI-assisted Gmail client — and an experiment in how far AI-led implementation can go with the right feedback loops."),
+    thesis: sourced("An AI-assisted Gmail client, built to test how far coding agents can go when they can check and correct their own work."),
     context: sourced(
       "The intentional part was the development loop: planning, TDD and tests, implementation, linting, type-checking, static analysis, review, and repeated verification. The goal was to give coding agents enough tooling to evaluate their own work, catch failures, and self-correct — producing more verified output, not pretending the result is perfectly refined architecture.",
     ),
@@ -75,7 +75,7 @@ export const previewProjects: PreviewProject[] = [
   {
     id: "latercart",
     name: "latercart",
-    thesis: sourced("A repeat-purchase agent in iMessage, with every order approved one at a time."),
+    thesis: sourced("An iMessage agent built at the Agentic Commerce Hackathon. It schedules reorders and charges only after the user approves each purchase by passkey. Idempotency keys and DB locks guard against double charges."),
     context: sourced(
       "LaterCart brings recurring purchases into one conversational flow: schedule a reorder, refresh the product and price, then approve that specific purchase. Coffee is the first fully developed and validated vertical; the broader direction is capability-gated support for more merchants and categories, without claiming universal coverage.",
     ),

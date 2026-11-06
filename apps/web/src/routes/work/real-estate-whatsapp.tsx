@@ -14,26 +14,38 @@ function CaseStudyPage() {
     <WorkCaseStudy title={realEstateStudy.title}>
       <p>
         {
-          "I owned the backend of a real-estate WhatsApp platform covering property questions, document ingestion and retrieval, structured lead summaries and site-visit booking."
+          "Real-estate businesses wanted a WhatsApp agent that could answer property questions from their own documents, capture what buyers are looking for and book site visits, without custom code for each business. So a business adds its company information and documents, sets up its properties, connects a WhatsApp number and turns on an agent."
         }
       </p>
       <p>
         {
-          "For booking, I kept validation, storage and confirmation in a defined backend workflow. The model handled conversation, recognized booking intent and opened a WhatsApp Flow form to collect the visitor’s name, date and time."
+          "The MVP deadline got cut from three months to one, and I built the whole backend myself, along with the deployments and some of the frontend."
         }
       </p>
       <p>
         {
-          "Backend code validated the submission and returned defined feedback for invalid input. Valid submissions became booking records linked to the user’s context, followed by a predefined confirmation message."
+          "For booking, I didn't want the model deciding more than it needed to. It handles the conversation, and when someone wants a visit it opens a WhatsApp form. Backend code then checks the submission, saves the booking and sends the confirmation, so the model never writes the booking record."
         }
       </p>
       <p>
         {
-          "I also introduced a delayed form-reminder workflow using Hatchet. A form-start event scheduled the reminder, and a form-submitted event cancelled the pending job. I tested that workflow locally and in the deployed environment."
+          "As we kept adding features, I could see the gaps at scale, so I got PgBouncer and Hatchet into our sprints next to the feature work."
         }
       </p>
       <p>
-        {"The backend used TypeScript, Bun and Hono, with Postgres, Qdrant, LlamaParse and S3."}
+        {
+          "Hatchet's first job was the form reminder. When the form goes out, it schedules a nudge for 5, 15 or 30 minutes later, depending on the agent. When it wakes up, it checks the database and skips the message if the person already submitted."
+        }
+      </p>
+      <p>
+        {
+          "After we moved from MinIO to S3, WhatsApp images silently stopped working in production. I fixed it by detecting the real file type from the bytes and setting the right Content-Type, which also repaired the existing images without a DB migration."
+        }
+      </p>
+      <p>
+        {
+          "The backend runs on TypeScript, Bun and Hono, with Postgres, Qdrant, LlamaParse and S3."
+        }
       </p>
     </WorkCaseStudy>
   );
