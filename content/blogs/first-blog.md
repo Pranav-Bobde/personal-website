@@ -21,7 +21,7 @@ On a [LinkedIn Live](https://www.linkedin.com/feed/update/urn:li:activity:752054
 
 Why publish at all? If I spent 4 hours learning something in a chat, it shouldn't stay in a chat. [My post on merging parallel PRs](/blogs/merging-in-parallel) is one of those chats.
 
-## Setup is one install and two free accounts
+## Setup costs nothing
 
 I never timed the setup. Cladius's estimate on the Live was an hour or two for site, article and domain.
 
