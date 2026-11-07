@@ -4,7 +4,7 @@ import { Actions, CommitGraph, Reserved, type GraphCommit, type GraphPulse } fro
 import { DEFAULT_SPACING } from "./commit-graph-layout";
 import { Btn, DemoFrame } from "./demo-ui";
 import { branchRef, BUILDS, INIT, mainRef, PRS, prMessage, REPLAYED } from "./merge-scenario";
-import { useGoSteps } from "./use-go-steps";
+import { SoundToggle, useSoundedGoSteps, type SoundCue } from "./demo-sound";
 
 /* Same row height as the Problem 1 widget, because this one continues where that one ended. */
 const SPACING = { ...DEFAULT_SPACING, rowH: 66, laneW: 18 };
@@ -90,6 +90,19 @@ export const STACK_STEPS: GraphCommit[][] = [
 /* How long each step holds before the next one starts. */
 export const STACK_STEP_MS = [1300, 2200, 1800, 1300, 1500, 1300, 1000];
 
+/* One cue per step: check runs, it fails, #3 moves, check reruns, green, Maria lands, retarget, done. */
+const STACK_CUES: readonly (SoundCue | null)[] = [
+  null,
+  "running",
+  "failure",
+  "note",
+  "running",
+  "pass",
+  "note",
+  "tick",
+  "success",
+];
+
 const CAPTIONS: ReactNode[] = [
   <>
     <b>Ben&apos;s #3 branches off</b> <code>main</code>, like every other PR.
@@ -131,7 +144,7 @@ const STACK_PULSE: GraphPulse = {
 };
 
 export function StackedPrsDemo() {
-  const { step, done, go, reset } = useGoSteps(STACK_STEP_MS);
+  const { step, done, go, reset } = useSoundedGoSteps(STACK_STEP_MS, STACK_CUES);
 
   return (
     <DemoFrame label="Ben's #3 moves from main to Maria's #2" tag="newest on top">
@@ -156,6 +169,7 @@ export function StackedPrsDemo() {
           <Btn onClick={reset} tone="muted">
             reset
           </Btn>
+          <SoundToggle />
         </Actions>
       </div>
     </DemoFrame>

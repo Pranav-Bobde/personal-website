@@ -7,13 +7,17 @@ import { createRoot } from "react-dom/client";
 
 import { BlogDemoPortals } from "./demo-portals.tsx";
 import { demoRegistry } from "./registry.ts";
+import { renderMarkdown } from "../../lib/markdown.ts";
 import { BranchDriftDemo, driftCommits, DRIFT_STEPS } from "./branch-drift-demo.tsx";
 import { edgePath, layoutCommits } from "./commit-graph-layout.ts";
 import { ConflictKindsDemo, DIFFERENT_LINES_STEPS, SAME_LINE_STEPS } from "./conflict-kinds-demo.tsx";
+import { CUES, buildOutput, scheduleCue } from "./demo-sound.tsx";
+import { DOMAIN_FRAMES, DOMAIN_STEP_MS, DomainPathDemo } from "./domain-path-demo.tsx";
 import { FeatureFlagDemo, flagCommits } from "./feature-flag-demo.tsx";
 import { MergeQueueDemo, NO_QUEUE_FRAMES, QUEUE_FRAMES, QUEUE_STEP_MS } from "./merge-queue-demo.tsx";
 import { buildError, ERR_NO_EXPORT, LANDED_NO_QUEUE, ON_SYNCED_MAIN, PRS, REPLAYED } from "./merge-scenario.tsx";
 import { PrCastDemo } from "./pr-cast-demo.tsx";
+import { PushbackDemo, PUSHBACK_STEP_MS } from "./pushback-demo.tsx";
 import { checkState, QueueOrStackDemo, CHECK_STEP_MS } from "./queue-or-stack-demo.tsx";
 import { StackedPrsDemo } from "./stacked-prs-demo.tsx";
 import { WriteSkewDemo } from "./write-skew-demo.tsx";
@@ -469,7 +473,7 @@ test("the stack starts with #3 forked from main, not red, and Go lands both PRs 
   const labels = () => Array.from(container.querySelectorAll("button")).map(visibleLabel);
 
   try {
-    expect(labels()).toEqual(["Go", "reset"]);
+    expect(labels()).toEqual(["Go", "reset", "sound on"]);
     expect(row(container, "#3").dataset.lane).toBe("2");
     expect(row(container, "#3").dataset.look).not.toBe("bad");
     expect(row(container, "#3").dataset.hash).toBe(PRS["#3"].hash);
@@ -672,6 +676,9 @@ const VISIBLE_RED = [
   ".gx-card[data-outcome]",
   ".gx-card[data-pick]",
   '.gx-inbox[data-live="true"]',
+  ".chat-flag[data-on=\"true\"]",
+  '.dp-row[data-state="bad"]',
+  '.dp-row[data-state="ok"]',
 ].join(",");
 
 const visibleText = (container) => {
@@ -686,6 +693,8 @@ const GO_WIDGETS = [
   ["merge queue", MergeQueueDemo, /build broken/],
   ["queue or stack", QueueOrStackDemo, /Use a queue/],
   ["feature flag", FeatureFlagDemo, /Merged, not released/],
+  ["pushback", PushbackDemo, /That was misleading\./],
+  ["domain path", DomainPathDemo, /Stopped at DNS\./],
 ];
 
 for (const [name, Demo, outcome] of GO_WIDGETS) {
@@ -1040,4 +1049,341 @@ test("the merge queue and the stack picker each keep their own replayed hashes",
   expect(REPLAYED.fourOnOne).toBe("2636a0c");
   expect(REPLAYED.stackedTwoOnOne).toBe("49ba257");
   expect(REPLAYED.stackedFourOnOne).toBe("2d74213");
+});
+
+test("the pushback demo keeps the quotes word for word and flags only the claim's two words", async () => {
+  expect(PUSHBACK_STEP_MS.length).toBe(3);
+  const { container, click, cleanup } = await renderDemo(PushbackDemo);
+  const shownTurns = () =>
+    Array.from(container.querySelectorAll('.chat-text[data-shown="true"]')).map((turn) => turn.textContent);
+
+  try {
+    expect(shownTurns()).toEqual([]);
+    expect(container.querySelector(".chat-flag").dataset.on).toBe("false");
+    expect(container.querySelector(".chat-flag").textContent).toBe("very efficiently");
+
+    await click("Go");
+    expect(container.querySelector(".chat-flag").dataset.on).toBe("true");
+    expect(container.querySelector(".chat-flag-note").dataset.shown).toBe("true");
+    expect(shownTurns()[0]).toContain(
+      "With Node.js's common single-process async model, many concurrent handlers can share one pool very efficiently:",
+    );
+    expect(shownTurns()[1]).toContain("you just self claimly tagged The node one as the efficient one");
+    expect(shownTurns()[2]).toContain("there is no special efficiency difference just because it\u2019s Node.js.");
+    expect(shownTurns()[2].endsWith("That was misleading.")).toBe(true);
+    expect(container.querySelector(".gx-caption").dataset.tone).toBe("ok");
+  } finally {
+    await cleanup();
+  }
+});
+
+test("no record fails at DNS and goes no further, and the record goes all the way", async () => {
+  expect(DOMAIN_STEP_MS.none.length).toBe(DOMAIN_FRAMES.none.length - 2);
+  expect(DOMAIN_STEP_MS.record.length).toBe(DOMAIN_FRAMES.record.length - 2);
+  DOMAIN_FRAMES.none.slice(0, -1).forEach((frame) => expect(frame.states).not.toContain("bad"));
+  DOMAIN_FRAMES.record.forEach((frame) => expect(frame.states).not.toContain("bad"));
+
+  const { container, click, cleanup } = await renderDemo(DomainPathDemo);
+  const states = () => Array.from(container.querySelectorAll(".dp-row")).map((node) => node.dataset.state);
+  const status = (name) => container.querySelector(`[data-row="${name}"] .dp-status`).textContent;
+  const go = () => Array.from(container.querySelectorAll("button")).find((button) => visibleLabel(button) === "Go");
+
+  try {
+    expect(states()).toEqual(["idle", "idle", "idle", "idle"]);
+    await click("Go");
+    expect(states()).toEqual(["ok", "bad", "skipped", "skipped"]);
+    expect(status("DNS record")).toBe("\u2717 no record found");
+    expect(status("Vercel")).toBe("not reached");
+    expect(container.querySelector(".gx-caption").dataset.tone).toBe("bad");
+    expect(container.querySelector(".dp-packet").dataset.state).toBe("bad");
+
+    await click("record added");
+    expect(states()).toEqual(["idle", "idle", "idle", "idle"]);
+    expect(go().disabled).toBe(false);
+    expect(visibleText(container)).toContain("the value Vercel shows you");
+    expect(container.textContent).not.toMatch(/vercel-dns|cname\.vercel/i);
+
+    await click("Go");
+    expect(states()).toEqual(["ok", "ok", "ok", "ok"]);
+    expect(status("Your site")).toBe("\u2713 live");
+    expect(container.querySelector(".gx-caption").dataset.tone).toBe("ok");
+  } finally {
+    await cleanup();
+  }
+});
+
+/* A stand-in for the browser's AudioContext that records what the sound helper asks it to do. */
+class FakeParam {
+  value = 1;
+  targets = [];
+  setValueAtTime() {}
+  linearRampToValueAtTime() {}
+  exponentialRampToValueAtTime() {}
+  setTargetAtTime(value) {
+    this.targets.push(value);
+  }
+}
+
+class FakeNode {
+  gain = new FakeParam();
+  frequency = new FakeParam();
+  connect(node) {
+    return node;
+  }
+  disconnect() {}
+}
+
+class FakeAudioContext {
+  static instances = [];
+  static oscillators = [];
+  static resumed = 0;
+  currentTime = 0;
+  sampleRate = 8000;
+  destination = new FakeNode();
+  constructor() {
+    FakeAudioContext.instances.push(this);
+  }
+  resume() {
+    FakeAudioContext.resumed += 1;
+    return Promise.resolve();
+  }
+  createGain() {
+    return new FakeNode();
+  }
+  createConvolver() {
+    return new FakeNode();
+  }
+  createBiquadFilter() {
+    return new FakeNode();
+  }
+  createBuffer(_channels, length) {
+    const samples = new Float32Array(length);
+    return { getChannelData: () => samples };
+  }
+  createOscillator() {
+    const oscillator = new FakeNode();
+    oscillator.starts = [];
+    oscillator.stops = [];
+    oscillator.start = (time) => oscillator.starts.push(time);
+    oscillator.stop = (time) => oscillator.stops.push(time);
+    FakeAudioContext.oscillators.push(oscillator);
+    return oscillator;
+  }
+}
+
+const startedWaves = () => FakeAudioContext.oscillators.map((oscillator) => oscillator.type);
+const startedHz = () => FakeAudioContext.oscillators.map((oscillator) => oscillator.frequency.value);
+const clearOscillators = () => {
+  FakeAudioContext.oscillators = [];
+};
+
+/* Runs before any test installs the fake, because the helper keeps the first context it opens. */
+test("with no audio available, the widgets still run and the toggle still works", async () => {
+  expect(globalThis.AudioContext).toBeUndefined();
+  const { container, click, cleanup } = await renderDemo(DomainPathDemo);
+  try {
+    await click("Go");
+    expect(visibleText(container)).toContain("Stopped at DNS.");
+    await click("sound on");
+    await click("sound off");
+    await click("reset");
+    expect(visibleText(container)).not.toContain("Stopped at DNS.");
+  } finally {
+    await cleanup();
+  }
+});
+
+test("a throwing AudioContext constructor leaves the widget running", async () => {
+  globalThis.AudioContext = class {
+    constructor() {
+      throw new Error("blocked");
+    }
+  };
+  const { container, click, cleanup } = await renderDemo(PushbackDemo);
+  try {
+    await click("Go");
+    expect(visibleText(container)).toContain("That was misleading.");
+  } finally {
+    delete globalThis.AudioContext;
+    await cleanup();
+  }
+});
+
+test("sound starts only from Go, suits the outcome, and reset stops it and plays G3 then C3", async () => {
+  globalThis.AudioContext = FakeAudioContext;
+  const { click, cleanup } = await renderDemo(DomainPathDemo);
+  try {
+    expect(FakeAudioContext.instances.length).toBe(0);
+    await click("reset");
+    await click("record added");
+    await click("no record");
+    expect(FakeAudioContext.instances.length).toBe(0);
+    expect(FakeAudioContext.oscillators.length).toBe(0);
+
+    await click("Go");
+    expect(FakeAudioContext.instances.length).toBe(1);
+    expect(FakeAudioContext.resumed).toBe(1);
+    expect(new Set(startedWaves())).toEqual(new Set(["sawtooth"]));
+    expect(startedHz()).toEqual([82.41, 65.41]);
+
+    const running = FakeAudioContext.oscillators;
+    clearOscillators();
+    await click("reset");
+    running.forEach((oscillator) => expect(oscillator.stops.length).toBe(2));
+    expect(new Set(startedWaves())).toEqual(new Set(["sine"]));
+    expect(startedHz()).toEqual([196, 130.81]);
+    const [g3, c3] = FakeAudioContext.oscillators;
+    expect(c3.starts[0] - g3.starts[0]).toBeCloseTo(0.1, 5);
+
+    clearOscillators();
+    await click("reset");
+    expect(FakeAudioContext.oscillators.length).toBe(0);
+
+    await click("record added");
+    await click("Go");
+    expect(new Set(startedWaves())).toEqual(new Set(["triangle"]));
+    expect(startedHz()).toEqual([523.25, 659.25, 783.99, 1046.5]);
+  } finally {
+    clearOscillators();
+    await cleanup();
+  }
+});
+
+test("switching the scenario and unmounting both stop what is playing, with no extra sound", async () => {
+  const { click, cleanup } = await renderDemo(DomainPathDemo);
+  await click("Go");
+  const running = FakeAudioContext.oscillators;
+  clearOscillators();
+  await click("record added");
+  running.forEach((oscillator) => expect(oscillator.stops.length).toBe(2));
+  expect(FakeAudioContext.oscillators.length).toBe(0);
+
+  await click("Go");
+  const playing = FakeAudioContext.oscillators;
+  clearOscillators();
+  await cleanup();
+  playing.forEach((oscillator) => expect(oscillator.stops.length).toBe(2));
+  expect(FakeAudioContext.oscillators.length).toBe(0);
+});
+
+test("one sound setting: every toggle follows it, it is remembered, and off is silent", async () => {
+  const first = await renderDemo(PushbackDemo);
+  const second = await renderDemo(StackedPrsDemo);
+  const toggle = (container) => container.querySelector(".demo-sound");
+  const contexts = FakeAudioContext.instances.length;
+
+  try {
+    await first.click("sound on");
+    expect(visibleLabel(toggle(first.container))).toBe("sound off");
+    expect(visibleLabel(toggle(second.container))).toBe("sound off");
+    expect(window.localStorage.getItem("blog-demo-sound")).toBe("off");
+
+    await second.click("Go");
+    expect(FakeAudioContext.oscillators.length).toBe(0);
+    expect(FakeAudioContext.instances.length).toBe(contexts);
+
+    await second.click("reset");
+    expect(FakeAudioContext.oscillators.length).toBe(0);
+
+    await second.click("sound off");
+    expect(window.localStorage.getItem("blog-demo-sound")).toBe("on");
+    await second.click("Go");
+    expect(startedHz()).toEqual([523.25, 659.25, 783.99, 1046.5]);
+
+    const playing = FakeAudioContext.oscillators;
+    await first.click("sound on");
+    playing.forEach((oscillator) => expect(oscillator.stops.length).toBe(2));
+    await first.click("sound off");
+  } finally {
+    clearOscillators();
+    await first.cleanup();
+    await second.cleanup();
+  }
+});
+
+test("blocked localStorage doesn't break the toggle", async () => {
+  const descriptor = Object.getOwnPropertyDescriptor(dom.window, "localStorage");
+  Object.defineProperty(dom.window, "localStorage", {
+    configurable: true,
+    get() {
+      throw new Error("blocked");
+    },
+  });
+  const { container, click, cleanup } = await renderDemo(PushbackDemo);
+  try {
+    await click("sound on");
+    expect(visibleLabel(container.querySelector(".demo-sound"))).toBe("sound off");
+    await click("sound off");
+    expect(visibleLabel(container.querySelector(".demo-sound"))).toBe("sound on");
+  } finally {
+    await cleanup();
+    if (descriptor) Object.defineProperty(dom.window, "localStorage", descriptor);
+    else delete dom.window.localStorage;
+  }
+});
+
+test("every cue is short and starts at its own time", () => {
+  for (const [name, patch] of Object.entries(CUES)) {
+    const longest = Math.max(...patch.notes.map((note) => note.at + note.seconds));
+    expect(longest, name).toBeLessThanOrEqual(0.7);
+    patch.notes.forEach((note) => expect(note.peak, name).toBeLessThanOrEqual(0.55));
+  }
+  const ctx = new FakeAudioContext();
+  const { input } = buildOutput(ctx);
+  clearOscillators();
+  scheduleCue(ctx, input, "running");
+  const starts = FakeAudioContext.oscillators.map((oscillator) => oscillator.starts[0]);
+  [0.01, 0.15, 0.29].forEach((time, index) => expect(starts[index]).toBeCloseTo(time, 5));
+  clearOscillators();
+});
+
+const FIRST_BLOG = "content/blogs/first-blog.md";
+
+test("the first-blog post has its demos, its facts, and none of the banned content", async () => {
+  const repoRoot = resolve(import.meta.dir, "../../../../../");
+  const article = await readFile(resolve(repoRoot, FIRST_BLOG), "utf8");
+  const names = Array.from(article.matchAll(/::demo\[([^\]]+)\]/g), (match) => match[1]);
+
+  expect(names).toEqual(["pushback", "stacked-prs", "domain-path"]);
+  names.forEach((name) => expect(name in demoRegistry).toBe(true));
+  for (const part of [
+    "at least 3 to 4 hours",
+    "curl -fsSL https://opencode.ai/install | bash",
+    "Cladius Fernando",
+    "finished the deploy in Claude Code",
+    "https://samwho.dev/",
+    "https://test-blog-ruby-two.vercel.app/",
+    "/blogs/durable-objects-rabbit-hole",
+    "https://www.linkedin.com/feed/update/urn:li:activity:7520548724108939264/",
+    "If the AI changes its answer when you question it, the first answer was never proof.",
+    "Just never skip the checking and the pushback.",
+    "cud u create me another version",
+  ]) {
+    expect(article).toContain(part);
+  }
+  expect(article).not.toContain("\u2014");
+  expect(article).not.toMatch(/\b(he|she|his|her|hers|him|himself|herself)\b/i);
+  expect(article).not.toMatch(
+    /Senslyze|salary|ex-boss|left behind|10 to 20 PRs|top harness|the team|hire-me|chatgpt\.com\/share|Claudius/i,
+  );
+});
+
+test("the first-blog post is in the sitemap and its images are on disk", async () => {
+  const repoRoot = resolve(import.meta.dir, "../../../../../");
+  const sitemap = await readFile(resolve(repoRoot, "apps/web/public/sitemap.xml"), "utf8");
+  const article = await readFile(resolve(repoRoot, FIRST_BLOG), "utf8");
+
+  expect(sitemap).toContain("https://pranavb.xyz/blogs/first-blog");
+  const images = Array.from(article.matchAll(/!\[([^\]]+)\]\(([^)]+)\)/g), (match) => [match[1], match[2]]);
+  expect(images.length).toBe(2);
+  for (const [alt, path] of images) {
+    expect(alt.length).toBeGreaterThan(20);
+    expect((await readFile(resolve(repoRoot, "apps/web/public", `.${path}`))).length).toBeGreaterThan(1000);
+  }
+});
+
+test("a prompt fence wraps its text and drops the word prompt, and a plain fence stays as it was", () => {
+  const { html } = renderMarkdown("```prompt\nopen <site>\n```\n\n```\ngh auth login\n```");
+  expect(html).toContain('<pre class="markdown-prompt"><code>open &lt;site&gt;</code></pre>');
+  expect(html).toContain("<pre><code>gh auth login</code></pre>");
 });

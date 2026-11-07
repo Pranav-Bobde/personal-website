@@ -276,8 +276,10 @@ export function renderMarkdown(markdown: string): { html: string; toc: TocLink[]
 
   const withCodePlaceholders = markdown.replace(codeBlockPattern, (_, codeContent: string) => {
     const index = codeBlocks.length;
-    const escapedCode = escapeHtml(codeContent.trim());
-    codeBlocks.push(`<pre><code>${escapedCode}</code></pre>`);
+    // A ```prompt fence is prose for pasting into a chat, so it wraps instead of scrolling sideways.
+    const isPrompt = codeContent.startsWith("prompt\n");
+    const escapedCode = escapeHtml((isPrompt ? codeContent.slice("prompt\n".length) : codeContent).trim());
+    codeBlocks.push(`<pre${isPrompt ? ' class="markdown-prompt"' : ""}><code>${escapedCode}</code></pre>`);
     return `__CODE_BLOCK_${index}__`;
   });
 
