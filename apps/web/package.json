@@ -21,6 +21,7 @@
     "evlog": "^2.14.1",
     "lucide-react": "^1.8.0",
     "nitro": "^3.0.260429-beta",
+    "pele": "1.13.0",
     "posthog-js": "^1.376.2",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",

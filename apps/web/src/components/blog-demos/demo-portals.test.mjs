@@ -12,7 +12,6 @@ import { BranchDriftDemo, driftCommits, DRIFT_STEPS } from "./branch-drift-demo.
 import { edgePath, layoutCommits } from "./commit-graph-layout.ts";
 import { ConflictKindsDemo, DIFFERENT_LINES_STEPS, SAME_LINE_STEPS } from "./conflict-kinds-demo.tsx";
 import { CUES, buildOutput, scheduleCue } from "./demo-sound.tsx";
-import { DOMAIN_FRAMES, DOMAIN_STEP_MS, DomainPathDemo } from "./domain-path-demo.tsx";
 import { FeatureFlagDemo, flagCommits } from "./feature-flag-demo.tsx";
 import { MergeQueueDemo, NO_QUEUE_FRAMES, QUEUE_FRAMES, QUEUE_STEP_MS } from "./merge-queue-demo.tsx";
 import { buildError, ERR_NO_EXPORT, LANDED_NO_QUEUE, ON_SYNCED_MAIN, PRS, REPLAYED } from "./merge-scenario.tsx";
@@ -677,8 +676,6 @@ const VISIBLE_RED = [
   ".gx-card[data-pick]",
   '.gx-inbox[data-live="true"]',
   ".chat-flag[data-on=\"true\"]",
-  '.dp-row[data-state="bad"]',
-  '.dp-row[data-state="ok"]',
 ].join(",");
 
 const visibleText = (container) => {
@@ -694,7 +691,6 @@ const GO_WIDGETS = [
   ["queue or stack", QueueOrStackDemo, /Use a queue/],
   ["feature flag", FeatureFlagDemo, /Merged, not released/],
   ["pushback", PushbackDemo, /That was misleading\./],
-  ["domain path", DomainPathDemo, /Stopped at DNS\./],
 ];
 
 for (const [name, Demo, outcome] of GO_WIDGETS) {
@@ -1077,41 +1073,6 @@ test("the pushback demo keeps the quotes word for word and flags only the claim'
   }
 });
 
-test("no record fails at DNS and goes no further, and the record goes all the way", async () => {
-  expect(DOMAIN_STEP_MS.none.length).toBe(DOMAIN_FRAMES.none.length - 2);
-  expect(DOMAIN_STEP_MS.record.length).toBe(DOMAIN_FRAMES.record.length - 2);
-  DOMAIN_FRAMES.none.slice(0, -1).forEach((frame) => expect(frame.states).not.toContain("bad"));
-  DOMAIN_FRAMES.record.forEach((frame) => expect(frame.states).not.toContain("bad"));
-
-  const { container, click, cleanup } = await renderDemo(DomainPathDemo);
-  const states = () => Array.from(container.querySelectorAll(".dp-row")).map((node) => node.dataset.state);
-  const status = (name) => container.querySelector(`[data-row="${name}"] .dp-status`).textContent;
-  const go = () => Array.from(container.querySelectorAll("button")).find((button) => visibleLabel(button) === "Go");
-
-  try {
-    expect(states()).toEqual(["idle", "idle", "idle", "idle"]);
-    await click("Go");
-    expect(states()).toEqual(["ok", "bad", "skipped", "skipped"]);
-    expect(status("DNS record")).toBe("\u2717 no record found");
-    expect(status("Vercel")).toBe("not reached");
-    expect(container.querySelector(".gx-caption").dataset.tone).toBe("bad");
-    expect(container.querySelector(".dp-packet").dataset.state).toBe("bad");
-
-    await click("record added");
-    expect(states()).toEqual(["idle", "idle", "idle", "idle"]);
-    expect(go().disabled).toBe(false);
-    expect(visibleText(container)).toContain("the value Vercel shows you");
-    expect(container.textContent).not.toMatch(/vercel-dns|cname\.vercel/i);
-
-    await click("Go");
-    expect(states()).toEqual(["ok", "ok", "ok", "ok"]);
-    expect(status("Your site")).toBe("\u2713 live");
-    expect(container.querySelector(".gx-caption").dataset.tone).toBe("ok");
-  } finally {
-    await cleanup();
-  }
-});
-
 /* A stand-in for the browser's AudioContext that records what the sound helper asks it to do. */
 class FakeParam {
   value = 1;
@@ -1180,14 +1141,14 @@ const clearOscillators = () => {
 /* Runs before any test installs the fake, because the helper keeps the first context it opens. */
 test("with no audio available, the widgets still run and the toggle still works", async () => {
   expect(globalThis.AudioContext).toBeUndefined();
-  const { container, click, cleanup } = await renderDemo(DomainPathDemo);
+  const { container, click, cleanup } = await renderDemo(PushbackDemo);
   try {
     await click("Go");
-    expect(visibleText(container)).toContain("Stopped at DNS.");
+    expect(visibleText(container)).toContain("That was misleading.");
     await click("sound on");
     await click("sound off");
     await click("reset");
-    expect(visibleText(container)).not.toContain("Stopped at DNS.");
+    expect(visibleText(container)).not.toContain("That was misleading.");
   } finally {
     await cleanup();
   }
@@ -1209,22 +1170,20 @@ test("a throwing AudioContext constructor leaves the widget running", async () =
   }
 });
 
-test("sound starts only from Go, suits the outcome, and reset stops it and plays G3 then C3", async () => {
+test("sound starts only from Go, and reset stops it and plays G3 then C3", async () => {
   globalThis.AudioContext = FakeAudioContext;
-  const { click, cleanup } = await renderDemo(DomainPathDemo);
+  const { click, cleanup } = await renderDemo(PushbackDemo);
   try {
     expect(FakeAudioContext.instances.length).toBe(0);
     await click("reset");
-    await click("record added");
-    await click("no record");
     expect(FakeAudioContext.instances.length).toBe(0);
     expect(FakeAudioContext.oscillators.length).toBe(0);
 
     await click("Go");
     expect(FakeAudioContext.instances.length).toBe(1);
     expect(FakeAudioContext.resumed).toBe(1);
-    expect(new Set(startedWaves())).toEqual(new Set(["sawtooth"]));
-    expect(startedHz()).toEqual([82.41, 65.41]);
+    expect(new Set(startedWaves())).toEqual(new Set(["triangle"]));
+    expect(startedHz()).toEqual([523.25, 659.25, 783.99, 1046.5]);
 
     const running = FakeAudioContext.oscillators;
     clearOscillators();
@@ -1238,26 +1197,14 @@ test("sound starts only from Go, suits the outcome, and reset stops it and plays
     clearOscillators();
     await click("reset");
     expect(FakeAudioContext.oscillators.length).toBe(0);
-
-    await click("record added");
-    await click("Go");
-    expect(new Set(startedWaves())).toEqual(new Set(["triangle"]));
-    expect(startedHz()).toEqual([523.25, 659.25, 783.99, 1046.5]);
   } finally {
     clearOscillators();
     await cleanup();
   }
 });
 
-test("switching the scenario and unmounting both stop what is playing, with no extra sound", async () => {
-  const { click, cleanup } = await renderDemo(DomainPathDemo);
-  await click("Go");
-  const running = FakeAudioContext.oscillators;
-  clearOscillators();
-  await click("record added");
-  running.forEach((oscillator) => expect(oscillator.stops.length).toBe(2));
-  expect(FakeAudioContext.oscillators.length).toBe(0);
-
+test("unmounting stops what is playing, with no extra sound", async () => {
+  const { click, cleanup } = await renderDemo(PushbackDemo);
   await click("Go");
   const playing = FakeAudioContext.oscillators;
   clearOscillators();
@@ -1344,7 +1291,7 @@ test("the first-blog post has its demos, its facts, and none of the banned conte
   const article = await readFile(resolve(repoRoot, FIRST_BLOG), "utf8");
   const names = Array.from(article.matchAll(/::demo\[([^\]]+)\]/g), (match) => match[1]);
 
-  expect(names).toEqual(["pushback", "stacked-prs", "domain-path"]);
+  expect(names).toEqual(["pushback", "stacked-prs"]);
   names.forEach((name) => expect(name in demoRegistry).toBe(true));
   for (const part of [
     "at least 3 to 4 hours",
@@ -1356,6 +1303,10 @@ test("the first-blog post has its demos, its facts, and none of the banned conte
     "/blogs/durable-objects-rabbit-hole",
     "https://www.linkedin.com/feed/update/urn:li:activity:7520548724108939264/",
     "If the AI changes its answer when you question it, the first answer was never proof.",
+    "## Hand this post to your agent",
+    "(#hand-this-post-to-your-agent)",
+    "Read this post first: https://pranavb.xyz/blogs/first-blog",
+    "```mermaid",
     "Just never skip the checking and the pushback.",
     "cud u create me another version",
   ]) {
@@ -1364,7 +1315,7 @@ test("the first-blog post has its demos, its facts, and none of the banned conte
   expect(article).not.toContain("\u2014");
   expect(article).not.toMatch(/\b(he|she|his|her|hers|him|himself|herself)\b/i);
   expect(article).not.toMatch(
-    /Senslyze|salary|ex-boss|left behind|10 to 20 PRs|top harness|the team|hire-me|chatgpt\.com\/share|Claudius/i,
+    /Senslyze|salary|ex-boss|left behind|10 to 20 PRs|top harness|the team|hire-me|chatgpt\.com\/share|Claudius|Do this today|matter more than the prompts/i,
   );
 });
 
@@ -1386,4 +1337,27 @@ test("a prompt fence wraps its text and drops the word prompt, and a plain fence
   const { html } = renderMarkdown("```prompt\nopen <site>\n```\n\n```\ngh auth login\n```");
   expect(html).toContain('<pre class="markdown-prompt"><code>open &lt;site&gt;</code></pre>');
   expect(html).toContain("<pre><code>gh auth login</code></pre>");
+});
+
+test("every code fence gets a copy button, and its language line never shows as code", () => {
+  const { html } = renderMarkdown("```prompt\nopen <site>\n```\n\n```typescript\nconst a = 1;\n```");
+  expect(html.match(/data-copy-code/g)?.length).toBe(2);
+  expect(html).toContain('aria-label="Copy prompt"');
+  expect(html).toContain('aria-label="Copy code"');
+  expect(html).toContain("<pre><code>const a = 1;</code></pre>");
+  expect(html).not.toContain("typescript");
+});
+
+test("a mermaid fence renders as an SVG diagram with no copy button", () => {
+  const { html } = renderMarkdown('```mermaid\nflowchart TD\n  A["You type yourname.xyz"] --> B["Vercel"]\n```');
+  expect(html).toContain('<figure class="markdown-diagram"><svg');
+  expect(html).toContain("yourname.xyz");
+  expect(html).not.toContain("data-copy-code");
+  expect(html).not.toContain("flowchart TD");
+});
+
+test("a same-page anchor link stays in the tab, and outside links open a new one", () => {
+  const { html } = renderMarkdown("[prompt](#hand-this-post-to-your-agent) and [site](https://samwho.dev/)");
+  expect(html).toContain('<a href="#hand-this-post-to-your-agent" class="text-accent hover:underline">prompt</a>');
+  expect(html).toContain('<a href="https://samwho.dev/" class="text-accent hover:underline" target="_blank"');
 });

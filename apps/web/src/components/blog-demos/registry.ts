@@ -4,7 +4,6 @@ import { BranchDriftDemo } from "./branch-drift-demo";
 import { CheckoutWindowDemo } from "./checkout-window-demo";
 import { ConflictKindsDemo } from "./conflict-kinds-demo";
 import { ConnectionPressureDemo } from "./connection-pressure-demo";
-import { DomainPathDemo } from "./domain-path-demo";
 import { FeatureFlagDemo } from "./feature-flag-demo";
 import { MergeQueueDemo } from "./merge-queue-demo";
 import { MvccVisibilityDemo } from "./mvcc-visibility-demo";
@@ -28,5 +27,4 @@ export const demoRegistry: Record<string, ComponentType> = {
   "write-skew": WriteSkewDemo,
   "checkout-window": CheckoutWindowDemo,
   pushback: PushbackDemo,
-  "domain-path": DomainPathDemo,
 };

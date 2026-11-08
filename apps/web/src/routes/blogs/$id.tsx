@@ -55,6 +55,7 @@ function BlogPostPage() {
     `Feedback on "${post.title}": `,
   )}`;
   useBlogAnalytics(post);
+  useCodeCopyButtons(contentRef);
   useBlogPostHotkeys(toc, feedbackHref, () => {
     trackBlogFeedbackClicked(post, "hotkey");
   });
@@ -109,6 +110,64 @@ function BlogPostPage() {
       </div>
     </div>
   );
+}
+
+// Code blocks arrive as static HTML, so one delegated listener serves every copy button.
+function useCodeCopyButtons(containerRef: RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const root = containerRef.current;
+    if (!root) {
+      return;
+    }
+
+    const timers = new Map<HTMLButtonElement, number>();
+    const onClick = (event: MouseEvent) => {
+      const button =
+        event.target instanceof Element
+          ? event.target.closest<HTMLButtonElement>("button[data-copy-code]")
+          : null;
+      const code = button?.parentElement?.querySelector("pre code")?.textContent;
+      if (!button || code === undefined || code === null) {
+        return;
+      }
+
+      const showCopied = () => {
+        button.dataset.copied = "true";
+        window.clearTimeout(timers.get(button));
+        timers.set(
+          button,
+          window.setTimeout(() => {
+            delete button.dataset.copied;
+          }, 1500),
+        );
+      };
+      // Older browsers and non-HTTPS pages have no clipboard API, so fall back to a hidden textarea.
+      const copyWithTextarea = () => {
+        const area = document.createElement("textarea");
+        area.value = code;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.append(area);
+        area.select();
+        const copied = document.execCommand("copy");
+        area.remove();
+        if (copied) showCopied();
+      };
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code).then(showCopied, copyWithTextarea);
+      } else {
+        copyWithTextarea();
+      }
+    };
+
+    root.addEventListener("click", onClick);
+    return () => {
+      root.removeEventListener("click", onClick);
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, [containerRef]);
 }
 
 function useActiveSectionId(toc: TocLink[]) {

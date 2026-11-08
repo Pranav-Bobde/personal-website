@@ -1,3 +1,6 @@
+import { register, render } from "pele/core";
+import flowchart from "pele/diagrams/flowchart";
+
 function escapeHtml(input: string) {
   return input
     .replaceAll("&", "&amp;")
@@ -57,9 +60,11 @@ function formatInline(input: string) {
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.*?)\*/g, "<em>$1</em>")
     .replace(/`(.*?)`/g, '<code class="bg-secondary px-1 py-0.5 rounded text-sm">$1</code>')
-    .replace(
-      /\[(.*?)\]\((.*?)\)/g,
-      '<a href="$2" class="text-accent hover:underline" target="_blank" rel="noopener noreferrer">$1</a>',
+    .replace(/\[(.*?)\]\((.*?)\)/g, (_, label: string, href: string) =>
+      // A same-page anchor scrolls this tab; every other link opens a new one.
+      href.startsWith("#")
+        ? `<a href="${href}" class="text-accent hover:underline">${label}</a>`
+        : `<a href="${href}" class="text-accent hover:underline" target="_blank" rel="noopener noreferrer">${label}</a>`,
     );
 }
 
@@ -266,6 +271,43 @@ function renderBlocks(markdown: string, state: MarkdownRenderState) {
     .join("");
 }
 
+register(flowchart);
+
+const copyIcon =
+  '<svg class="markdown-copy-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+const checkIcon =
+  '<svg class="markdown-check-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+function renderCopyableCode(code: string, isPrompt: boolean) {
+  const label = isPrompt ? "Copy prompt" : "Copy code";
+  // The click handler lives in the blog route; this markup stays static so it renders on the server.
+  const text = isPrompt ? '<span class="markdown-copy-label">Copy prompt</span>' : "";
+  return `<div class="markdown-code"><button type="button" class="markdown-copy" data-copy-code aria-label="${label}" title="${label}">${copyIcon}${checkIcon}${text}</button><pre${
+    isPrompt ? ' class="markdown-prompt"' : ""
+  }><code>${escapeHtml(code)}</code></pre></div>`;
+}
+
+function renderDiagram(source: string) {
+  try {
+    return `<figure class="markdown-diagram">${render(source).svg}</figure>`;
+  } catch {
+    return `<pre><code>${escapeHtml(source)}</code></pre>`;
+  }
+}
+
+function renderFence(codeContent: string) {
+  const firstLineEnd = codeContent.indexOf("\n");
+  const language = firstLineEnd === -1 ? "" : codeContent.slice(0, firstLineEnd).trim();
+  const body = (language ? codeContent.slice(firstLineEnd + 1) : codeContent).trim();
+
+  if (language === "mermaid") {
+    return renderDiagram(body);
+  }
+
+  // A ```prompt fence is prose for pasting into a chat, so it wraps instead of scrolling sideways.
+  return renderCopyableCode(body, language === "prompt");
+}
+
 export function renderMarkdown(markdown: string): { html: string; toc: TocLink[] } {
   const codeBlockPattern = /```([\s\S]*?)```/g;
   const codeBlocks: string[] = [];
@@ -276,10 +318,7 @@ export function renderMarkdown(markdown: string): { html: string; toc: TocLink[]
 
   const withCodePlaceholders = markdown.replace(codeBlockPattern, (_, codeContent: string) => {
     const index = codeBlocks.length;
-    // A ```prompt fence is prose for pasting into a chat, so it wraps instead of scrolling sideways.
-    const isPrompt = codeContent.startsWith("prompt\n");
-    const escapedCode = escapeHtml((isPrompt ? codeContent.slice("prompt\n".length) : codeContent).trim());
-    codeBlocks.push(`<pre${isPrompt ? ' class="markdown-prompt"' : ""}><code>${escapedCode}</code></pre>`);
+    codeBlocks.push(renderFence(codeContent));
     return `__CODE_BLOCK_${index}__`;
   });
 

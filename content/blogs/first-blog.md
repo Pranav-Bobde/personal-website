@@ -1,6 +1,6 @@
 ---
 title: "The Site Takes 4 Prompts. The Post Takes 4 Hours."
-date: "2026-11-07"
+date: "2026-11-09"
 readingTime: "6 min read"
 summary: "Zero to your own blog: every step, what it costs, and the part AI can't do for you. The site is 4 prompts. The learning behind a post worth reading is not."
 tags: ["blogging", "ai-agents", "opencode", "github", "vercel", "domains", "writing"]
@@ -15,7 +15,9 @@ Zero to your own blog: every step, the cost, and the part AI can't do.
 - **Deploy:** about 3 minutes.
 - **Money:** $0. A domain is optional.
 
-## Cladius asked for the from-zero version
+**Short on time?** [Copy the prompt at the end](#hand-this-post-to-your-agent) into your agent. It reads this post and walks you through every step.
+
+## No domain, no Vercel, new to GitHub? Start here
 
 On a [LinkedIn Live](https://www.linkedin.com/feed/update/urn:li:activity:7520548724108939264/), I showed how I build my posts. At the end, Cladius Fernando, who hosted it, asked me to write it for someone with no domain, no Vercel account, and maybe new to GitHub. This is that post.
 
@@ -66,11 +68,13 @@ One process with one pool behaves the same in any language, so "very efficiently
 
 Keep going until the facts match what you can check.
 
-## My prompts alone won't get you my result
+## Let your agent see the site it builds
 
-**The tools matter more than the prompts.** Copy my prompts exactly and you still won't get my output, because my agent can do things yours may not.
+**My results came from the prompts plus one ability: my agent could look at the site.**
 
-The big one is seeing its own work. The [browser-use](https://github.com/browser-use/browser-use) skill, a set of instructions and tools the agent can load, lets it open the site, look at it, resize for mobile, fix what broke and repeat. [Claude Code has a Chrome option](https://code.claude.com/docs/en/chrome) that does a similar job.
+The [browser-use](https://github.com/browser-use/browser-use) skill, a set of instructions and tools the agent can load, lets it open the site, look at it, resize for mobile, fix what broke and repeat. [Claude Code has a Chrome option](https://code.claude.com/docs/en/chrome) that does a similar job.
+
+Without it, the agent can't notice a broken layout. Then you do that part: open the site, and tell it what looks wrong or paste a screenshot.
 
 **Warning: this gives the agent your signed-in browser, so it can act as you.** For example, it could send a message from your logged-in LinkedIn. Use a separate browser profile at first.
 
@@ -181,9 +185,15 @@ Want your own domain? **DNS** is the internet's phone book, and a **registrar** 
 
 Vercel handles SSL, the padlock on `https`. A subdomain like `blog.yourname.xyz` uses a CNAME record and a root domain like `yourname.xyz` uses an A record. Always [copy what Vercel shows](https://vercel.com/docs/domains/working-with-domains/add-a-domain).
 
-Here is why that record matters. Press `Go` on `no record`, then switch to `record added` and press `Go` again.
+Here is what that record does:
 
-::demo[domain-path]
+```mermaid
+flowchart TD
+  A["You type yourname.xyz"] --> B{"DNS record at your registrar?"}
+  B -- "no" --> C["Nothing loads"]
+  B -- "yes" --> D["Vercel finds your project"]
+  D --> E["Your site opens, with https"]
+```
 
 What a domain costs:
 
@@ -193,15 +203,34 @@ What a domain costs:
 
 Check the price at checkout, renewal included.
 
-## Do this today: ask "compared to what?"
+## Hand this post to your agent
 
-The site is the easy part. Your agent can do it with you: paste this post's link in and ask it to walk you through.
+Copy this into your agent: OpenCode, Claude Code, Codex or any other. It reads this post, then walks you through it one step at a time.
 
-The part it can't do starts now:
+```prompt
+Read this post first: https://pranavb.xyz/blogs/first-blog
 
-1. Pick one thing that confused you this week.
-2. Open a chat.
-3. Ask **"compared to what?"** at its first confident claim.
+Guide me from zero to my own blog post, live on the internet, following that post.
+
+How to guide me:
+- One step at a time. Say what the step does, then wait for me before the next one.
+- I may be new to the terminal, GitHub and Vercel. Explain each new term in one plain sentence.
+- Run commands for me when you can. Tell me exactly what I must type or click myself.
+- Ask me before anything that costs money, makes something public, or can't be undone.
+- Never put keys or passwords in the code.
+
+Steps:
+1. Check that node, git, the GitHub CLI and the Vercel CLI are installed. Help me install what's missing.
+2. Ask what I want to write about and for my learning chat's share link. Remind me to check that chat for private details first. If I have no chat yet, explain the post's "Learn first" section and stop until I have one.
+3. Draft a table of contents from the chat and wait for my approval.
+4. Build a simple portfolio site with a blog section and write the post. Learn about me from my LinkedIn URL. Keep my voice and simple words.
+5. Open the site for me. If you can view web pages, check it at desktop and phone widths and fix what breaks.
+6. Add small interactive examples beside the hard ideas, like https://samwho.dev/ does.
+7. Create a private GitHub repo, deploy it to Vercel, and give me both links.
+8. Ask if I want my own domain. If yes, walk me through adding it in Vercel and in my registrar's DNS settings. I buy the domain myself.
+```
+
+The agent can build the site. The learning chat is still yours. When the AI calls something better, efficient or wrong, ask what it compares against and what actually breaks.
 
 **If the AI changes its answer when you question it, the first answer was never proof.**
 

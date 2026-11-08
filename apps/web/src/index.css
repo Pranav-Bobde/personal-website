@@ -307,6 +307,61 @@
   white-space: pre-wrap;
 }
 
+.prose .markdown-code {
+  @apply relative my-8;
+}
+
+.prose .markdown-code pre {
+  @apply my-0 pr-12;
+}
+
+.prose .markdown-copy {
+  @apply border-border bg-card text-muted-foreground hover:text-foreground focus-visible:ring-accent absolute top-2 right-2 grid size-8 cursor-pointer place-items-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none;
+}
+
+.prose .markdown-copy svg {
+  @apply size-4 fill-none stroke-current;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.prose .markdown-copy .markdown-check-icon,
+.prose .markdown-copy[data-copied] .markdown-copy-icon {
+  display: none;
+}
+
+.prose .markdown-copy[data-copied] {
+  @apply text-accent;
+}
+
+.prose .markdown-copy:has(.markdown-copy-label) {
+  @apply text-accent border-accent/40 w-auto gap-1.5 px-2.5 text-xs;
+  grid-auto-flow: column;
+}
+
+.prose .markdown-copy:has(.markdown-copy-label) + pre {
+  @apply pt-12;
+}
+
+.prose .markdown-copy[data-copied] .markdown-check-icon {
+  display: block;
+}
+
+.prose .markdown-diagram {
+  @apply border-border bg-secondary/40 my-8 flex justify-center rounded-md border p-4;
+  --pele-bg: transparent;
+  --pele-fg: var(--foreground);
+  --pele-muted: var(--muted-foreground);
+  --pele-line: var(--muted-foreground);
+  --pele-surface: var(--card);
+  --pele-surface-alt: var(--secondary);
+  --pele-border: var(--muted-foreground);
+  --pele-accent: var(--accent);
+  --pele-font: inherit;
+  --pele-radius: 6px;
+}
+
 .prose a {
   @apply text-accent hover:underline;
 }
@@ -622,139 +677,7 @@
   font-weight: 700;
 }
 
-/* ---- domain path demo: four equal rows, so the address can move by row number ---- */
-.dp-wrap {
-  position: relative;
-  min-width: 0;
-}
-.blog-demo .dp-path {
-  display: grid;
-  grid-auto-rows: 1fr;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.blog-demo .dp-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  gap: 8px;
-  margin: 0;
-  padding: 8px 10px 8px 6px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  transition:
-    background 0.25s,
-    border-color 0.25s,
-    opacity 0.25s;
-}
-.dp-row:not(:last-child)::before {
-  position: absolute;
-  top: 24px;
-  bottom: -13px;
-  left: 17px;
-  border-left: 2px solid hsl(0 0% 24%);
-  content: "";
-  transition: border-color 0.25s;
-}
-.dp-dot {
-  position: relative;
-  width: 11px;
-  height: 11px;
-  margin: 4px auto 0;
-  border: 2px solid hsl(0 0% 42%);
-  border-radius: 50%;
-  background: hsl(0 0% 5.5%);
-  transition:
-    background 0.25s,
-    border-color 0.25s;
-}
-.dp-packet {
-  position: absolute;
-  z-index: 1;
-  top: calc(var(--dp-row) * 25% + 11px);
-  left: 11px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: hsl(180 100% 50%);
-  box-shadow: 0 0 0 3px hsl(180 100% 50% / 0.25);
-  transition:
-    top 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    background 0.25s,
-    box-shadow 0.25s,
-    opacity 0.2s;
-}
-.dp-packet[data-state="idle"] {
-  opacity: 0;
-}
-.dp-packet[data-state="bad"] {
-  background: hsl(2 72% 58%);
-  box-shadow: 0 0 0 3px hsl(2 72% 58% / 0.3);
-}
-.dp-body {
-  min-width: 0;
-}
-.dp-head {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0 10px;
-  min-height: 20px;
-  font-size: 13px;
-  line-height: 20px;
-}
-.dp-name {
-  color: hsl(0 0% 98%);
-  font-weight: 700;
-}
-.dp-status {
-  color: hsl(0 0% 50%);
-  font-size: 12.5px;
-  white-space: nowrap;
-}
-.dp-detail {
-  color: hsl(0 0% 66%);
-  font-size: 12.5px;
-  line-height: 1.5;
-}
-.dp-row[data-state="active"] {
-  border-color: hsl(42 95% 58% / 0.5);
-  background: hsl(42 95% 58% / 0.07);
-}
-.dp-row[data-state="active"] .dp-status {
-  color: hsl(42 95% 62%);
-}
-.dp-row[data-state="ok"] .dp-status {
-  color: hsl(150 62% 55%);
-}
-.dp-row[data-state="ok"] .dp-dot {
-  border-color: hsl(150 62% 47%);
-  background: hsl(150 62% 47%);
-}
-.dp-row[data-state="ok"]:not(:last-child)::before {
-  border-left-color: hsl(150 62% 47%);
-}
-.dp-row[data-state="bad"] {
-  border-color: hsl(2 72% 58%);
-  background: hsl(2 72% 50% / 0.2);
-}
-.dp-row[data-state="bad"] .dp-status {
-  color: hsl(2 90% 72%);
-  font-weight: 700;
-}
-.dp-row[data-state="bad"]:not(:last-child)::before,
-.dp-row[data-state="skipped"]:not(:last-child)::before {
-  border-left-style: dashed;
-}
-.dp-row[data-state="skipped"] {
-  opacity: 0.45;
-}
 @media (prefers-reduced-motion: reduce) {
-  .dp-row,
-  .dp-row::before,
-  .dp-dot,
-  .dp-packet,
   .chat-bubble,
   .chat-flag {
     transition: none;
